@@ -7,6 +7,9 @@ website:
     left:
     - text: "Project Proposal"
       href: "Project/Project_Proposal/Project_Proposal.html"
+      
+    - text: "Shiny App"
+      href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
 
 
     right: 
