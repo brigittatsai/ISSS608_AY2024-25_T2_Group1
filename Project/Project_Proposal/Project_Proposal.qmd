@@ -7,6 +7,8 @@ author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
 
 ## 1 Background
 
+This
+
 ## 2 Problem Statement
 
 ## 3 Method
