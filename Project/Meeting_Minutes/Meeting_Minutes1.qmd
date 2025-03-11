@@ -1,0 +1,51 @@
+---
+title: "Meeting Minutes 1"
+author: "TzuTing Huang"
+date: "March 4, 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Meeting Minutes
+
+**Date:** March 4, 2025
+
+**Attendees:** Brigitta Karen Tsai (BK), ENRICO LIMBERG (EL), Hannah (HH)
+
+**Agenda:**
+
+1.  Looking into Different Topic and Dataset
+2.  Evaluating Data Availability
+
+## **1 Discussion Summary**
+
+### 1.1 Looking into Different Topic and Dataset
+
+**BK**: Examinate First Topic - PISA 2022 (Not to choose)
+
+1.  The dataset is quite complex and extensive, as it consists mainly of questionnaire-based data.
+2.  Due to the heavy data manipulation and preprocessing required, the team decided not to pursue this topic.
+
+**EL & HH**: Second Topic - Be Weatherwise or Otherwise
+
+3.  Some of the data we are interested in is too scattered, as it is recorded on a monthly basis, making it challenging to predict long-term annual trends.
+4.  Climate trends are influenced by multiple external factors (e.g., human activities, government policies, global climate patterns), which are not fully captured in the dataset, making it difficult to establish direct causal relationships.
+
+### 1.2 Evaluating Data Availability 
+
+**BK / EL / HH**:
+
+The team explored two extensions of the second topic:
+
+1.  Impact of Climate Change on Carbon Emissions
+2.  Impact of Carbon Emissions on Climate Change
+
+However, due to data fragmentation and lack of comprehensive datasets, the team found data availability unsuitable and decided to consider other topics.
+
+## 2 Conclusion
+
+After this meeting, we have decided to try running trial codes to see the areas that we can explore in the weather dataset. We still take into consideration other dataset that we find interesting.

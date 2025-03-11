@@ -9,8 +9,29 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "ISSS608_AY2024-25_T2_Group1",
+    "title": "ISSS608 Visual Analytics and Application Group 1",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+    "text": "Welcome to the main page of Visual Analytics and Application, Group 1 Project website"
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes1.html",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes1.html",
+    "title": "Meeting Minutes 1",
+    "section": "",
+    "text": "Date: March 4, 2025\nAttendees: Brigitta Karen Tsai (BK), ENRICO LIMBERG (EL), Hannah (HH)\nAgenda:\n\nLooking into Different Topic and Dataset\nEvaluating Data Availability\n\n\n\n\n\nBK: Examinate First Topic - PISA 2022 (Not to choose)\n\nThe dataset is quite complex and extensive, as it consists mainly of questionnaire-based data.\nDue to the heavy data manipulation and preprocessing required, the team decided not to pursue this topic.\n\nEL & HH: Second Topic - Be Weatherwise or Otherwise\n\nSome of the data we are interested in is too scattered, as it is recorded on a monthly basis, making it challenging to predict long-term annual trends.\nClimate trends are influenced by multiple external factors (e.g., human activities, government policies, global climate patterns), which are not fully captured in the dataset, making it difficult to establish direct causal relationships.\n\n\n\n\nBK / EL / HH:\nThe team explored two extensions of the second topic:\n\nImpact of Climate Change on Carbon Emissions\nImpact of Carbon Emissions on Climate Change\n\nHowever, due to data fragmentation and lack of comprehensive datasets, the team found data availability unsuitable and decided to consider other topics.\n\n\n\n\nAfter this meeting, we have decided to try running trial codes to see the areas that we can explore in the weather dataset. We still take into consideration other dataset that we find interesting."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes1.html#discussion-summary",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes1.html#discussion-summary",
+    "title": "Meeting Minutes 1",
+    "section": "",
+    "text": "BK: Examinate First Topic - PISA 2022 (Not to choose)\n\nThe dataset is quite complex and extensive, as it consists mainly of questionnaire-based data.\nDue to the heavy data manipulation and preprocessing required, the team decided not to pursue this topic.\n\nEL & HH: Second Topic - Be Weatherwise or Otherwise\n\nSome of the data we are interested in is too scattered, as it is recorded on a monthly basis, making it challenging to predict long-term annual trends.\nClimate trends are influenced by multiple external factors (e.g., human activities, government policies, global climate patterns), which are not fully captured in the dataset, making it difficult to establish direct causal relationships.\n\n\n\n\nBK / EL / HH:\nThe team explored two extensions of the second topic:\n\nImpact of Climate Change on Carbon Emissions\nImpact of Carbon Emissions on Climate Change\n\nHowever, due to data fragmentation and lack of comprehensive datasets, the team found data availability unsuitable and decided to consider other topics."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes1.html#conclusion",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes1.html#conclusion",
+    "title": "Meeting Minutes 1",
+    "section": "",
+    "text": "After this meeting, we have decided to try running trial codes to see the areas that we can explore in the weather dataset. We still take into consideration other dataset that we find interesting."
   }
 ]

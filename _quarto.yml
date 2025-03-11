@@ -10,6 +10,9 @@ website:
       
     - text: "Shiny App"
       href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
+      
+    - text: "Meeting Minutes"
+      href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
 
 
     right: 

@@ -1,6 +1,13 @@
 ---
 title: "Project Proposal"
 author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
+date: "March 11, 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
 ---
 
 # Project Proposal

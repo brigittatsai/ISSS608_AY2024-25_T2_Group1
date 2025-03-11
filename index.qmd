@@ -1,11 +1,5 @@
 ---
-title: "ISSS608_AY2024-25_T2_Group1"
+title: "ISSS608 Visual Analytics and Application Group 1"
 ---
 
-This is a Quarto website.
-
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
-
-```{r}
-1 + 1
-```
+Welcome to the main page of **Visual Analytics and Application, Group 1** Project website
