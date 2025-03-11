@@ -1,19 +1,21 @@
 project:
   type: website
-
+  
 website:
-  title: "ISSS608_AY2024-25_T2_Group1"
+  title: "Visual Analytics Project - Group 1"
   navbar:
     left:
+    - text: "Project Proposal"
+      href: "Project/Project_Proposal/Project_Proposal.html"
+
+
+    right: 
       - href: index.qmd
         text: Home
       - about.qmd
-
 format:
   html:
-    theme: cosmo
+    theme: sandstone
     css: styles.css
     toc: true
-
 editor: visual
-
