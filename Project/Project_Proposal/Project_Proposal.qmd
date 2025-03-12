@@ -10,8 +10,6 @@ execute:
   freeze: true
 ---
 
-# Project Proposal
-
 # Mapping the Rain: Analysing Rainfall Patterns and Flood Risks in Singapore
 
 ## 1 Overview
