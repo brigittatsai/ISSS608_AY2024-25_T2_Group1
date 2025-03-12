@@ -10,7 +10,7 @@ execute:
   freeze: true
 ---
 
-# Meeting Minutes
+# Minutes of Meeting 1
 
 **Date:** March 4, 2025
 
@@ -35,7 +35,7 @@ execute:
 3.  Some of the data we are interested in is too scattered, as it is recorded on a monthly basis, making it challenging to predict long-term annual trends.
 4.  Climate trends are influenced by multiple external factors (e.g., human activities, government policies, global climate patterns), which are not fully captured in the dataset, making it difficult to establish direct causal relationships.
 
-### 1.2 Evaluating Data Availability 
+### 1.2 Evaluating Data Availability
 
 **BK / EL / HH**:
 

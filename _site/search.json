@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "Project/Trial/Trial.html",
+    "href": "Project/Trial/Trial.html",
+    "title": "Group_Project",
+    "section": "",
+    "text": "pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,\n               spNetwork, tmaptools)\n\n\nc124 &lt;- read_csv(\"data/changi_124.csv\")\n\nRows: 31 Columns: 13\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): Station\ndbl (12): Year, Month, Day, Daily Rainfall Total (mm), Highest 30 min Rainfa...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\ngeo = st_read(dsn = \"data/geospatial\", \n                  layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\brigittatsai\\ISSS608_AY2024-25_T2_Group1\\Project\\Trial\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\n\n\nst_geometry(geo)\n\nGeometry set for 323 features \nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\nFirst 5 geometries:\n\n\nMULTIPOLYGON (((31495.56 30140.01, 31980.96 296...\n\n\nMULTIPOLYGON (((29092.28 30021.89, 29119.64 300...\n\n\nMULTIPOLYGON (((29932.33 29879.12, 29947.32 298...\n\n\nMULTIPOLYGON (((27131.28 30059.73, 27088.33 297...\n\n\nMULTIPOLYGON (((26451.03 30396.46, 26440.47 303...\n\n\n\nplot(st_geometry(geo))\n\n\n\n\n\n\n\n\n\nst_crs(geo)\n\nCoordinate Reference System:\n  User input: SVY21 \n  wkt:\nPROJCRS[\"SVY21\",\n    BASEGEOGCRS[\"SVY21[WGS84]\",\n        DATUM[\"World Geodetic System 1984\",\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ID[\"EPSG\",6326]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"Degree\",0.0174532925199433]]],\n    CONVERSION[\"unnamed\",\n        METHOD[\"Transverse Mercator\",\n            ID[\"EPSG\",9807]],\n        PARAMETER[\"Latitude of natural origin\",1.36666666666667,\n            ANGLEUNIT[\"Degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",103.833333333333,\n            ANGLEUNIT[\"Degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",1,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",28001.642,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",38744.572,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]]]\n\n\n\ngeo &lt;- st_transform(geo, 3414)\n\n\nchangi &lt;- geo %&gt;%\n  filter(SUBZONE_N %in% c(\"CHANGI AIRPORT\", \"CHANGI BAY\",\n                          \"CHANGI POINT\", \"CHANGI WEST\"))\n\n\nchangi &lt;- changi %&gt;% \n  mutate(Station = \"Changi\")\n\n\nchangi &lt;- changi %&gt;%\n  relocate(Station, .before = everything())\n\n\nchangi &lt;- left_join(changi, c124,\n                    by = c(\"Station\" = \"Station\"))\n\nWarning in sf_column %in% names(g): Detected an unexpected many-to-many relationship between `x` and `y`.\nℹ Row 1 of `x` matches multiple rows in `y`.\nℹ Row 1 of `y` matches multiple rows in `x`.\nℹ If a many-to-many relationship is expected, set `relationship =\n  \"many-to-many\"` to silence this warning.\n\n\n\nggplot(changi) +\n  geom_sf(aes(fill = `Daily Rainfall Total (mm)`), color = \"black\") + \n  scale_fill_gradient(low = \"blue\", high = \"red\", name = \"Daily Rainfall\") +\n  theme_minimal() +\n  labs(title = \"Mean Temperature in Changi (Jan 2024)\",\n       caption = \"Data Source: Your Dataset\") +\n  theme(legend.position = \"right\")"
+  },
+  {
+    "objectID": "Project/Trial/Trial.html#weather-data-trial",
+    "href": "Project/Trial/Trial.html#weather-data-trial",
+    "title": "Group_Project",
+    "section": "",
+    "text": "pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,\n               spNetwork, tmaptools)\n\n\nc124 &lt;- read_csv(\"data/changi_124.csv\")\n\nRows: 31 Columns: 13\n── Column specification ────────────────────────────────────────────────────────\nDelimiter: \",\"\nchr  (1): Station\ndbl (12): Year, Month, Day, Daily Rainfall Total (mm), Highest 30 min Rainfa...\n\nℹ Use `spec()` to retrieve the full column specification for this data.\nℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.\n\n\n\ngeo = st_read(dsn = \"data/geospatial\", \n                  layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\brigittatsai\\ISSS608_AY2024-25_T2_Group1\\Project\\Trial\\data\\geospatial' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\n\n\nst_geometry(geo)\n\nGeometry set for 323 features \nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\nFirst 5 geometries:\n\n\nMULTIPOLYGON (((31495.56 30140.01, 31980.96 296...\n\n\nMULTIPOLYGON (((29092.28 30021.89, 29119.64 300...\n\n\nMULTIPOLYGON (((29932.33 29879.12, 29947.32 298...\n\n\nMULTIPOLYGON (((27131.28 30059.73, 27088.33 297...\n\n\nMULTIPOLYGON (((26451.03 30396.46, 26440.47 303...\n\n\n\nplot(st_geometry(geo))\n\n\n\n\n\n\n\n\n\nst_crs(geo)\n\nCoordinate Reference System:\n  User input: SVY21 \n  wkt:\nPROJCRS[\"SVY21\",\n    BASEGEOGCRS[\"SVY21[WGS84]\",\n        DATUM[\"World Geodetic System 1984\",\n            ELLIPSOID[\"WGS 84\",6378137,298.257223563,\n                LENGTHUNIT[\"metre\",1]],\n            ID[\"EPSG\",6326]],\n        PRIMEM[\"Greenwich\",0,\n            ANGLEUNIT[\"Degree\",0.0174532925199433]]],\n    CONVERSION[\"unnamed\",\n        METHOD[\"Transverse Mercator\",\n            ID[\"EPSG\",9807]],\n        PARAMETER[\"Latitude of natural origin\",1.36666666666667,\n            ANGLEUNIT[\"Degree\",0.0174532925199433],\n            ID[\"EPSG\",8801]],\n        PARAMETER[\"Longitude of natural origin\",103.833333333333,\n            ANGLEUNIT[\"Degree\",0.0174532925199433],\n            ID[\"EPSG\",8802]],\n        PARAMETER[\"Scale factor at natural origin\",1,\n            SCALEUNIT[\"unity\",1],\n            ID[\"EPSG\",8805]],\n        PARAMETER[\"False easting\",28001.642,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8806]],\n        PARAMETER[\"False northing\",38744.572,\n            LENGTHUNIT[\"metre\",1],\n            ID[\"EPSG\",8807]]],\n    CS[Cartesian,2],\n        AXIS[\"(E)\",east,\n            ORDER[1],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]],\n        AXIS[\"(N)\",north,\n            ORDER[2],\n            LENGTHUNIT[\"metre\",1,\n                ID[\"EPSG\",9001]]]]\n\n\n\ngeo &lt;- st_transform(geo, 3414)\n\n\nchangi &lt;- geo %&gt;%\n  filter(SUBZONE_N %in% c(\"CHANGI AIRPORT\", \"CHANGI BAY\",\n                          \"CHANGI POINT\", \"CHANGI WEST\"))\n\n\nchangi &lt;- changi %&gt;% \n  mutate(Station = \"Changi\")\n\n\nchangi &lt;- changi %&gt;%\n  relocate(Station, .before = everything())\n\n\nchangi &lt;- left_join(changi, c124,\n                    by = c(\"Station\" = \"Station\"))\n\nWarning in sf_column %in% names(g): Detected an unexpected many-to-many relationship between `x` and `y`.\nℹ Row 1 of `x` matches multiple rows in `y`.\nℹ Row 1 of `y` matches multiple rows in `x`.\nℹ If a many-to-many relationship is expected, set `relationship =\n  \"many-to-many\"` to silence this warning.\n\n\n\nggplot(changi) +\n  geom_sf(aes(fill = `Daily Rainfall Total (mm)`), color = \"black\") + \n  scale_fill_gradient(low = \"blue\", high = \"red\", name = \"Daily Rainfall\") +\n  theme_minimal() +\n  labs(title = \"Mean Temperature in Changi (Jan 2024)\",\n       caption = \"Data Source: Your Dataset\") +\n  theme(legend.position = \"right\")"
+  },
+  {
+    "objectID": "Project/Trial/Trial.html#government-procurement-data-trial",
+    "href": "Project/Trial/Trial.html#government-procurement-data-trial",
+    "title": "Group_Project",
+    "section": "2 Government Procurement Data (Trial)",
+    "text": "2 Government Procurement Data (Trial)"
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#overview",
+    "href": "Project/Project_Proposal/Project_Proposal.html#overview",
+    "title": "Project Proposal",
+    "section": "1 Overview",
+    "text": "1 Overview\n\n1.1 Background\nIn December 29, 2024, Singapore residents were concerned with flash flood, which happened in Bukit Timah area, triggered by heavy rainfall. This flood has brought many people’s attention towards the increasing frequency of rainfall. PUB (Public Utilities Board) highlighted that the Bukit Timah area is prone to flooding, and the drainage system improvement works has been ongoing over the past decade. They have also issued flood risk warnings for nearly 20 location points, including Bukit Timah and Toa Payoh area, as well as western and central areas. This extreme climate change has influenced weather patterns. Singapore faces many challenges managing these weather fluctuations to minimize the impact towards their residents and the landscapes. (source: Channel News Asia)\n\n\n1.2 Purpose of Analysis\nAs weather enthusiasts, who have high curiosity on weather changes and impacts towards the daily life of Singapore residents, our team has decided to further deep-dive into weather data, unveiling the pattern of rainfalls and exploring the association between rainfall patterns and flood risks, to avoid potential future floods happening in Singapore. As Singapore is a tropical country, Singapore is iconic for its high humidity, leading to frequent rainfalls. As the climate continue to evolve, understanding the historical rainfall patterns is crucial for either residents’ activities, urban planning and even safeguarding public facilities. Hence, by carefully processing weather data and visualising it, our team aims to develop enhanced Shiny app for several purposes, to raise residents’ awareness towards rainfall periods, carefully planning their activities, and also to support key government decisions influenced by weather conditions."
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#dataset",
+    "href": "Project/Project_Proposal/Project_Proposal.html#dataset",
+    "title": "Project Proposal",
+    "section": "2 Dataset",
+    "text": "2 Dataset\nTo create a data-driven visual storyboard, our team will use Shiny App to present our findings, and the following dataset will be utilized to support our analysis:\n\nSingapore’s Weather Data\n\nSource: Historical Daily Weather Records\nFile Type: csv file\n\nSingapore’s Geospatial Boundaries Data\n\nSource: Master Plan 2014 Planning Area Boundary\nFile Type: shp file\n\n\nTo further enhance our analysis, our team might possibly use additional datasets to present meaningful findings. According to our analysis, our team is also evaluating several datasets to determine if reliable sources and data are available, which will be further discussed during the process of building our project. The following are the dataset topics that might be considered:\n\nSea Level Changes in Singapore Coastal Areas\nPopulation Density across Singapore Regions"
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#approach-and-methodology",
+    "href": "Project/Project_Proposal/Project_Proposal.html#approach-and-methodology",
+    "title": "Project Proposal",
+    "section": "3 Approach and Methodology",
+    "text": "3 Approach and Methodology\nTime-series analysis, geospatial visualisation,"
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#limitations",
+    "href": "Project/Project_Proposal/Project_Proposal.html#limitations",
+    "title": "Project Proposal",
+    "section": "4 Limitations",
+    "text": "4 Limitations"
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#reference",
+    "href": "Project/Project_Proposal/Project_Proposal.html#reference",
+    "title": "Project Proposal",
+    "section": "5 Reference",
+    "text": "5 Reference"
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#methodology",
+    "href": "Project/Project_Proposal/Project_Proposal.html#methodology",
+    "title": "Project Proposal",
+    "section": "3 Methodology",
+    "text": "3 Methodology\n\n3.1 Approach\nOur team aims to use visual analytics methods, from both methodology taught in ISSS608 Visual Analytics and Application course and other external sources that our team can refer to. Our team aims to use methods such as time-series analysis, geospatial mapping and descriptive visualisations using R libraries such as:\n\nDescriptive Visuals: ggplot2, shiny, plotly, etc\nGeospatial Mapping: tmap, sf\nTime-series Analysis: tsibble, feasts, seasonal, lubridate\n\nThese R packages will be carefully utilized according to our analysis needs during the project work.\n\n\n3.2 Storyboards\nOur team has created a rough storyboard and carefully planned the flow of our analysis, to ease readers in understanding the presented visuals. Our team will begin with geospatial mapping, to see the overall rainfall patterns across Singapore’s regions. Through the geospatial mapping, we will find out regions with highest frequency of rainfall, highlighting areas that requires extra attention. The storyboard will continue with several time-series analysis, unveiling the weather patterns of different regions and areas in Singapore. After the overall analysis, we will zoom in to certain areas that have higher frequency of rainfalls, analysing starting from monthly, weekly, to the daily records. In addition, our team will also analyse the intensity level of the rainfall (heavy/ light rains) in these highlighted areas. By combining visualisation methods both listed in this proposal and other potential visualisation methods that we might explore during the process, our team will unveil the hidden patterns and cause of weather issues in Singapore."
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#limitations-and-challenges",
+    "href": "Project/Project_Proposal/Project_Proposal.html#limitations-and-challenges",
+    "title": "Project Proposal",
+    "section": "4 Limitations and Challenges",
+    "text": "4 Limitations and Challenges\nOur team aims to present as detailed findings as possible through these data visualisations. However, there are several limitations that we found during the dataset exploration and topic exploration. The weather data provided by Meteorological Service Singapore’s website has several issues. Out of the 63 regions listed, 19 regions do not have weather records at all, and 27 regions have rainfall records, but not temperature data, which could have enhanced our analysis. To tackle this, we will select regions in each administrative district that have complete data. There is also another challenge in this dataset. The website provides monthly records of each region, hence, our team will need to extract the data monthly and merge it during the process. Our team will carefully select and extract the required data accordingly."
+  },
+  {
+    "objectID": "Project/Project_Proposal/Project_Proposal.html#relevant-works",
+    "href": "Project/Project_Proposal/Project_Proposal.html#relevant-works",
+    "title": "Project Proposal",
+    "section": "5 Relevant Works",
+    "text": "5 Relevant Works"
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes1.html",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes1.html",
+    "title": "Meeting Minutes 1",
+    "section": "",
+    "text": "Date: March 4, 2025\nAttendees: Brigitta Karen Tsai (BK), ENRICO LIMBERG (EL), Hannah (HH)\nAgenda:\n\nLooking into Different Topic and Dataset\nEvaluating Data Availability\n\n\n\n\n\nBK: Examinate First Topic - PISA 2022 (Not to choose)\n\nThe dataset is quite complex and extensive, as it consists mainly of questionnaire-based data.\nDue to the heavy data manipulation and preprocessing required, the team decided not to pursue this topic.\n\nEL & HH: Second Topic - Be Weatherwise or Otherwise\n\nSome of the data we are interested in is too scattered, as it is recorded on a monthly basis, making it challenging to predict long-term annual trends.\nClimate trends are influenced by multiple external factors (e.g., human activities, government policies, global climate patterns), which are not fully captured in the dataset, making it difficult to establish direct causal relationships.\n\n\n\n\nBK / EL / HH:\nThe team explored two extensions of the second topic:\n\nImpact of Climate Change on Carbon Emissions\nImpact of Carbon Emissions on Climate Change\n\nHowever, due to data fragmentation and lack of comprehensive datasets, the team found data availability unsuitable and decided to consider other topics.\n\n\n\n\nAfter this meeting, we have decided to try running trial codes to see the areas that we can explore in the weather dataset. We still take into consideration other dataset that we find interesting."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes1.html#discussion-summary",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes1.html#discussion-summary",
+    "title": "Meeting Minutes 1",
+    "section": "",
+    "text": "BK: Examinate First Topic - PISA 2022 (Not to choose)\n\nThe dataset is quite complex and extensive, as it consists mainly of questionnaire-based data.\nDue to the heavy data manipulation and preprocessing required, the team decided not to pursue this topic.\n\nEL & HH: Second Topic - Be Weatherwise or Otherwise\n\nSome of the data we are interested in is too scattered, as it is recorded on a monthly basis, making it challenging to predict long-term annual trends.\nClimate trends are influenced by multiple external factors (e.g., human activities, government policies, global climate patterns), which are not fully captured in the dataset, making it difficult to establish direct causal relationships.\n\n\n\n\nBK / EL / HH:\nThe team explored two extensions of the second topic:\n\nImpact of Climate Change on Carbon Emissions\nImpact of Carbon Emissions on Climate Change\n\nHowever, due to data fragmentation and lack of comprehensive datasets, the team found data availability unsuitable and decided to consider other topics."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes1.html#conclusion",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes1.html#conclusion",
+    "title": "Meeting Minutes 1",
+    "section": "",
+    "text": "After this meeting, we have decided to try running trial codes to see the areas that we can explore in the weather dataset. We still take into consideration other dataset that we find interesting."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes2.html",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes2.html",
+    "title": "Meeting Minutes 2",
+    "section": "",
+    "text": "Minutes of Meeting 2\nDate: March 11, 2025\nAttendees: Brigitta Karen Tsai, Enrico Limberg, Hannah\nAgenda: Finalising Topic and Visual Storyboard\n\n\n1 Discussion"
+  }
+]

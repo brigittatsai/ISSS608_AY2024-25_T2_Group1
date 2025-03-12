@@ -65,12 +65,16 @@ changi <- left_join(changi, c124,
 
 ```{r}
 ggplot(changi) +
-  geom_sf(aes(fill = `Mean Temperature (°C)`), color = "black") + 
-  scale_fill_gradient(low = "blue", high = "red", name = "Mean Temp (°C)") +
+  geom_sf(aes(fill = `Daily Rainfall Total (mm)`), color = "black") + 
+  scale_fill_gradient(low = "blue", high = "red", name = "Daily Rainfall") +
   theme_minimal() +
   labs(title = "Mean Temperature in Changi (Jan 2024)",
        caption = "Data Source: Your Dataset") +
   theme(legend.position = "right")
+```
+
+```{r}
+unique(geo$SUBZONE_N)
 ```
 
 ## 2 Government Procurement Data (Trial)

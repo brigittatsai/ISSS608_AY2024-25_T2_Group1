@@ -12,8 +12,52 @@ execute:
 
 # Project Proposal
 
-## 1 Background
+# Mapping the Rain: Analysing Rainfall Patterns and Flood Risks in Singapore
 
-## 2 Problem Statement
+## 1 Overview
 
-## 3 Method
+### 1.1 Background
+
+In December 29, 2024, Singapore residents were concerned with flash flood, which happened in Bukit Timah area, triggered by heavy rainfall. This flood has brought many people's attention towards the increasing frequency of rainfall. PUB (Public Utilities Board) highlighted that the Bukit Timah area is prone to flooding, and the drainage system improvement works has been ongoing over the past decade. They have also issued flood risk warnings for nearly 20 location points, including Bukit Timah and Toa Payoh area, as well as western and central areas. This extreme climate change has influenced weather patterns. Singapore faces many challenges managing these weather fluctuations to minimize the impact towards their residents and the landscapes. (*source: [Channel News Asia](https://www.channelnewsasia.com/singapore/flash-floods-bukit-timah-heavy-rain-weather-4830136)*)
+
+### 1.2 Purpose of Analysis
+
+As weather enthusiasts, who have high curiosity on weather changes and impacts towards the daily life of Singapore residents, our team has decided to further deep-dive into weather data, unveiling the pattern of rainfalls and exploring the association between rainfall patterns and flood risks, to avoid potential future floods happening in Singapore. As Singapore is a tropical country, Singapore is iconic for its high humidity, leading to frequent rainfalls. As the climate continue to evolve, understanding the historical rainfall patterns is crucial for either residents' activities, urban planning and even safeguarding public facilities. Hence, by carefully processing weather data and visualising it, our team aims to develop enhanced Shiny app for several purposes, to raise residents' awareness towards rainfall periods, carefully planning their activities, and also to support key government decisions influenced by weather conditions.
+
+## 2 Dataset
+
+To create a data-driven visual storyboard, our team will use **Shiny App** to present our findings, and the following dataset will be utilized to support our analysis:
+
+1.  **Singapore's Weather Data**
+    1.  Source: [*Historical Daily Weather Records*](https://www.weather.gov.sg/climate-historical-daily/)
+    2.  File Type: csv file
+2.  **Singapore's Geospatial Boundaries Data**
+    1.  Source*:* [*Master Plan 2014 Planning Area Boundary*](https://data.gov.sg/datasets/d_ae891df9d691b091f5383f87b842645a/view)
+    2.  File Type: shp file
+
+To further enhance our analysis, our team might possibly use additional datasets to present meaningful findings. According to our analysis, our team is also evaluating several datasets to determine if reliable sources and data are available, which will be further discussed during the process of building our project. The following are the dataset topics that might be considered:
+
+1.  **Sea Level Changes in Singapore Coastal Areas**
+2.  **Population Density across Singapore Regions**
+
+## 3 Methodology
+
+### 3.1 Approach
+
+Our team aims to use visual analytics methods, from both methodology taught in **ISSS608 Visual Analytics and Application** course and other external sources that our team can refer to. Our team aims to use methods such as **time-series analysis, geospatial mapping** and **descriptive visualisations** using **R** libraries such as:
+
+1.  **Descriptive Visuals:** ggplot2, shiny, plotly, etc
+2.  **Geospatial Mapping:** tmap, sf
+3.  **Time-series Analysis:** tsibble, feasts, seasonal, lubridate
+
+These R packages will be carefully utilized according to our analysis needs during the project work.
+
+### 3.2 Storyboards
+
+Our team has created a rough storyboard and carefully planned the flow of our analysis, to ease readers in understanding the presented visuals. Our team will begin with geospatial mapping, to see the overall rainfall patterns across Singapore's regions. Through the geospatial mapping, we will find out regions with highest frequency of rainfall, highlighting areas that requires extra attention. The storyboard will continue with several time-series analysis, unveiling the weather patterns of different regions and areas in Singapore. After the overall analysis, we will zoom in to certain areas that have higher frequency of rainfalls, analysing starting from monthly, weekly, to the daily records. In addition, our team will also analyse the intensity level of the rainfall (heavy/ light rains) in these highlighted areas. By combining visualisation methods both listed in this proposal and other potential visualisation methods that we might explore during the process, our team will unveil the hidden patterns and cause of weather issues in Singapore.
+
+## 4 Limitations and Challenges
+
+Our team aims to present as detailed findings as possible through these data visualisations. However, there are several limitations that we found during the dataset exploration and topic exploration. The weather data provided by [*Meteorological Service Singapore*](https://www.weather.gov.sg/climate-historical-daily/)*'s* website has several issues. Out of the 63 regions listed, 19 regions do not have weather records at all, and 27 regions have rainfall records, but not temperature data, which could have enhanced our analysis. To tackle this, we will select regions in each administrative district that have complete data. There is also another challenge in this dataset. The website provides monthly records of each region, hence, our team will need to extract the data monthly and merge it during the process. Our team will carefully select and extract the required data accordingly.
+
+## 5 Relevant Works

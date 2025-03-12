@@ -1,0 +1,21 @@
+---
+title: "Meeting Minutes 2"
+author: "Brigitta Karen Tsai"
+date: "March 12, 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+# Minutes of Meeting 2
+
+**Date:** March 11, 2025
+
+**Attendees:** Brigitta Karen Tsai, Enrico Limberg, Hannah
+
+**Agenda:** Finalising Topic and Visual Storyboard
+
+# 1 Discussion
