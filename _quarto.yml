@@ -14,8 +14,8 @@ website:
     - text: "Meeting Minutes"
       href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
       
-    - text: "Trial"
-      href: "Project/Trial/Trial.html"
+    - text: "Project Code"
+      href: "Project/Project_Code/Project_Code.html"
 
 
     right: 

@@ -1,0 +1,102 @@
+---
+title: "Project_Code"
+author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
+date: "March 20, 2025"
+date-modified: "last-modified"
+execute: 
+  eval: true
+  echo: true
+  message: false
+  freeze: true
+---
+
+```{r}
+pacman::p_load(rvest,dplyr,stringr,purrr,
+               readr,httr,tidyr,fs,janitor,tidyverse,knitr)
+
+#| eval: false
+#| include: false
+#This is the code where I downloaded the data：
+# The base URL of the target website
+base_url <- "https://www.weather.gov.sg/files/dailydata/"
+
+# Site corresponding file code
+stations <- c("Paya Lebar"="S06", "Macritchie Reservoir"="S07",
+              "Lower Peirce Reservoir"="S08", "Changi"="S24", "Seletar"="S25",
+              "Pasir Ris (West)"="S29", "Jurong Pier"="S33", "Ulu Pandan"="S35",
+              "Mandai"="S40", "Tai Seng"="S43", "Jurong (West)"="S44", 
+              "Clementi"="S50", "Sentosa Island"="S60", "Bukit Panjang"="S64",
+              "Kranji Reservoir"="S66", "Upper Peirce Reservoir"="S69",
+              "Kent Ridge"="S71", "Queenstown"="S77", "Tanjong Katong"="S78",
+              "Somerset (Road)"="S79", "Sembawang"="S80", "Punggol"="S81",
+              "Simei"="S84", "Toa Payoh"="S88", "Tuas"="S89", "Bukit Timah"="S90",
+              "Buona Vista"="S92", "Pasir Ris (Central)"="S94", "Admiralty"="S104", 
+              "Pulau Ubin"="S106", "East Coast Parkway"="S107",
+              "Marina Barrage"="S108", "Ang Mo Kio"="S109", "Newton"="S111",
+              "Lim Chu Kang"="S112", "Marine Parade"="S113",
+              "Choa Chu Kang (Central)"="S114", "Tuas South"="S115",
+              "Pasir Panjang"="S116", "Jurong Island"="S117",
+              "Nicoll Highway"="S119", "Choa Chu Kang (South)"="S121",
+              "Whampoa"="S123")
+
+# Define download time range (January 2019 - January 2025)
+years <- 2024:2024
+months <- sprintf("%02d", 1:12)  # 01, 02, ..., 12
+
+# Only data from January 2019 to January 2025 are retained
+date_combinations <- expand.grid(Year = years, Month = months, stringsAsFactors = FALSE) %>%
+  filter(!(Year == 2024 & Month < "01"), # Exclude before January 2014
+         !(Year == 2024 & Month > "12")) # Exclude after Dec 2024
+
+# Create a directory to store data
+dir.create("data", showWarnings = FALSE)
+
+# Record failed downloads
+failed_downloads <- data.frame(Station = character(), Year = integer(), Month = character(), File_URL = character(), stringsAsFactors = FALSE)
+
+# Iterate through stations, years, and months
+for (station_name in names(stations)) {
+  station_code <- stations[[station_name]]
+  
+  for (i in 1:nrow(date_combinations)) {
+    year <- date_combinations$Year[i]
+    month <- date_combinations$Month[i]
+    
+    # Construct the file name
+    file_name <- paste0("DAILYDATA_", station_code, "_", year, month, ".csv")
+    
+    # Construct the full download URL
+    file_url <- paste0(base_url, file_name)
+
+    # Local save path
+    file_path <- file.path("data", file_name)
+    
+    # Check if the URL is valid
+    response <- HEAD(file_url)
+    
+    if (status_code(response) == 200) {
+      # Download the file
+      download.file(file_url, destfile = file_path, mode = "wb")
+      cat("✅ Download successful:", file_name, "\n")
+    } else {
+      cat("❌ Download failed:", file_name, "\n")
+      
+      # Record the failed file
+      failed_downloads <- rbind(failed_downloads, data.frame(
+        Station = station_name,
+        Year = year,
+        Month = month,
+        File_URL = file_url
+      ))
+    }
+  }
+}
+
+# Save the failed download log
+if (nrow(failed_downloads) > 0) {
+  write.csv(failed_downloads, "data/failed_downloads_log.csv", row.names = FALSE)
+  cat("⚠️ The failed download files have been recorded: data/failed_downloads_log.csv\n")
+} else {
+  cat("🎉 All data downloaded successfully!\n")
+}
+```
