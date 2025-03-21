@@ -10,7 +10,9 @@ execute:
   freeze: true
 ---
 
-## 1 Weather Data (Download and Merged)
+## 1 Weather Data (Download and Merge)
+
+### 1.1 Download data
 
 ```{r}
 pacman::p_load(rvest,dplyr,stringr,purrr,readr,httr,tidyr,fs,janitor,tidyverse,knitr)
@@ -90,6 +92,8 @@ if (nrow(failed_downloads) > 0) {
 }
 ```
 
+### 1.2 Merge data
+
 ```{r}
 library(tidyverse)
 library(janitor)
@@ -124,4 +128,3 @@ glimpse(all_data)
 pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
                spNetwork, tmaptools)
 ```
-
