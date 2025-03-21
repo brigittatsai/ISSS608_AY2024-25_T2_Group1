@@ -2,20 +2,22 @@ project:
   type: website
   
 website:
-  title: "Visual Analytics Project - Group 1"
-  navbar:
-    left:
-    - text: "Project Proposal"
-      href: "Project/Project_Proposal/Project_Proposal.html"
+  title: "Visual Analytics for Singapore's Weather"
+  sidebar:
+    style: "docked" 
+    contents:
+      - href: "Project/Project_Proposal/Project_Proposal.html"
+        text: "Home"
+        
+      - href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
+        text: "Shiny App"
+        
+      - href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
+        text: "Meeting Minutes"
       
-    - text: "Shiny App"
-      href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
-      
-    - text: "Meeting Minutes"
-      href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
-      
-    - text: "Project Code"
-      href: "Project/Project_Code/Project_Code.html"
+      - href: "Project/Project_Code/Project_Code.html"
+        text: "Project Code"
+        
 
 
     right: 
@@ -24,7 +26,9 @@ website:
       - about.qmd
 format:
   html:
-    theme: sandstone
+    include-after-body: _footer.html
+    theme: flatly
     css: styles.css
     toc: true
+    
 editor: visual
