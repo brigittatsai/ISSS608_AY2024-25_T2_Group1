@@ -8,16 +8,19 @@ website:
     - text: "Proposal"
       href: "Project/Project_Proposal/Project_Proposal.html"
         
-    - text: "Shiny App"
-      href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
-        
     - text: "Meeting Minutes"
       menu:
       - text: "Meeting Minutes 1"
         href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
+        
+      - text: "Meeting Minutes 2"
+        href: "Project/Meeting_Minutes/Meeting_Minutes2.html"
       
-      - text: "Project Code"
-        href: "Project/Project_Code/Project_Code.html"
+    - text: "Project Code"
+      href: "Project/Project_Code/Project_Code.html"
+      
+    - text: "Shiny App"
+      href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
 
     right: 
       - href: index.qmd
