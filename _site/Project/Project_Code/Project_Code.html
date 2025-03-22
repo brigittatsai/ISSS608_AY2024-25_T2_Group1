@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang">
-<meta name="dcterms.date" content="2025-03-20">
+<meta name="dcterms.date" content="2025-03-19">
 
 <title>Visual Analytics Project - Group 1 - Project_Code</title>
 <style>
@@ -162,7 +162,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#data-extraction" id="toc-data-extraction" class="nav-link active" data-scroll-target="#data-extraction">1 Data Extraction</a>
+  <ul class="collapse">
+  <li><a href="#install-and-load-r-packages" id="toc-install-and-load-r-packages" class="nav-link" data-scroll-target="#install-and-load-r-packages">1.1 Install and Load R Packages</a></li>
+  <li><a href="#download-data" id="toc-download-data" class="nav-link" data-scroll-target="#download-data">1.2 Download data</a></li>
+  <li><a href="#merge-data" id="toc-merge-data" class="nav-link" data-scroll-target="#merge-data">1.3 Merge data</a></li>
+  <li><a href="#save-to-csv-file" id="toc-save-to-csv-file" class="nav-link" data-scroll-target="#save-to-csv-file">1.4 Save to csv File</a></li>
+  <li><a href="#remove-individual-files" id="toc-remove-individual-files" class="nav-link" data-scroll-target="#remove-individual-files">1.5 Remove Individual Files</a></li>
+  </ul></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2 Data Preparation</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -186,14 +200,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 20, 2025</p>
+      <p class="date">March 19, 2025</p>
     </div>
   </div>
   
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 21, 2025</p>
+      <p class="date-modified">March 22, 2025</p>
     </div>
   </div>
     
@@ -204,642 +218,1183 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<section id="data-extraction" class="level1">
+<h1>1 Data Extraction</h1>
+<section id="install-and-load-r-packages" class="level2">
+<h2 class="anchored" data-anchor-id="install-and-load-r-packages">1.1 Install and Load R Packages</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(rvest,dplyr,stringr,purrr,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               readr,httr,tidyr,fs,janitor,tidyverse,knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>               readr,httr,tidyr,fs,janitor,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>               tidyverse,knitr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="download-data" class="level2">
+<h2 class="anchored" data-anchor-id="download-data">1.2 Download data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#This is the code where I downloaded the data：</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>base_url <span class="ot">&lt;-</span> <span class="st">"https://www.weather.gov.sg/files/dailydata/"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Site corresponding file code</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Changi"</span><span class="ot">=</span><span class="st">"S24"</span>, <span class="st">"Ang Mo Kio"</span><span class="ot">=</span><span class="st">"S109"</span>, <span class="st">"Pulau Ubin"</span><span class="ot">=</span><span class="st">"S106"</span>, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>              <span class="st">"East Coast Parkway"</span><span class="ot">=</span><span class="st">"S107"</span>, <span class="st">"Seletar"</span><span class="ot">=</span><span class="st">"S25"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Clementi"</span><span class="ot">=</span><span class="st">"S50"</span>, <span class="st">"Jurong (West)"</span><span class="ot">=</span><span class="st">"S44"</span>, <span class="st">"Paya Lebar"</span><span class="ot">=</span><span class="st">"S06"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Newton"</span><span class="ot">=</span><span class="st">"S111"</span>, <span class="st">"Pasir Panjang"</span><span class="ot">=</span><span class="st">"S116"</span>, <span class="st">"Tai Seng"</span><span class="ot">=</span><span class="st">"S43"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Admiralty"</span> <span class="ot">=</span> <span class="st">"S104"</span>, <span class="st">"Sembawang"</span> <span class="ot">=</span> <span class="st">"S80"</span>, <span class="st">"Sentosa Island"</span> <span class="ot">=</span> <span class="st">"S60"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Jurong Island"</span> <span class="ot">=</span> <span class="st">"S117"</span>, <span class="st">"Choa Chu Kang (South)"</span><span class="ot">=</span><span class="st">"S121"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Tuas South"</span><span class="ot">=</span><span class="st">"S115"</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Define download time range</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="dv">2024</span><span class="sc">:</span><span class="dv">2024</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>months <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)  <span class="co"># 01, 02, ..., 12</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Only data from January 2024 to December 2024 are retained</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>date_combinations <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">Year =</span> years, <span class="at">Month =</span> months, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> Month <span class="sc">&lt;</span> <span class="st">"01"</span>), <span class="co"># Exclude before Jan 2024</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(Year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> Month <span class="sc">&gt;</span> <span class="st">"12"</span>)) <span class="co"># Exclude after Dec 2024</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a directory to store data</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Record failed downloads</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>failed_downloads <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Station =</span> <span class="fu">character</span>(), <span class="at">Year =</span> <span class="fu">integer</span>(), <span class="at">Month =</span> <span class="fu">character</span>(), <span class="at">File_URL =</span> <span class="fu">character</span>(), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate through stations, years, and months</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (station_name <span class="cf">in</span> <span class="fu">names</span>(stations)) {</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  station_code <span class="ot">&lt;-</span> stations[[station_name]]</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(date_combinations)) {</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    year <span class="ot">&lt;-</span> date_combinations<span class="sc">$</span>Year[i]</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    month <span class="ot">&lt;-</span> date_combinations<span class="sc">$</span>Month[i]</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Construct the file name</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    file_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"DAILYDATA_"</span>, station_code, <span class="st">"_"</span>, year, month, <span class="st">".csv"</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Construct the full download URL</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    file_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_url, file_name)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Local save path</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    file_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, file_name)</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the URL is valid</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    response <span class="ot">&lt;-</span> <span class="fu">HEAD</span>(file_url)</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">status_code</span>(response) <span class="sc">==</span> <span class="dv">200</span>) {</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Download the file</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>      <span class="fu">download.file</span>(file_url, <span class="at">destfile =</span> file_path, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"✅ Download successful:"</span>, file_name, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"❌ Download failed:"</span>, file_name, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Record the failed file</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>      failed_downloads <span class="ot">&lt;-</span> <span class="fu">rbind</span>(failed_downloads, <span class="fu">data.frame</span>(</span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>        <span class="at">Station =</span> station_name,</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>        <span class="at">Year =</span> year,</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>        <span class="at">Month =</span> month,</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>        <span class="at">File_URL =</span> file_url</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>      ))</span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the failed download log</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(failed_downloads) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(failed_downloads, <span class="st">"data/failed_downloads_log.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"⚠️ The failed download files have been recorded: data/failed_downloads_log.csv</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"🎉 All data downloaded successfully!</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="merge-data" class="level2">
+<h2 class="anchored" data-anchor-id="merge-data">1.3 Merge data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all CSV files from the "data" folder that contain "DAILYDATA_" and "2024" in their names</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"^DAILYDATA_.*_2024.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a safe reading function to ensure all columns are initially read as characters</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>safe_read <span class="ot">&lt;-</span> <span class="fu">safely</span>(<span class="sc">~</span> <span class="fu">read_csv</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  .x,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">col_types =</span> <span class="fu">cols</span>(<span class="at">.default =</span> <span class="st">"c"</span>),  <span class="co"># Read all columns as character to prevent merging errors</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">locale =</span> <span class="fu">locale</span>(<span class="at">encoding =</span> <span class="st">"UTF-8"</span>)  <span class="co"># Ensure UTF-8 encoding</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>())  <span class="co"># Standardize column names</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Read all files</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(files, safe_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 9 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 10 is invalid UTF-8</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
+string 11 is invalid UTF-8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb244"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb244-1"><a href="#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out successful reads and combine data</span></span>
+<span id="cb244-2"><a href="#cb244-2" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb244-3"><a href="#cb244-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">is.null</span>(.x<span class="sc">$</span>error)) <span class="sc">%&gt;%</span>  <span class="co"># Keep only successfully read files</span></span>
+<span id="cb244-4"><a href="#cb244-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(<span class="st">"result"</span>) <span class="sc">%&gt;%</span>  <span class="co"># Combine them into a single dataframe</span></span>
+<span id="cb244-5"><a href="#cb244-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">matches</span>(<span class="st">"station"</span>), <span class="sc">~</span> <span class="fu">na_if</span>(., <span class="st">"-"</span>))) <span class="sc">%&gt;%</span>  <span class="co"># Convert "-" to NA (except for "station" column)</span></span>
+<span id="cb244-6"><a href="#cb244-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">matches</span>(<span class="st">"station"</span>), as.numeric))  <span class="co"># Convert character columns back to numeric (except "station")</span></span>
+<span id="cb244-7"><a href="#cb244-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb244-8"><a href="#cb244-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the merged data structure</span></span>
+<span id="cb244-9"><a href="#cb244-9" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 2,928
+Columns: 13
+$ station                     &lt;chr&gt; "Paya Lebar", "Paya Lebar", "Paya Lebar", …
+$ year                        &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, …
+$ month                       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ day                         &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,…
+$ daily_rainfall_total_mm     &lt;dbl&gt; 21.6, 0.0, 1.6, 63.8, 4.4, 3.0, 59.8, 0.0,…
+$ highest_30_min_rainfall_mm  &lt;dbl&gt; 9.2, 0.0, 1.6, 13.8, 1.6, 3.0, 15.4, 0.0, …
+$ highest_60_min_rainfall_mm  &lt;dbl&gt; 13.2, 0.0, 1.6, 19.8, 3.0, 3.0, 17.4, 0.0,…
+$ highest_120_min_rainfall_mm &lt;dbl&gt; 14.6, 0.0, 1.6, 26.6, 3.2, 3.0, 21.8, 0.0,…
+$ mean_temperature_c          &lt;dbl&gt; 25.9, 27.8, 27.7, 25.0, 26.8, 28.1, 24.6, …
+$ maximum_temperature_c       &lt;dbl&gt; 28.8, 32.6, 32.6, 26.9, 30.8, 33.1, 27.3, …
+$ minimum_temperature_c       &lt;dbl&gt; 24.5, 24.2, 25.5, 23.7, 24.5, 24.9, 23.5, …
+$ mean_wind_speed_km_h        &lt;dbl&gt; 6.5, 7.0, 7.1, 7.2, 8.4, 7.6, 4.9, 8.5, 7.…
+$ max_wind_speed_km_h         &lt;dbl&gt; 24.1, 31.5, 29.6, 25.9, 35.2, 27.8, 18.5, …</code></pre>
+</div>
+</div>
+</section>
+<section id="save-to-csv-file" class="level2">
+<h2 class="anchored" data-anchor-id="save-to-csv-file">1.4 Save to csv File</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb246"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb246-1"><a href="#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(all_data, <span class="st">"data/weather.csv"</span>, <span class="at">na =</span> <span class="st">""</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="remove-individual-files" class="level2">
+<h2 class="anchored" data-anchor-id="remove-individual-files">1.5 Remove Individual Files</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb247"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb247-1"><a href="#cb247-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete all CSV files in the "data" folder</span></span>
+<span id="cb247-2"><a href="#cb247-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"^DAILYDATA_.*_2024.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[31] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[46] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[61] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[76] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
+[91] TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb249"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb249-1"><a href="#cb249-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"🗑️ All individual CSV files have been deleted.</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>🗑️ All individual CSV files have been deleted.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-preparation" class="level1">
+<h1>2 Data Preparation</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb251"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb251-1"><a href="#cb251-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sp, sf, raster, spatstat, tmap, tidyverse,</span>
+<span id="cb251-2"><a href="#cb251-2" aria-hidden="true" tabindex="-1"></a>               spNetwork, tmaptools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Installing package into 'C:/Users/brigi/AppData/Local/R/win-library/4.4'
 (as 'lib' is unspecified)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>also installing the dependency 'snakecase'</code></pre>
+<pre><code>also installing the dependencies 'spatstat.data', 'spatstat.geom'</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.4:
   cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.4/PACKAGES'</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code>package 'snakecase' successfully unpacked and MD5 sums checked
-package 'janitor' successfully unpacked and MD5 sums checked
+<pre><code>package 'spatstat.data' successfully unpacked and MD5 sums checked
+package 'spatstat.geom' successfully unpacked and MD5 sums checked
+package 'spatstat' successfully unpacked and MD5 sums checked
 
 The downloaded binary packages are in
-    C:\Users\brigi\AppData\Local\Temp\Rtmpc3B0Hw\downloaded_packages</code></pre>
+    C:\Users\brigi\AppData\Local\Temp\RtmpOiqBtP\downloaded_packages</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
-janitor installed</code></pre>
+spatstat installed</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'janitor' was built under R version 4.4.3</code></pre>
+<pre><code>Warning: package 'spatstat' was built under R version 4.4.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| eval: false</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#This is the code where I downloaded the data：</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># The base URL of the target website</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>base_url <span class="ot">&lt;-</span> <span class="st">"https://www.weather.gov.sg/files/dailydata/"</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Site corresponding file code</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Paya Lebar"</span><span class="ot">=</span><span class="st">"S06"</span>, <span class="st">"Macritchie Reservoir"</span><span class="ot">=</span><span class="st">"S07"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Lower Peirce Reservoir"</span><span class="ot">=</span><span class="st">"S08"</span>, <span class="st">"Changi"</span><span class="ot">=</span><span class="st">"S24"</span>, <span class="st">"Seletar"</span><span class="ot">=</span><span class="st">"S25"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Pasir Ris (West)"</span><span class="ot">=</span><span class="st">"S29"</span>, <span class="st">"Jurong Pier"</span><span class="ot">=</span><span class="st">"S33"</span>, <span class="st">"Ulu Pandan"</span><span class="ot">=</span><span class="st">"S35"</span>,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Mandai"</span><span class="ot">=</span><span class="st">"S40"</span>, <span class="st">"Tai Seng"</span><span class="ot">=</span><span class="st">"S43"</span>, <span class="st">"Jurong (West)"</span><span class="ot">=</span><span class="st">"S44"</span>, </span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Clementi"</span><span class="ot">=</span><span class="st">"S50"</span>, <span class="st">"Sentosa Island"</span><span class="ot">=</span><span class="st">"S60"</span>, <span class="st">"Bukit Panjang"</span><span class="ot">=</span><span class="st">"S64"</span>,</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Kranji Reservoir"</span><span class="ot">=</span><span class="st">"S66"</span>, <span class="st">"Upper Peirce Reservoir"</span><span class="ot">=</span><span class="st">"S69"</span>,</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Kent Ridge"</span><span class="ot">=</span><span class="st">"S71"</span>, <span class="st">"Queenstown"</span><span class="ot">=</span><span class="st">"S77"</span>, <span class="st">"Tanjong Katong"</span><span class="ot">=</span><span class="st">"S78"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Somerset (Road)"</span><span class="ot">=</span><span class="st">"S79"</span>, <span class="st">"Sembawang"</span><span class="ot">=</span><span class="st">"S80"</span>, <span class="st">"Punggol"</span><span class="ot">=</span><span class="st">"S81"</span>,</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Simei"</span><span class="ot">=</span><span class="st">"S84"</span>, <span class="st">"Toa Payoh"</span><span class="ot">=</span><span class="st">"S88"</span>, <span class="st">"Tuas"</span><span class="ot">=</span><span class="st">"S89"</span>, <span class="st">"Bukit Timah"</span><span class="ot">=</span><span class="st">"S90"</span>,</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Buona Vista"</span><span class="ot">=</span><span class="st">"S92"</span>, <span class="st">"Pasir Ris (Central)"</span><span class="ot">=</span><span class="st">"S94"</span>, <span class="st">"Admiralty"</span><span class="ot">=</span><span class="st">"S104"</span>, </span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Pulau Ubin"</span><span class="ot">=</span><span class="st">"S106"</span>, <span class="st">"East Coast Parkway"</span><span class="ot">=</span><span class="st">"S107"</span>,</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Marina Barrage"</span><span class="ot">=</span><span class="st">"S108"</span>, <span class="st">"Ang Mo Kio"</span><span class="ot">=</span><span class="st">"S109"</span>, <span class="st">"Newton"</span><span class="ot">=</span><span class="st">"S111"</span>,</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Lim Chu Kang"</span><span class="ot">=</span><span class="st">"S112"</span>, <span class="st">"Marine Parade"</span><span class="ot">=</span><span class="st">"S113"</span>,</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Choa Chu Kang (Central)"</span><span class="ot">=</span><span class="st">"S114"</span>, <span class="st">"Tuas South"</span><span class="ot">=</span><span class="st">"S115"</span>,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Pasir Panjang"</span><span class="ot">=</span><span class="st">"S116"</span>, <span class="st">"Jurong Island"</span><span class="ot">=</span><span class="st">"S117"</span>,</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Nicoll Highway"</span><span class="ot">=</span><span class="st">"S119"</span>, <span class="st">"Choa Chu Kang (South)"</span><span class="ot">=</span><span class="st">"S121"</span>,</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Whampoa"</span><span class="ot">=</span><span class="st">"S123"</span>)</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Define download time range (January 2019 - January 2025)</span></span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="dv">2024</span><span class="sc">:</span><span class="dv">2024</span></span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>months <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">12</span>)  <span class="co"># 01, 02, ..., 12</span></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Only data from January 2019 to January 2025 are retained</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>date_combinations <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">Year =</span> years, <span class="at">Month =</span> months, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> Month <span class="sc">&lt;</span> <span class="st">"01"</span>), <span class="co"># Exclude before January 2014</span></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(Year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> Month <span class="sc">&gt;</span> <span class="st">"12"</span>)) <span class="co"># Exclude after Dec 2024</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a directory to store data</span></span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Record failed downloads</span></span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>failed_downloads <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Station =</span> <span class="fu">character</span>(), <span class="at">Year =</span> <span class="fu">integer</span>(), <span class="at">Month =</span> <span class="fu">character</span>(), <span class="at">File_URL =</span> <span class="fu">character</span>(), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate through stations, years, and months</span></span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (station_name <span class="cf">in</span> <span class="fu">names</span>(stations)) {</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  station_code <span class="ot">&lt;-</span> stations[[station_name]]</span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(date_combinations)) {</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    year <span class="ot">&lt;-</span> date_combinations<span class="sc">$</span>Year[i]</span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    month <span class="ot">&lt;-</span> date_combinations<span class="sc">$</span>Month[i]</span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Construct the file name</span></span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    file_name <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">"DAILYDATA_"</span>, station_code, <span class="st">"_"</span>, year, month, <span class="st">".csv"</span>)</span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Construct the full download URL</span></span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>    file_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_url, file_name)</span>
-<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Local save path</span></span>
-<span id="cb8-56"><a href="#cb8-56" aria-hidden="true" tabindex="-1"></a>    file_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, file_name)</span>
-<span id="cb8-57"><a href="#cb8-57" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-58"><a href="#cb8-58" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the URL is valid</span></span>
-<span id="cb8-59"><a href="#cb8-59" aria-hidden="true" tabindex="-1"></a>    response <span class="ot">&lt;-</span> <span class="fu">HEAD</span>(file_url)</span>
-<span id="cb8-60"><a href="#cb8-60" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb8-61"><a href="#cb8-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">status_code</span>(response) <span class="sc">==</span> <span class="dv">200</span>) {</span>
-<span id="cb8-62"><a href="#cb8-62" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Download the file</span></span>
-<span id="cb8-63"><a href="#cb8-63" aria-hidden="true" tabindex="-1"></a>      <span class="fu">download.file</span>(file_url, <span class="at">destfile =</span> file_path, <span class="at">mode =</span> <span class="st">"wb"</span>)</span>
-<span id="cb8-64"><a href="#cb8-64" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"✅ Download successful:"</span>, file_name, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb8-65"><a href="#cb8-65" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
-<span id="cb8-66"><a href="#cb8-66" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"❌ Download failed:"</span>, file_name, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb8-67"><a href="#cb8-67" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb8-68"><a href="#cb8-68" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Record the failed file</span></span>
-<span id="cb8-69"><a href="#cb8-69" aria-hidden="true" tabindex="-1"></a>      failed_downloads <span class="ot">&lt;-</span> <span class="fu">rbind</span>(failed_downloads, <span class="fu">data.frame</span>(</span>
-<span id="cb8-70"><a href="#cb8-70" aria-hidden="true" tabindex="-1"></a>        <span class="at">Station =</span> station_name,</span>
-<span id="cb8-71"><a href="#cb8-71" aria-hidden="true" tabindex="-1"></a>        <span class="at">Year =</span> year,</span>
-<span id="cb8-72"><a href="#cb8-72" aria-hidden="true" tabindex="-1"></a>        <span class="at">Month =</span> month,</span>
-<span id="cb8-73"><a href="#cb8-73" aria-hidden="true" tabindex="-1"></a>        <span class="at">File_URL =</span> file_url</span>
-<span id="cb8-74"><a href="#cb8-74" aria-hidden="true" tabindex="-1"></a>      ))</span>
-<span id="cb8-75"><a href="#cb8-75" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb8-76"><a href="#cb8-76" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb8-77"><a href="#cb8-77" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>✅ Download successful: DAILYDATA_S06_202401.csv 
-✅ Download successful: DAILYDATA_S06_202402.csv 
-✅ Download successful: DAILYDATA_S06_202403.csv 
-✅ Download successful: DAILYDATA_S06_202404.csv 
-✅ Download successful: DAILYDATA_S06_202405.csv 
-✅ Download successful: DAILYDATA_S06_202406.csv 
-✅ Download successful: DAILYDATA_S06_202407.csv 
-✅ Download successful: DAILYDATA_S06_202408.csv 
-✅ Download successful: DAILYDATA_S06_202409.csv 
-✅ Download successful: DAILYDATA_S06_202410.csv 
-✅ Download successful: DAILYDATA_S06_202411.csv 
-✅ Download successful: DAILYDATA_S06_202412.csv 
-✅ Download successful: DAILYDATA_S07_202401.csv 
-✅ Download successful: DAILYDATA_S07_202402.csv 
-✅ Download successful: DAILYDATA_S07_202403.csv 
-✅ Download successful: DAILYDATA_S07_202404.csv 
-✅ Download successful: DAILYDATA_S07_202405.csv 
-✅ Download successful: DAILYDATA_S07_202406.csv 
-✅ Download successful: DAILYDATA_S07_202407.csv 
-✅ Download successful: DAILYDATA_S07_202408.csv 
-✅ Download successful: DAILYDATA_S07_202409.csv 
-✅ Download successful: DAILYDATA_S07_202410.csv 
-✅ Download successful: DAILYDATA_S07_202411.csv 
-✅ Download successful: DAILYDATA_S07_202412.csv 
-✅ Download successful: DAILYDATA_S08_202401.csv 
-✅ Download successful: DAILYDATA_S08_202402.csv 
-✅ Download successful: DAILYDATA_S08_202403.csv 
-✅ Download successful: DAILYDATA_S08_202404.csv 
-✅ Download successful: DAILYDATA_S08_202405.csv 
-✅ Download successful: DAILYDATA_S08_202406.csv 
-✅ Download successful: DAILYDATA_S08_202407.csv 
-✅ Download successful: DAILYDATA_S08_202408.csv 
-✅ Download successful: DAILYDATA_S08_202409.csv 
-✅ Download successful: DAILYDATA_S08_202410.csv 
-✅ Download successful: DAILYDATA_S08_202411.csv 
-✅ Download successful: DAILYDATA_S08_202412.csv 
-✅ Download successful: DAILYDATA_S24_202401.csv 
-✅ Download successful: DAILYDATA_S24_202402.csv 
-✅ Download successful: DAILYDATA_S24_202403.csv 
-✅ Download successful: DAILYDATA_S24_202404.csv 
-✅ Download successful: DAILYDATA_S24_202405.csv 
-✅ Download successful: DAILYDATA_S24_202406.csv 
-✅ Download successful: DAILYDATA_S24_202407.csv 
-✅ Download successful: DAILYDATA_S24_202408.csv 
-✅ Download successful: DAILYDATA_S24_202409.csv 
-✅ Download successful: DAILYDATA_S24_202410.csv 
-✅ Download successful: DAILYDATA_S24_202411.csv 
-✅ Download successful: DAILYDATA_S24_202412.csv 
-✅ Download successful: DAILYDATA_S25_202401.csv 
-✅ Download successful: DAILYDATA_S25_202402.csv 
-✅ Download successful: DAILYDATA_S25_202403.csv 
-✅ Download successful: DAILYDATA_S25_202404.csv 
-✅ Download successful: DAILYDATA_S25_202405.csv 
-✅ Download successful: DAILYDATA_S25_202406.csv 
-✅ Download successful: DAILYDATA_S25_202407.csv 
-✅ Download successful: DAILYDATA_S25_202408.csv 
-✅ Download successful: DAILYDATA_S25_202409.csv 
-✅ Download successful: DAILYDATA_S25_202410.csv 
-✅ Download successful: DAILYDATA_S25_202411.csv 
-✅ Download successful: DAILYDATA_S25_202412.csv 
-✅ Download successful: DAILYDATA_S29_202401.csv 
-✅ Download successful: DAILYDATA_S29_202402.csv 
-✅ Download successful: DAILYDATA_S29_202403.csv 
-✅ Download successful: DAILYDATA_S29_202404.csv 
-✅ Download successful: DAILYDATA_S29_202405.csv 
-✅ Download successful: DAILYDATA_S29_202406.csv 
-✅ Download successful: DAILYDATA_S29_202407.csv 
-✅ Download successful: DAILYDATA_S29_202408.csv 
-✅ Download successful: DAILYDATA_S29_202409.csv 
-✅ Download successful: DAILYDATA_S29_202410.csv 
-✅ Download successful: DAILYDATA_S29_202411.csv 
-✅ Download successful: DAILYDATA_S29_202412.csv 
-✅ Download successful: DAILYDATA_S33_202401.csv 
-✅ Download successful: DAILYDATA_S33_202402.csv 
-✅ Download successful: DAILYDATA_S33_202403.csv 
-✅ Download successful: DAILYDATA_S33_202404.csv 
-✅ Download successful: DAILYDATA_S33_202405.csv 
-✅ Download successful: DAILYDATA_S33_202406.csv 
-✅ Download successful: DAILYDATA_S33_202407.csv 
-✅ Download successful: DAILYDATA_S33_202408.csv 
-✅ Download successful: DAILYDATA_S33_202409.csv 
-✅ Download successful: DAILYDATA_S33_202410.csv 
-✅ Download successful: DAILYDATA_S33_202411.csv 
-✅ Download successful: DAILYDATA_S33_202412.csv 
-✅ Download successful: DAILYDATA_S35_202401.csv 
-✅ Download successful: DAILYDATA_S35_202402.csv 
-✅ Download successful: DAILYDATA_S35_202403.csv 
-✅ Download successful: DAILYDATA_S35_202404.csv 
-✅ Download successful: DAILYDATA_S35_202405.csv 
-✅ Download successful: DAILYDATA_S35_202406.csv 
-✅ Download successful: DAILYDATA_S35_202407.csv 
-✅ Download successful: DAILYDATA_S35_202408.csv 
-✅ Download successful: DAILYDATA_S35_202409.csv 
-✅ Download successful: DAILYDATA_S35_202410.csv 
-✅ Download successful: DAILYDATA_S35_202411.csv 
-✅ Download successful: DAILYDATA_S35_202412.csv 
-✅ Download successful: DAILYDATA_S40_202401.csv 
-✅ Download successful: DAILYDATA_S40_202402.csv 
-✅ Download successful: DAILYDATA_S40_202403.csv 
-✅ Download successful: DAILYDATA_S40_202404.csv 
-✅ Download successful: DAILYDATA_S40_202405.csv 
-✅ Download successful: DAILYDATA_S40_202406.csv 
-✅ Download successful: DAILYDATA_S40_202407.csv 
-✅ Download successful: DAILYDATA_S40_202408.csv 
-✅ Download successful: DAILYDATA_S40_202409.csv 
-✅ Download successful: DAILYDATA_S40_202410.csv 
-✅ Download successful: DAILYDATA_S40_202411.csv 
-✅ Download successful: DAILYDATA_S40_202412.csv 
-✅ Download successful: DAILYDATA_S43_202401.csv 
-✅ Download successful: DAILYDATA_S43_202402.csv 
-✅ Download successful: DAILYDATA_S43_202403.csv 
-✅ Download successful: DAILYDATA_S43_202404.csv 
-✅ Download successful: DAILYDATA_S43_202405.csv 
-✅ Download successful: DAILYDATA_S43_202406.csv 
-✅ Download successful: DAILYDATA_S43_202407.csv 
-✅ Download successful: DAILYDATA_S43_202408.csv 
-✅ Download successful: DAILYDATA_S43_202409.csv 
-✅ Download successful: DAILYDATA_S43_202410.csv 
-✅ Download successful: DAILYDATA_S43_202411.csv 
-✅ Download successful: DAILYDATA_S43_202412.csv 
-✅ Download successful: DAILYDATA_S44_202401.csv 
-✅ Download successful: DAILYDATA_S44_202402.csv 
-✅ Download successful: DAILYDATA_S44_202403.csv 
-✅ Download successful: DAILYDATA_S44_202404.csv 
-✅ Download successful: DAILYDATA_S44_202405.csv 
-✅ Download successful: DAILYDATA_S44_202406.csv 
-✅ Download successful: DAILYDATA_S44_202407.csv 
-✅ Download successful: DAILYDATA_S44_202408.csv 
-✅ Download successful: DAILYDATA_S44_202409.csv 
-✅ Download successful: DAILYDATA_S44_202410.csv 
-✅ Download successful: DAILYDATA_S44_202411.csv 
-✅ Download successful: DAILYDATA_S44_202412.csv 
-✅ Download successful: DAILYDATA_S50_202401.csv 
-✅ Download successful: DAILYDATA_S50_202402.csv 
-✅ Download successful: DAILYDATA_S50_202403.csv 
-✅ Download successful: DAILYDATA_S50_202404.csv 
-✅ Download successful: DAILYDATA_S50_202405.csv 
-✅ Download successful: DAILYDATA_S50_202406.csv 
-✅ Download successful: DAILYDATA_S50_202407.csv 
-✅ Download successful: DAILYDATA_S50_202408.csv 
-✅ Download successful: DAILYDATA_S50_202409.csv 
-✅ Download successful: DAILYDATA_S50_202410.csv 
-✅ Download successful: DAILYDATA_S50_202411.csv 
-✅ Download successful: DAILYDATA_S50_202412.csv 
-✅ Download successful: DAILYDATA_S60_202401.csv 
-✅ Download successful: DAILYDATA_S60_202402.csv 
-✅ Download successful: DAILYDATA_S60_202403.csv 
-✅ Download successful: DAILYDATA_S60_202404.csv 
-✅ Download successful: DAILYDATA_S60_202405.csv 
-✅ Download successful: DAILYDATA_S60_202406.csv 
-✅ Download successful: DAILYDATA_S60_202407.csv 
-✅ Download successful: DAILYDATA_S60_202408.csv 
-✅ Download successful: DAILYDATA_S60_202409.csv 
-✅ Download successful: DAILYDATA_S60_202410.csv 
-✅ Download successful: DAILYDATA_S60_202411.csv 
-✅ Download successful: DAILYDATA_S60_202412.csv 
-✅ Download successful: DAILYDATA_S64_202401.csv 
-✅ Download successful: DAILYDATA_S64_202402.csv 
-✅ Download successful: DAILYDATA_S64_202403.csv 
-✅ Download successful: DAILYDATA_S64_202404.csv 
-✅ Download successful: DAILYDATA_S64_202405.csv 
-✅ Download successful: DAILYDATA_S64_202406.csv 
-✅ Download successful: DAILYDATA_S64_202407.csv 
-✅ Download successful: DAILYDATA_S64_202408.csv 
-✅ Download successful: DAILYDATA_S64_202409.csv 
-✅ Download successful: DAILYDATA_S64_202410.csv 
-✅ Download successful: DAILYDATA_S64_202411.csv 
-✅ Download successful: DAILYDATA_S64_202412.csv 
-✅ Download successful: DAILYDATA_S66_202401.csv 
-✅ Download successful: DAILYDATA_S66_202402.csv 
-✅ Download successful: DAILYDATA_S66_202403.csv 
-✅ Download successful: DAILYDATA_S66_202404.csv 
-✅ Download successful: DAILYDATA_S66_202405.csv 
-✅ Download successful: DAILYDATA_S66_202406.csv 
-✅ Download successful: DAILYDATA_S66_202407.csv 
-✅ Download successful: DAILYDATA_S66_202408.csv 
-✅ Download successful: DAILYDATA_S66_202409.csv 
-✅ Download successful: DAILYDATA_S66_202410.csv 
-✅ Download successful: DAILYDATA_S66_202411.csv 
-✅ Download successful: DAILYDATA_S66_202412.csv 
-✅ Download successful: DAILYDATA_S69_202401.csv 
-✅ Download successful: DAILYDATA_S69_202402.csv 
-✅ Download successful: DAILYDATA_S69_202403.csv 
-✅ Download successful: DAILYDATA_S69_202404.csv 
-✅ Download successful: DAILYDATA_S69_202405.csv 
-✅ Download successful: DAILYDATA_S69_202406.csv 
-✅ Download successful: DAILYDATA_S69_202407.csv 
-✅ Download successful: DAILYDATA_S69_202408.csv 
-✅ Download successful: DAILYDATA_S69_202409.csv 
-✅ Download successful: DAILYDATA_S69_202410.csv 
-✅ Download successful: DAILYDATA_S69_202411.csv 
-✅ Download successful: DAILYDATA_S69_202412.csv 
-✅ Download successful: DAILYDATA_S71_202401.csv 
-✅ Download successful: DAILYDATA_S71_202402.csv 
-✅ Download successful: DAILYDATA_S71_202403.csv 
-✅ Download successful: DAILYDATA_S71_202404.csv 
-✅ Download successful: DAILYDATA_S71_202405.csv 
-✅ Download successful: DAILYDATA_S71_202406.csv 
-✅ Download successful: DAILYDATA_S71_202407.csv 
-✅ Download successful: DAILYDATA_S71_202408.csv 
-✅ Download successful: DAILYDATA_S71_202409.csv 
-✅ Download successful: DAILYDATA_S71_202410.csv 
-✅ Download successful: DAILYDATA_S71_202411.csv 
-✅ Download successful: DAILYDATA_S71_202412.csv 
-✅ Download successful: DAILYDATA_S77_202401.csv 
-✅ Download successful: DAILYDATA_S77_202402.csv 
-✅ Download successful: DAILYDATA_S77_202403.csv 
-✅ Download successful: DAILYDATA_S77_202404.csv 
-✅ Download successful: DAILYDATA_S77_202405.csv 
-✅ Download successful: DAILYDATA_S77_202406.csv 
-✅ Download successful: DAILYDATA_S77_202407.csv 
-✅ Download successful: DAILYDATA_S77_202408.csv 
-✅ Download successful: DAILYDATA_S77_202409.csv 
-✅ Download successful: DAILYDATA_S77_202410.csv 
-✅ Download successful: DAILYDATA_S77_202411.csv 
-✅ Download successful: DAILYDATA_S77_202412.csv 
-✅ Download successful: DAILYDATA_S78_202401.csv 
-✅ Download successful: DAILYDATA_S78_202402.csv 
-✅ Download successful: DAILYDATA_S78_202403.csv 
-✅ Download successful: DAILYDATA_S78_202404.csv 
-✅ Download successful: DAILYDATA_S78_202405.csv 
-✅ Download successful: DAILYDATA_S78_202406.csv 
-✅ Download successful: DAILYDATA_S78_202407.csv 
-✅ Download successful: DAILYDATA_S78_202408.csv 
-✅ Download successful: DAILYDATA_S78_202409.csv 
-✅ Download successful: DAILYDATA_S78_202410.csv 
-✅ Download successful: DAILYDATA_S78_202411.csv 
-✅ Download successful: DAILYDATA_S78_202412.csv 
-✅ Download successful: DAILYDATA_S79_202401.csv 
-✅ Download successful: DAILYDATA_S79_202402.csv 
-✅ Download successful: DAILYDATA_S79_202403.csv 
-✅ Download successful: DAILYDATA_S79_202404.csv 
-✅ Download successful: DAILYDATA_S79_202405.csv 
-✅ Download successful: DAILYDATA_S79_202406.csv 
-✅ Download successful: DAILYDATA_S79_202407.csv 
-✅ Download successful: DAILYDATA_S79_202408.csv 
-✅ Download successful: DAILYDATA_S79_202409.csv 
-✅ Download successful: DAILYDATA_S79_202410.csv 
-✅ Download successful: DAILYDATA_S79_202411.csv 
-✅ Download successful: DAILYDATA_S79_202412.csv 
-✅ Download successful: DAILYDATA_S80_202401.csv 
-✅ Download successful: DAILYDATA_S80_202402.csv 
-✅ Download successful: DAILYDATA_S80_202403.csv 
-✅ Download successful: DAILYDATA_S80_202404.csv 
-✅ Download successful: DAILYDATA_S80_202405.csv 
-✅ Download successful: DAILYDATA_S80_202406.csv 
-✅ Download successful: DAILYDATA_S80_202407.csv 
-✅ Download successful: DAILYDATA_S80_202408.csv 
-✅ Download successful: DAILYDATA_S80_202409.csv 
-✅ Download successful: DAILYDATA_S80_202410.csv 
-✅ Download successful: DAILYDATA_S80_202411.csv 
-✅ Download successful: DAILYDATA_S80_202412.csv 
-✅ Download successful: DAILYDATA_S81_202401.csv 
-✅ Download successful: DAILYDATA_S81_202402.csv 
-✅ Download successful: DAILYDATA_S81_202403.csv 
-✅ Download successful: DAILYDATA_S81_202404.csv 
-✅ Download successful: DAILYDATA_S81_202405.csv 
-✅ Download successful: DAILYDATA_S81_202406.csv 
-✅ Download successful: DAILYDATA_S81_202407.csv 
-✅ Download successful: DAILYDATA_S81_202408.csv 
-✅ Download successful: DAILYDATA_S81_202409.csv 
-✅ Download successful: DAILYDATA_S81_202410.csv 
-✅ Download successful: DAILYDATA_S81_202411.csv 
-✅ Download successful: DAILYDATA_S81_202412.csv 
-✅ Download successful: DAILYDATA_S84_202401.csv 
-✅ Download successful: DAILYDATA_S84_202402.csv 
-✅ Download successful: DAILYDATA_S84_202403.csv 
-✅ Download successful: DAILYDATA_S84_202404.csv 
-✅ Download successful: DAILYDATA_S84_202405.csv 
-✅ Download successful: DAILYDATA_S84_202406.csv 
-✅ Download successful: DAILYDATA_S84_202407.csv 
-✅ Download successful: DAILYDATA_S84_202408.csv 
-✅ Download successful: DAILYDATA_S84_202409.csv 
-✅ Download successful: DAILYDATA_S84_202410.csv 
-✅ Download successful: DAILYDATA_S84_202411.csv 
-✅ Download successful: DAILYDATA_S84_202412.csv 
-✅ Download successful: DAILYDATA_S88_202401.csv 
-✅ Download successful: DAILYDATA_S88_202402.csv 
-✅ Download successful: DAILYDATA_S88_202403.csv 
-✅ Download successful: DAILYDATA_S88_202404.csv 
-✅ Download successful: DAILYDATA_S88_202405.csv 
-✅ Download successful: DAILYDATA_S88_202406.csv 
-✅ Download successful: DAILYDATA_S88_202407.csv 
-✅ Download successful: DAILYDATA_S88_202408.csv 
-✅ Download successful: DAILYDATA_S88_202409.csv 
-✅ Download successful: DAILYDATA_S88_202410.csv 
-✅ Download successful: DAILYDATA_S88_202411.csv 
-✅ Download successful: DAILYDATA_S88_202412.csv 
-✅ Download successful: DAILYDATA_S89_202401.csv 
-✅ Download successful: DAILYDATA_S89_202402.csv 
-✅ Download successful: DAILYDATA_S89_202403.csv 
-✅ Download successful: DAILYDATA_S89_202404.csv 
-✅ Download successful: DAILYDATA_S89_202405.csv 
-✅ Download successful: DAILYDATA_S89_202406.csv 
-✅ Download successful: DAILYDATA_S89_202407.csv 
-✅ Download successful: DAILYDATA_S89_202408.csv 
-✅ Download successful: DAILYDATA_S89_202409.csv 
-✅ Download successful: DAILYDATA_S89_202410.csv 
-✅ Download successful: DAILYDATA_S89_202411.csv 
-✅ Download successful: DAILYDATA_S89_202412.csv 
-✅ Download successful: DAILYDATA_S90_202401.csv 
-✅ Download successful: DAILYDATA_S90_202402.csv 
-✅ Download successful: DAILYDATA_S90_202403.csv 
-✅ Download successful: DAILYDATA_S90_202404.csv 
-✅ Download successful: DAILYDATA_S90_202405.csv 
-✅ Download successful: DAILYDATA_S90_202406.csv 
-✅ Download successful: DAILYDATA_S90_202407.csv 
-✅ Download successful: DAILYDATA_S90_202408.csv 
-✅ Download successful: DAILYDATA_S90_202409.csv 
-✅ Download successful: DAILYDATA_S90_202410.csv 
-✅ Download successful: DAILYDATA_S90_202411.csv 
-✅ Download successful: DAILYDATA_S90_202412.csv 
-✅ Download successful: DAILYDATA_S92_202401.csv 
-✅ Download successful: DAILYDATA_S92_202402.csv 
-✅ Download successful: DAILYDATA_S92_202403.csv 
-✅ Download successful: DAILYDATA_S92_202404.csv 
-✅ Download successful: DAILYDATA_S92_202405.csv 
-✅ Download successful: DAILYDATA_S92_202406.csv 
-✅ Download successful: DAILYDATA_S92_202407.csv 
-✅ Download successful: DAILYDATA_S92_202408.csv 
-✅ Download successful: DAILYDATA_S92_202409.csv 
-✅ Download successful: DAILYDATA_S92_202410.csv 
-✅ Download successful: DAILYDATA_S92_202411.csv 
-✅ Download successful: DAILYDATA_S92_202412.csv 
-✅ Download successful: DAILYDATA_S94_202401.csv 
-✅ Download successful: DAILYDATA_S94_202402.csv 
-✅ Download successful: DAILYDATA_S94_202403.csv 
-✅ Download successful: DAILYDATA_S94_202404.csv 
-✅ Download successful: DAILYDATA_S94_202405.csv 
-✅ Download successful: DAILYDATA_S94_202406.csv 
-✅ Download successful: DAILYDATA_S94_202407.csv 
-✅ Download successful: DAILYDATA_S94_202408.csv 
-✅ Download successful: DAILYDATA_S94_202409.csv 
-✅ Download successful: DAILYDATA_S94_202410.csv 
-✅ Download successful: DAILYDATA_S94_202411.csv 
-✅ Download successful: DAILYDATA_S94_202412.csv 
-✅ Download successful: DAILYDATA_S104_202401.csv 
-✅ Download successful: DAILYDATA_S104_202402.csv 
-✅ Download successful: DAILYDATA_S104_202403.csv 
-✅ Download successful: DAILYDATA_S104_202404.csv 
-✅ Download successful: DAILYDATA_S104_202405.csv 
-✅ Download successful: DAILYDATA_S104_202406.csv 
-✅ Download successful: DAILYDATA_S104_202407.csv 
-✅ Download successful: DAILYDATA_S104_202408.csv 
-✅ Download successful: DAILYDATA_S104_202409.csv 
-✅ Download successful: DAILYDATA_S104_202410.csv 
-✅ Download successful: DAILYDATA_S104_202411.csv 
-✅ Download successful: DAILYDATA_S104_202412.csv 
-✅ Download successful: DAILYDATA_S106_202401.csv 
-✅ Download successful: DAILYDATA_S106_202402.csv 
-✅ Download successful: DAILYDATA_S106_202403.csv 
-✅ Download successful: DAILYDATA_S106_202404.csv 
-✅ Download successful: DAILYDATA_S106_202405.csv 
-✅ Download successful: DAILYDATA_S106_202406.csv 
-✅ Download successful: DAILYDATA_S106_202407.csv 
-✅ Download successful: DAILYDATA_S106_202408.csv 
-✅ Download successful: DAILYDATA_S106_202409.csv 
-✅ Download successful: DAILYDATA_S106_202410.csv 
-✅ Download successful: DAILYDATA_S106_202411.csv 
-✅ Download successful: DAILYDATA_S106_202412.csv 
-✅ Download successful: DAILYDATA_S107_202401.csv 
-✅ Download successful: DAILYDATA_S107_202402.csv 
-✅ Download successful: DAILYDATA_S107_202403.csv 
-✅ Download successful: DAILYDATA_S107_202404.csv 
-✅ Download successful: DAILYDATA_S107_202405.csv 
-✅ Download successful: DAILYDATA_S107_202406.csv 
-✅ Download successful: DAILYDATA_S107_202407.csv 
-✅ Download successful: DAILYDATA_S107_202408.csv 
-✅ Download successful: DAILYDATA_S107_202409.csv 
-✅ Download successful: DAILYDATA_S107_202410.csv 
-✅ Download successful: DAILYDATA_S107_202411.csv 
-✅ Download successful: DAILYDATA_S107_202412.csv 
-✅ Download successful: DAILYDATA_S108_202401.csv 
-✅ Download successful: DAILYDATA_S108_202402.csv 
-✅ Download successful: DAILYDATA_S108_202403.csv 
-✅ Download successful: DAILYDATA_S108_202404.csv 
-✅ Download successful: DAILYDATA_S108_202405.csv 
-✅ Download successful: DAILYDATA_S108_202406.csv 
-✅ Download successful: DAILYDATA_S108_202407.csv 
-✅ Download successful: DAILYDATA_S108_202408.csv 
-✅ Download successful: DAILYDATA_S108_202409.csv 
-✅ Download successful: DAILYDATA_S108_202410.csv 
-✅ Download successful: DAILYDATA_S108_202411.csv 
-✅ Download successful: DAILYDATA_S108_202412.csv 
-✅ Download successful: DAILYDATA_S109_202401.csv 
-✅ Download successful: DAILYDATA_S109_202402.csv 
-✅ Download successful: DAILYDATA_S109_202403.csv 
-✅ Download successful: DAILYDATA_S109_202404.csv 
-✅ Download successful: DAILYDATA_S109_202405.csv 
-✅ Download successful: DAILYDATA_S109_202406.csv 
-✅ Download successful: DAILYDATA_S109_202407.csv 
-✅ Download successful: DAILYDATA_S109_202408.csv 
-✅ Download successful: DAILYDATA_S109_202409.csv 
-✅ Download successful: DAILYDATA_S109_202410.csv 
-✅ Download successful: DAILYDATA_S109_202411.csv 
-✅ Download successful: DAILYDATA_S109_202412.csv 
-✅ Download successful: DAILYDATA_S111_202401.csv 
-✅ Download successful: DAILYDATA_S111_202402.csv 
-✅ Download successful: DAILYDATA_S111_202403.csv 
-✅ Download successful: DAILYDATA_S111_202404.csv 
-✅ Download successful: DAILYDATA_S111_202405.csv 
-✅ Download successful: DAILYDATA_S111_202406.csv 
-✅ Download successful: DAILYDATA_S111_202407.csv 
-✅ Download successful: DAILYDATA_S111_202408.csv 
-✅ Download successful: DAILYDATA_S111_202409.csv 
-✅ Download successful: DAILYDATA_S111_202410.csv 
-✅ Download successful: DAILYDATA_S111_202411.csv 
-✅ Download successful: DAILYDATA_S111_202412.csv 
-✅ Download successful: DAILYDATA_S112_202401.csv 
-✅ Download successful: DAILYDATA_S112_202402.csv 
-✅ Download successful: DAILYDATA_S112_202403.csv 
-✅ Download successful: DAILYDATA_S112_202404.csv 
-✅ Download successful: DAILYDATA_S112_202405.csv 
-✅ Download successful: DAILYDATA_S112_202406.csv 
-✅ Download successful: DAILYDATA_S112_202407.csv 
-✅ Download successful: DAILYDATA_S112_202408.csv 
-✅ Download successful: DAILYDATA_S112_202409.csv 
-✅ Download successful: DAILYDATA_S112_202410.csv 
-✅ Download successful: DAILYDATA_S112_202411.csv 
-✅ Download successful: DAILYDATA_S112_202412.csv 
-✅ Download successful: DAILYDATA_S113_202401.csv 
-✅ Download successful: DAILYDATA_S113_202402.csv 
-✅ Download successful: DAILYDATA_S113_202403.csv 
-✅ Download successful: DAILYDATA_S113_202404.csv 
-✅ Download successful: DAILYDATA_S113_202405.csv 
-✅ Download successful: DAILYDATA_S113_202406.csv 
-✅ Download successful: DAILYDATA_S113_202407.csv 
-✅ Download successful: DAILYDATA_S113_202408.csv 
-✅ Download successful: DAILYDATA_S113_202409.csv 
-✅ Download successful: DAILYDATA_S113_202410.csv 
-✅ Download successful: DAILYDATA_S113_202411.csv 
-✅ Download successful: DAILYDATA_S113_202412.csv 
-✅ Download successful: DAILYDATA_S114_202401.csv 
-✅ Download successful: DAILYDATA_S114_202402.csv 
-✅ Download successful: DAILYDATA_S114_202403.csv 
-✅ Download successful: DAILYDATA_S114_202404.csv 
-✅ Download successful: DAILYDATA_S114_202405.csv 
-✅ Download successful: DAILYDATA_S114_202406.csv 
-✅ Download successful: DAILYDATA_S114_202407.csv 
-✅ Download successful: DAILYDATA_S114_202408.csv 
-✅ Download successful: DAILYDATA_S114_202409.csv 
-✅ Download successful: DAILYDATA_S114_202410.csv 
-✅ Download successful: DAILYDATA_S114_202411.csv 
-✅ Download successful: DAILYDATA_S114_202412.csv 
-✅ Download successful: DAILYDATA_S115_202401.csv 
-✅ Download successful: DAILYDATA_S115_202402.csv 
-✅ Download successful: DAILYDATA_S115_202403.csv 
-✅ Download successful: DAILYDATA_S115_202404.csv 
-✅ Download successful: DAILYDATA_S115_202405.csv 
-✅ Download successful: DAILYDATA_S115_202406.csv 
-✅ Download successful: DAILYDATA_S115_202407.csv 
-✅ Download successful: DAILYDATA_S115_202408.csv 
-✅ Download successful: DAILYDATA_S115_202409.csv 
-✅ Download successful: DAILYDATA_S115_202410.csv 
-✅ Download successful: DAILYDATA_S115_202411.csv 
-✅ Download successful: DAILYDATA_S115_202412.csv 
-✅ Download successful: DAILYDATA_S116_202401.csv 
-✅ Download successful: DAILYDATA_S116_202402.csv 
-✅ Download successful: DAILYDATA_S116_202403.csv 
-✅ Download successful: DAILYDATA_S116_202404.csv 
-✅ Download successful: DAILYDATA_S116_202405.csv 
-✅ Download successful: DAILYDATA_S116_202406.csv 
-✅ Download successful: DAILYDATA_S116_202407.csv 
-✅ Download successful: DAILYDATA_S116_202408.csv 
-✅ Download successful: DAILYDATA_S116_202409.csv 
-✅ Download successful: DAILYDATA_S116_202410.csv 
-✅ Download successful: DAILYDATA_S116_202411.csv 
-✅ Download successful: DAILYDATA_S116_202412.csv 
-✅ Download successful: DAILYDATA_S117_202401.csv 
-✅ Download successful: DAILYDATA_S117_202402.csv 
-✅ Download successful: DAILYDATA_S117_202403.csv 
-✅ Download successful: DAILYDATA_S117_202404.csv 
-✅ Download successful: DAILYDATA_S117_202405.csv 
-✅ Download successful: DAILYDATA_S117_202406.csv 
-✅ Download successful: DAILYDATA_S117_202407.csv 
-✅ Download successful: DAILYDATA_S117_202408.csv 
-✅ Download successful: DAILYDATA_S117_202409.csv 
-✅ Download successful: DAILYDATA_S117_202410.csv 
-✅ Download successful: DAILYDATA_S117_202411.csv 
-✅ Download successful: DAILYDATA_S117_202412.csv 
-✅ Download successful: DAILYDATA_S119_202401.csv 
-✅ Download successful: DAILYDATA_S119_202402.csv 
-✅ Download successful: DAILYDATA_S119_202403.csv 
-✅ Download successful: DAILYDATA_S119_202404.csv 
-✅ Download successful: DAILYDATA_S119_202405.csv 
-✅ Download successful: DAILYDATA_S119_202406.csv 
-✅ Download successful: DAILYDATA_S119_202407.csv 
-✅ Download successful: DAILYDATA_S119_202408.csv 
-✅ Download successful: DAILYDATA_S119_202409.csv 
-✅ Download successful: DAILYDATA_S119_202410.csv 
-✅ Download successful: DAILYDATA_S119_202411.csv 
-✅ Download successful: DAILYDATA_S119_202412.csv 
-✅ Download successful: DAILYDATA_S121_202401.csv 
-✅ Download successful: DAILYDATA_S121_202402.csv 
-✅ Download successful: DAILYDATA_S121_202403.csv 
-✅ Download successful: DAILYDATA_S121_202404.csv 
-✅ Download successful: DAILYDATA_S121_202405.csv 
-✅ Download successful: DAILYDATA_S121_202406.csv 
-✅ Download successful: DAILYDATA_S121_202407.csv 
-✅ Download successful: DAILYDATA_S121_202408.csv 
-✅ Download successful: DAILYDATA_S121_202409.csv 
-✅ Download successful: DAILYDATA_S121_202410.csv 
-✅ Download successful: DAILYDATA_S121_202411.csv 
-✅ Download successful: DAILYDATA_S121_202412.csv 
-✅ Download successful: DAILYDATA_S123_202401.csv 
-✅ Download successful: DAILYDATA_S123_202402.csv 
-✅ Download successful: DAILYDATA_S123_202403.csv 
-✅ Download successful: DAILYDATA_S123_202404.csv 
-✅ Download successful: DAILYDATA_S123_202405.csv 
-✅ Download successful: DAILYDATA_S123_202406.csv 
-✅ Download successful: DAILYDATA_S123_202407.csv 
-✅ Download successful: DAILYDATA_S123_202408.csv 
-✅ Download successful: DAILYDATA_S123_202409.csv 
-✅ Download successful: DAILYDATA_S123_202410.csv 
-✅ Download successful: DAILYDATA_S123_202411.csv 
-✅ Download successful: DAILYDATA_S123_202412.csv </code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.data' was built under R version 4.4.3</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save the failed download log</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">nrow</span>(failed_downloads) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write.csv</span>(failed_downloads, <span class="st">"data/failed_downloads_log.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"⚠️ The failed download files have been recorded: data/failed_downloads_log.csv</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"🎉 All data downloaded successfully!</span><span class="sc">\n</span><span class="st">"</span>)</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>🎉 All data downloaded successfully!</code></pre>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.univar' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.geom' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.random' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.explore' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.model' was built under R version 4.4.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'spatstat.linnet' was built under R version 4.4.3</code></pre>
 </div>
 </div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

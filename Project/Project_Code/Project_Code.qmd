@@ -1,7 +1,7 @@
 ---
 title: "Project_Code"
 author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
-date: "March 20, 2025"
+date: "March 19, 2025"
 date-modified: "last-modified"
 execute: 
   eval: true
@@ -10,42 +10,39 @@ execute:
   freeze: true
 ---
 
+# 1 Data Extraction
+
+## 1.1 Install and Load R Packages
+
 ```{r}
 pacman::p_load(rvest,dplyr,stringr,purrr,
-               readr,httr,tidyr,fs,janitor,tidyverse,knitr)
+               readr,httr,tidyr,fs,janitor,
+               tidyverse,knitr)
+```
 
-#| eval: false
-#| include: false
+
+## 1.2 Download data
+
+```{r, eval=FALSE}
 #This is the code where I downloaded the data：
-# The base URL of the target website
 base_url <- "https://www.weather.gov.sg/files/dailydata/"
 
 # Site corresponding file code
-stations <- c("Paya Lebar"="S06", "Macritchie Reservoir"="S07",
-              "Lower Peirce Reservoir"="S08", "Changi"="S24", "Seletar"="S25",
-              "Pasir Ris (West)"="S29", "Jurong Pier"="S33", "Ulu Pandan"="S35",
-              "Mandai"="S40", "Tai Seng"="S43", "Jurong (West)"="S44", 
-              "Clementi"="S50", "Sentosa Island"="S60", "Bukit Panjang"="S64",
-              "Kranji Reservoir"="S66", "Upper Peirce Reservoir"="S69",
-              "Kent Ridge"="S71", "Queenstown"="S77", "Tanjong Katong"="S78",
-              "Somerset (Road)"="S79", "Sembawang"="S80", "Punggol"="S81",
-              "Simei"="S84", "Toa Payoh"="S88", "Tuas"="S89", "Bukit Timah"="S90",
-              "Buona Vista"="S92", "Pasir Ris (Central)"="S94", "Admiralty"="S104", 
-              "Pulau Ubin"="S106", "East Coast Parkway"="S107",
-              "Marina Barrage"="S108", "Ang Mo Kio"="S109", "Newton"="S111",
-              "Lim Chu Kang"="S112", "Marine Parade"="S113",
-              "Choa Chu Kang (Central)"="S114", "Tuas South"="S115",
-              "Pasir Panjang"="S116", "Jurong Island"="S117",
-              "Nicoll Highway"="S119", "Choa Chu Kang (South)"="S121",
-              "Whampoa"="S123")
+stations <- c("Changi"="S24", "Ang Mo Kio"="S109", "Pulau Ubin"="S106", 
+              "East Coast Parkway"="S107", "Seletar"="S25",
+              "Clementi"="S50", "Jurong (West)"="S44", "Paya Lebar"="S06",
+              "Newton"="S111", "Pasir Panjang"="S116", "Tai Seng"="S43",
+              "Admiralty" = "S104", "Sembawang" = "S80", "Sentosa Island" = "S60",
+              "Jurong Island" = "S117", "Choa Chu Kang (South)"="S121",
+              "Tuas South"="S115")
 
-# Define download time range (January 2019 - January 2025)
+# Define download time range
 years <- 2024:2024
 months <- sprintf("%02d", 1:12)  # 01, 02, ..., 12
 
-# Only data from January 2019 to January 2025 are retained
+# Only data from January 2024 to December 2024 are retained
 date_combinations <- expand.grid(Year = years, Month = months, stringsAsFactors = FALSE) %>%
-  filter(!(Year == 2024 & Month < "01"), # Exclude before January 2014
+  filter(!(Year == 2024 & Month < "01"), # Exclude before Jan 2024
          !(Year == 2024 & Month > "12")) # Exclude after Dec 2024
 
 # Create a directory to store data
@@ -99,4 +96,59 @@ if (nrow(failed_downloads) > 0) {
 } else {
   cat("🎉 All data downloaded successfully!\n")
 }
+```
+
+## 1.3 Merge data
+
+```{r}
+library(tidyverse)
+library(janitor)
+
+# Get all CSV files from the "data" folder that contain "DAILYDATA_" and "2024" in their names
+files <- list.files("data", pattern = "^DAILYDATA_.*_2024.*\\.csv$", full.names = TRUE)
+
+# Define a safe reading function to ensure all columns are initially read as characters
+safe_read <- safely(~ read_csv(
+  .x,
+  col_types = cols(.default = "c"),  # Read all columns as character to prevent merging errors
+  locale = locale(encoding = "UTF-8")  # Ensure UTF-8 encoding
+) %>%
+  clean_names())  # Standardize column names
+
+# Read all files
+results <- map(files, safe_read)
+
+# Filter out successful reads and combine data
+all_data <- results %>%
+  keep(~ is.null(.x$error)) %>%  # Keep only successfully read files
+  map_dfr("result") %>%  # Combine them into a single dataframe
+  mutate(across(where(is.character) & !matches("station"), ~ na_if(., "-"))) %>%  # Convert "-" to NA (except for "station" column)
+  mutate(across(where(is.character) & !matches("station"), as.numeric))  # Convert character columns back to numeric (except "station")
+
+# Check the merged data structure
+glimpse(all_data)
+
+
+```
+
+## 1.4 Save to csv File
+
+```{r}
+write_csv(all_data, "data/weather.csv", na = "", col_names = TRUE)
+```
+
+## 1.5 Remove Individual Files
+
+```{r}
+# Delete all CSV files in the "data" folder
+file.remove(list.files("data", pattern = "^DAILYDATA_.*_2024.*\\.csv$", full.names = TRUE))
+
+cat("🗑️ All individual CSV files have been deleted.\n")
+```
+
+# 2 Data Preparation
+
+```{r}
+pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
+               spNetwork, tmaptools)
 ```
