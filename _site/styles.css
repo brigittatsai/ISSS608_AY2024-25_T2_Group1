@@ -1,1 +1,48 @@
 /* css styles */
+body {
+    background-color: #e3f2fd; /* Light Blue */
+    color: #333;
+}
+
+.sidebar {
+    background-color: #bbdefb !important; /* Softer Blue */
+}
+
+.navbar {
+    background-color: #64b5f6 !important; /* Brighter Blue */
+    color: white !important;
+}
+
+h1, h2, h3 {
+    color: #1976d2; /* Deep Blue */
+}
+
+@keyframes rain {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+.rain {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 15px;
+  background: rgba(255, 255, 255, 0.6);
+  animation: rain linear infinite;
+}
+
+@keyframes rainMove {
+  from { transform: translateX(-50vw); }
+  to { transform: translateX(50vw); }
+}
+
+.rain:nth-child(odd) { animation-duration: 1.2s; }
+.rain:nth-child(even) { animation-duration: 1.5s; }
+
+.rain-container {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
