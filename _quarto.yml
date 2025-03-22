@@ -3,22 +3,21 @@ project:
   
 website:
   title: "Visual Analytics for Singapore's Weather"
-  sidebar:
-    style: "docked" 
-    contents:
-      - href: "Project/Project_Proposal/Project_Proposal.html"
-        text: "Home"
+  navbar:
+    left:
+    - text: "Proposal"
+      href: "Project/Project_Proposal/Project_Proposal.html"
         
-      - href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
-        text: "Shiny App"
+    - text: "Shiny App"
+      href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
         
-      - href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
-        text: "Meeting Minutes"
+    - text: "Meeting Minutes"
+      menu:
+      - text: "Meeting Minutes 1"
+        href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
       
-      - href: "Project/Project_Code/Project_Code.html"
-        text: "Project Code"
-        
-
+      - text: "Project Code"
+        href: "Project/Project_Code/Project_Code.html"
 
     right: 
       - href: index.qmd
@@ -26,9 +25,7 @@ website:
       - about.qmd
 format:
   html:
-    include-after-body: _footer.html
-    theme: flatly
+    theme: sandstone
     css: styles.css
     toc: true
-    
 editor: visual
