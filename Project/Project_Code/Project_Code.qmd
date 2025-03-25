@@ -45,7 +45,7 @@ date_combinations <- expand.grid(Year = years, Month = months, stringsAsFactors 
          !(Year == 2024 & Month > "12")) # Exclude after Dec 2024
 
 # Create a directory to store data
-dir.create("data", showWarnings = FALSE)
+dir.create("data/aspatial", showWarnings = FALSE)
 
 # Record failed downloads
 failed_downloads <- data.frame(Station = character(), Year = integer(), Month = character(), File_URL = character(), stringsAsFactors = FALSE)
@@ -65,7 +65,7 @@ for (station_name in names(stations)) {
     file_url <- paste0(base_url, file_name)
 
     # Local save path
-    file_path <- file.path("data", file_name)
+    file_path <- file.path("data/aspatial", file_name)
     
     # Check if the URL is valid
     response <- HEAD(file_url)
@@ -99,12 +99,12 @@ if (nrow(failed_downloads) > 0) {
 
 ## 1.3 Merge data
 
-```{r}
+```{r, eval=FALSE}
 library(tidyverse)
 library(janitor)
 
 # Get all CSV files from the "data" folder that contain "DAILYDATA_" and "2024" in their names
-files <- list.files("data", pattern = "^DAILYDATA_.*_2024.*\\.csv$", full.names = TRUE)
+files <- list.files("data/aspatial", pattern = "^DAILYDATA_.*_2024.*\\.csv$", full.names = TRUE)
 
 # Define a safe reading function to ensure all columns are initially read as characters
 safe_read <- safely(~ read_csv(
@@ -132,15 +132,15 @@ glimpse(all_data)
 
 ## 1.4 Save to csv File
 
-```{r}
-write_csv(all_data, "data/weather.csv", na = "", col_names = TRUE)
+```{r, eval=FALSE}
+write_csv(all_data, "data/aspatial/weather.csv", na = "", col_names = TRUE)
 ```
 
 ## 1.5 Remove Individual Files
 
-```{r}
+```{r, eval=FALSE}
 # Delete all CSV files in the "data" folder
-file.remove(list.files("data", pattern = "^DAILYDATA_.*_2024.*\\.csv$", full.names = TRUE))
+file.remove(list.files("data/aspatial", pattern = "^DAILYDATA_.*_2024.*\\.csv$", full.names = TRUE))
 
 cat("🗑️ All individual CSV files have been deleted.\n")
 ```
@@ -150,4 +150,114 @@ cat("🗑️ All individual CSV files have been deleted.\n")
 ```{r}
 pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
                spNetwork, tmaptools)
+```
+
+## 2.1 Import Aspatial Data
+
+```{r}
+weather <- read_csv("data/aspatial/weather.csv")
+```
+
+## 2.2 Import Geospatial Data
+
+```{r}
+mpsz <- st_read(dsn = "data/geospatial", 
+                layer = "MP14_SUBZONE_WEB_PL")
+```
+
+# 3 Data Preparation
+
+## 3.1 Match Station Names
+
+```{r}
+sort(unique(weather$station))
+```
+
+```{r}
+sort(unique(mpsz$SUBZONE_N))
+```
+
+```{r}
+mpsz <- mpsz %>%
+  mutate(SUBZONE_N = case_when(
+    SUBZONE_N == "ADMIRALTY" ~ "Admiralty",
+    SUBZONE_N == "ANG MO KIO TOWN CENTRE" ~ "Ang Mo Kio",
+    SUBZONE_N %in% c("CHANGI AIRPORT", "CHANGI BAY", 
+                     "CHANGI POINT", "CHANGI WEST") ~ "Changi",
+    SUBZONE_N == "CHOA CHU KANG CENTRAL" ~ "Choa Chu Kang (South)",
+    SUBZONE_N == "CLEMENTI CENTRAL" ~ "Clementi",
+    SUBZONE_N == "EAST COAST" ~ "East Coast Parkway",
+    SUBZONE_N == "JURONG WEST CENTRAL" ~ "Jurong (West)",
+    SUBZONE_N == "JURONG ISLAND AND BUKOM" ~ "Jurong Island",
+    SUBZONE_N == "NEWTON CIRCUS" ~ "Newton",
+    SUBZONE_N %in% c("PASIR PANJANG 1", "PASIR PANJANG 2") ~ "Pasir Panjang",
+    SUBZONE_N %in% c("PAYA LEBAR EAST", "PAYA LEBAR NORTH", 
+                     "PAYA LEBAR WEST") ~ "Paya Lebar",
+    SUBZONE_N == "PULAU UBIN" ~ "Pulau Ubin",
+    SUBZONE_N %in% c("SELETAR", "SELETAR AEROSPACE PARK") ~ "Seletar",
+    SUBZONE_N %in% c("SEMBAWANG CENTRAL", "SEMBAWANG EAST", "SEMBAWANG NORTH",
+                     "SEMBAWANG SPRINGS", "SEMBAWANG STRAITS") ~ "Sembawang",
+    SUBZONE_N == "SENTOSA" ~ "Sentosa Island",
+    SUBZONE_N == "TAI SENG" ~ "Tai Seng",
+    SUBZONE_N == "TUAS BAY" ~ "Tuas South",
+    TRUE ~ SUBZONE_N
+  ))
+```
+
+## 3.2 Join Dataset
+
+```{r}
+weather <- left_join(mpsz, weather,
+                         by = c("SUBZONE_N" = "station"),
+                         relationship = "many-to-many")
+```
+
+## 3.3 Remove Unnecessary Columns
+
+```{r}
+weather <- subset(weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,
+                                       PLN_AREA_C, REGION_C, FMEL_UPD_D, 
+                                       CA_IND, INC_CRC))
+```
+
+## 3.4 Rename Columns
+
+```{r}
+weather <- weather %>%
+  rename(Station = SUBZONE_N,
+         Area = PLN_AREA_N,
+         Region = REGION_N,
+         Year = year,
+         Month = month,
+         Day = day,
+         rainfall_total = daily_rainfall_total_mm,
+         rainfall_30 = highest_30_min_rainfall_mm,
+         rainfall_60 = highest_60_min_rainfall_mm,
+         rainfall_120 = highest_120_min_rainfall_mm,
+         mean_temp = mean_temperature_c,
+         max_temp = maximum_temperature_c,
+         min_temp = minimum_temperature_c,
+         mean_wind = mean_wind_speed_km_h,
+         max_wind = max_wind_speed_km_h)
+```
+
+## 3.5 Remove Missing Records
+
+Define list of stations:
+
+```{r}
+stations <- c("Admiralty", "Ang Mo Kio", "Changi", "Choa Chu Kang (South)",
+              "Clementi", "East Coast Parkway", "Jurong (West)",
+              "Jurong Island", "Newton", "Pasir Panjang", "Paya Lebar",
+              "Pulau Ubin", "Seletar", "Sembawang", "Sentosa Island",
+              "Tai Seng", "Tuas South")
+```
+
+```{r}
+weather <- weather %>% 
+  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) |
+                                    is.na(rainfall_60) | is.na(rainfall_120) |
+                                    is.na(mean_temp) | is.na(max_temp) |
+                                    is.na(min_temp) | is.na(mean_wind) |
+                                    is.na(max_wind))))
 ```

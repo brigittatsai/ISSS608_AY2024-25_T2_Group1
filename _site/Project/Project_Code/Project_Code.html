@@ -185,7 +185,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#save-to-csv-file" id="toc-save-to-csv-file" class="nav-link" data-scroll-target="#save-to-csv-file">1.4 Save to csv File</a></li>
   <li><a href="#remove-individual-files" id="toc-remove-individual-files" class="nav-link" data-scroll-target="#remove-individual-files">1.5 Remove Individual Files</a></li>
   </ul></li>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2 Data Preparation</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2 Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#import-aspatial-data" id="toc-import-aspatial-data" class="nav-link" data-scroll-target="#import-aspatial-data">2.1 Import Aspatial Data</a></li>
+  <li><a href="#import-geospatial-data" id="toc-import-geospatial-data" class="nav-link" data-scroll-target="#import-geospatial-data">2.2 Import Geospatial Data</a></li>
+  </ul></li>
+  <li><a href="#data-preparation-1" id="toc-data-preparation-1" class="nav-link" data-scroll-target="#data-preparation-1">3 Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#match-station-names" id="toc-match-station-names" class="nav-link" data-scroll-target="#match-station-names">3.1 Match Station Names</a></li>
+  <li><a href="#join-dataset" id="toc-join-dataset" class="nav-link" data-scroll-target="#join-dataset">3.2 Join Dataset</a></li>
+  <li><a href="#remove-unnecessary-columns" id="toc-remove-unnecessary-columns" class="nav-link" data-scroll-target="#remove-unnecessary-columns">3.3 Remove Unnecessary Columns</a></li>
+  <li><a href="#rename-columns" id="toc-rename-columns" class="nav-link" data-scroll-target="#rename-columns">3.4 Rename Columns</a></li>
+  <li><a href="#remove-missing-records" id="toc-remove-missing-records" class="nav-link" data-scroll-target="#remove-missing-records">3.5 Remove Missing Records</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -194,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Project_Code</h1>
+<h1 class="title">Project Code</h1>
 </div>
 
 
@@ -218,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 22, 2025</p>
+      <p class="date-modified">March 25, 2025</p>
     </div>
   </div>
     
@@ -264,7 +276,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>         <span class="sc">!</span>(Year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> Month <span class="sc">&gt;</span> <span class="st">"12"</span>)) <span class="co"># Exclude after Dec 2024</span></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a directory to store data</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data/aspatial"</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Record failed downloads</span></span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>failed_downloads <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Station =</span> <span class="fu">character</span>(), <span class="at">Year =</span> <span class="fu">integer</span>(), <span class="at">Month =</span> <span class="fu">character</span>(), <span class="at">File_URL =</span> <span class="fu">character</span>(), <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>)</span>
@@ -284,7 +296,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    file_url <span class="ot">&lt;-</span> <span class="fu">paste0</span>(base_url, file_name)</span>
 <span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Local save path</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    file_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data"</span>, file_name)</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    file_path <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">"data/aspatial"</span>, file_name)</span>
 <span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Check if the URL is valid</span></span>
 <span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>    response <span class="ot">&lt;-</span> <span class="fu">HEAD</span>(file_url)</span>
@@ -323,7 +335,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Get all CSV files from the "data" folder that contain "DAILYDATA_" and "2024" in their names</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"^DAILYDATA_.*_2024.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data/aspatial"</span>, <span class="at">pattern =</span> <span class="st">"^DAILYDATA_.*_2024.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define a safe reading function to ensure all columns are initially read as characters</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>safe_read <span class="ot">&lt;-</span> <span class="fu">safely</span>(<span class="sc">~</span> <span class="fu">read_csv</span>(</span>
@@ -334,1077 +346,342 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>())  <span class="co"># Standardize column names</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Read all files</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(files, safe_read)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 9 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 10 is invalid UTF-8</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in grepl(x = string, pattern = current_unicode, fixed = TRUE): input
-string 11 is invalid UTF-8</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb244"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb244-1"><a href="#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out successful reads and combine data</span></span>
-<span id="cb244-2"><a href="#cb244-2" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
-<span id="cb244-3"><a href="#cb244-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">is.null</span>(.x<span class="sc">$</span>error)) <span class="sc">%&gt;%</span>  <span class="co"># Keep only successfully read files</span></span>
-<span id="cb244-4"><a href="#cb244-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(<span class="st">"result"</span>) <span class="sc">%&gt;%</span>  <span class="co"># Combine them into a single dataframe</span></span>
-<span id="cb244-5"><a href="#cb244-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">matches</span>(<span class="st">"station"</span>), <span class="sc">~</span> <span class="fu">na_if</span>(., <span class="st">"-"</span>))) <span class="sc">%&gt;%</span>  <span class="co"># Convert "-" to NA (except for "station" column)</span></span>
-<span id="cb244-6"><a href="#cb244-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">matches</span>(<span class="st">"station"</span>), as.numeric))  <span class="co"># Convert character columns back to numeric (except "station")</span></span>
-<span id="cb244-7"><a href="#cb244-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb244-8"><a href="#cb244-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the merged data structure</span></span>
-<span id="cb244-9"><a href="#cb244-9" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 2,928
-Columns: 13
-$ station                     &lt;chr&gt; "Paya Lebar", "Paya Lebar", "Paya Lebar", …
-$ year                        &lt;dbl&gt; 2024, 2024, 2024, 2024, 2024, 2024, 2024, …
-$ month                       &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
-$ day                         &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,…
-$ daily_rainfall_total_mm     &lt;dbl&gt; 21.6, 0.0, 1.6, 63.8, 4.4, 3.0, 59.8, 0.0,…
-$ highest_30_min_rainfall_mm  &lt;dbl&gt; 9.2, 0.0, 1.6, 13.8, 1.6, 3.0, 15.4, 0.0, …
-$ highest_60_min_rainfall_mm  &lt;dbl&gt; 13.2, 0.0, 1.6, 19.8, 3.0, 3.0, 17.4, 0.0,…
-$ highest_120_min_rainfall_mm &lt;dbl&gt; 14.6, 0.0, 1.6, 26.6, 3.2, 3.0, 21.8, 0.0,…
-$ mean_temperature_c          &lt;dbl&gt; 25.9, 27.8, 27.7, 25.0, 26.8, 28.1, 24.6, …
-$ maximum_temperature_c       &lt;dbl&gt; 28.8, 32.6, 32.6, 26.9, 30.8, 33.1, 27.3, …
-$ minimum_temperature_c       &lt;dbl&gt; 24.5, 24.2, 25.5, 23.7, 24.5, 24.9, 23.5, …
-$ mean_wind_speed_km_h        &lt;dbl&gt; 6.5, 7.0, 7.1, 7.2, 8.4, 7.6, 4.9, 8.5, 7.…
-$ max_wind_speed_km_h         &lt;dbl&gt; 24.1, 31.5, 29.6, 25.9, 35.2, 27.8, 18.5, …</code></pre>
-</div>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">map</span>(files, safe_read)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out successful reads and combine data</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>all_data <span class="ot">&lt;-</span> results <span class="sc">%&gt;%</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">keep</span>(<span class="sc">~</span> <span class="fu">is.null</span>(.x<span class="sc">$</span>error)) <span class="sc">%&gt;%</span>  <span class="co"># Keep only successfully read files</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">map_dfr</span>(<span class="st">"result"</span>) <span class="sc">%&gt;%</span>  <span class="co"># Combine them into a single dataframe</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">matches</span>(<span class="st">"station"</span>), <span class="sc">~</span> <span class="fu">na_if</span>(., <span class="st">"-"</span>))) <span class="sc">%&gt;%</span>  <span class="co"># Convert "-" to NA (except for "station" column)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.character) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">matches</span>(<span class="st">"station"</span>), as.numeric))  <span class="co"># Convert character columns back to numeric (except "station")</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the merged data structure</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(all_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="save-to-csv-file" class="level2">
 <h2 class="anchored" data-anchor-id="save-to-csv-file">1.4 Save to csv File</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb246"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb246-1"><a href="#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(all_data, <span class="st">"data/weather.csv"</span>, <span class="at">na =</span> <span class="st">""</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(all_data, <span class="st">"data/aspatial/weather.csv"</span>, <span class="at">na =</span> <span class="st">""</span>, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="remove-individual-files" class="level2">
 <h2 class="anchored" data-anchor-id="remove-individual-files">1.5 Remove Individual Files</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb247"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb247-1"><a href="#cb247-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete all CSV files in the "data" folder</span></span>
-<span id="cb247-2"><a href="#cb247-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">list.files</span>(<span class="st">"data"</span>, <span class="at">pattern =</span> <span class="st">"^DAILYDATA_.*_2024.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[16] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[31] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[46] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[61] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[76] TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE TRUE
-[91] TRUE TRUE TRUE TRUE TRUE TRUE</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb249"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb249-1"><a href="#cb249-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"🗑️ All individual CSV files have been deleted.</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>🗑️ All individual CSV files have been deleted.</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete all CSV files in the "data" folder</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">file.remove</span>(<span class="fu">list.files</span>(<span class="st">"data/aspatial"</span>, <span class="at">pattern =</span> <span class="st">"^DAILYDATA_.*_2024.*</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"🗑️ All individual CSV files have been deleted.</span><span class="sc">\n</span><span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
 <section id="data-preparation" class="level1">
 <h1>2 Data Preparation</h1>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb251"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb251-1"><a href="#cb251-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sp, sf, raster, spatstat, tmap, tidyverse,</span>
-<span id="cb251-2"><a href="#cb251-2" aria-hidden="true" tabindex="-1"></a>               spNetwork, tmaptools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Installing package into 'C:/Users/brigi/AppData/Local/R/win-library/4.4'
-(as 'lib' is unspecified)</code></pre>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sp, sf, raster, spatstat, tmap, tidyverse,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>               spNetwork, tmaptools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="import-aspatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-aspatial-data">2.1 Import Aspatial Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/aspatial/weather.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>also installing the dependencies 'spatstat.data', 'spatstat.geom'</code></pre>
+<pre><code>Rows: 6222 Columns: 13
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (1): station
+dbl (12): year, month, day, daily_rainfall_total_mm, highest_30_min_rainfall...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: unable to access index for repository http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.4:
-  cannot open URL 'http://www.stats.ox.ac.uk/pub/RWin/bin/windows/contrib/4.4/PACKAGES'</code></pre>
 </div>
+</section>
+<section id="import-geospatial-data" class="level2">
+<h2 class="anchored" data-anchor-id="import-geospatial-data">2.2 Import Geospatial Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/geospatial"</span>, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"MP14_SUBZONE_WEB_PL"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>package 'spatstat.data' successfully unpacked and MD5 sums checked
-package 'spatstat.geom' successfully unpacked and MD5 sums checked
-package 'spatstat' successfully unpacked and MD5 sums checked
+<pre><code>Reading layer `MP14_SUBZONE_WEB_PL' from data source 
+  `C:\brigittatsai\ISSS608_AY2024-25_T2_Group1\Project\Project_Code\data\geospatial' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 323 features and 15 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33
+Projected CRS: SVY21</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="data-preparation-1" class="level1">
+<h1>3 Data Preparation</h1>
+<section id="match-station-names" class="level2">
+<h2 class="anchored" data-anchor-id="match-station-names">3.1 Match Station Names</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">unique</span>(weather<span class="sc">$</span>station))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] "Admiralty"             "Ang Mo Kio"            "Changi"               
+ [4] "Choa Chu Kang (South)" "Clementi"              "East Coast Parkway"   
+ [7] "Jurong (West)"         "Jurong Island"         "Newton"               
+[10] "Pasir Panjang"         "Paya Lebar"            "Pulau Ubin"           
+[13] "Seletar"               "Sembawang"             "Sentosa Island"       
+[16] "Tai Seng"              "Tuas South"           </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">unique</span>(mpsz<span class="sc">$</span>SUBZONE_N))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "ADMIRALTY"                     "AIRPORT ROAD"                 
+  [3] "ALEXANDRA HILL"                "ALEXANDRA NORTH"              
+  [5] "ALJUNIED"                      "ANAK BUKIT"                   
+  [7] "ANCHORVALE"                    "ANG MO KIO TOWN CENTRE"       
+  [9] "ANSON"                         "BALESTIER"                    
+ [11] "BANGKIT"                       "BAYFRONT SUBZONE"             
+ [13] "BAYSHORE"                      "BEDOK NORTH"                  
+ [15] "BEDOK RESERVOIR"               "BEDOK SOUTH"                  
+ [17] "BENCOOLEN"                     "BENDEMEER"                    
+ [19] "BENOI SECTOR"                  "BIDADARI"                     
+ [21] "BISHAN EAST"                   "BOAT QUAY"                    
+ [23] "BOON KENG"                     "BOON LAY PLACE"               
+ [25] "BOON TECK"                     "BOULEVARD"                    
+ [27] "BRADDELL"                      "BRAS BASAH"                   
+ [29] "BRICKWORKS"                    "BUGIS"                        
+ [31] "BUKIT BATOK CENTRAL"           "BUKIT BATOK EAST"             
+ [33] "BUKIT BATOK SOUTH"             "BUKIT BATOK WEST"             
+ [35] "BUKIT HO SWEE"                 "BUKIT MERAH"                  
+ [37] "CAIRNHILL"                     "CECIL"                        
+ [39] "CENTRAL SUBZONE"               "CENTRAL WATER CATCHMENT"      
+ [41] "CHANGI AIRPORT"                "CHANGI BAY"                   
+ [43] "CHANGI POINT"                  "CHANGI WEST"                  
+ [45] "CHATSWORTH"                    "CHENG SAN"                    
+ [47] "CHIN BEE"                      "CHINA SQUARE"                 
+ [49] "CHINATOWN"                     "CHOA CHU KANG CENTRAL"        
+ [51] "CHOA CHU KANG NORTH"           "CHONG BOON"                   
+ [53] "CITY HALL"                     "CITY TERMINALS"               
+ [55] "CLARKE QUAY"                   "CLEMENTI CENTRAL"             
+ [57] "CLEMENTI NORTH"                "CLEMENTI WEST"                
+ [59] "CLEMENTI WOODS"                "CLIFFORD PIER"                
+ [61] "COMMONWEALTH"                  "COMPASSVALE"                  
+ [63] "CONEY ISLAND"                  "CORONATION ROAD"              
+ [65] "CRAWFORD"                      "DAIRY FARM"                   
+ [67] "DEFU INDUSTRIAL PARK"          "DEPOT ROAD"                   
+ [69] "DHOBY GHAUT"                   "DOVER"                        
+ [71] "DUNEARN"                       "EAST COAST"                   
+ [73] "EVERTON PARK"                  "FABER"                        
+ [75] "FAJAR"                         "FARRER COURT"                 
+ [77] "FARRER PARK"                   "FERNVALE"                     
+ [79] "FLORA DRIVE"                   "FORT CANNING"                 
+ [81] "FRANKEL"                       "GALI BATU"                    
+ [83] "GEYLANG BAHRU"                 "GEYLANG EAST"                 
+ [85] "GHIM MOH"                      "GOMBAK"                       
+ [87] "GOODWOOD PARK"                 "GREENWOOD PARK"               
+ [89] "GUILIN"                        "GUL BASIN"                    
+ [91] "GUL CIRCLE"                    "HENDERSON HILL"               
+ [93] "HILLCREST"                     "HILLVIEW"                     
+ [95] "HOLLAND DRIVE"                 "HOLLAND ROAD"                 
+ [97] "HONG KAH"                      "HONG KAH NORTH"               
+ [99] "HOUGANG CENTRAL"               "HOUGANG EAST"                 
+[101] "HOUGANG WEST"                  "INSTITUTION HILL"             
+[103] "INTERNATIONAL BUSINESS PARK"   "ISTANA NEGARA"                
+[105] "JELEBU"                        "JOO KOON"                     
+[107] "JOO SENG"                      "JURONG GATEWAY"               
+[109] "JURONG ISLAND AND BUKOM"       "JURONG PORT"                  
+[111] "JURONG RIVER"                  "JURONG WEST CENTRAL"          
+[113] "KAKI BUKIT"                    "KALLANG BAHRU"                
+[115] "KALLANG WAY"                   "KAMPONG BUGIS"                
+[117] "KAMPONG GLAM"                  "KAMPONG JAVA"                 
+[119] "KAMPONG TIONG BAHRU"           "KAMPONG UBI"                  
+[121] "KANGKAR"                       "KATONG"                       
+[123] "KEAT HONG"                     "KEBUN BAHRU"                  
+[125] "KEMBANGAN"                     "KENT RIDGE"                   
+[127] "KHATIB"                        "KIAN TECK"                    
+[129] "KIM KEAT"                      "KOVAN"                        
+[131] "KRANJI"                        "LAKESIDE"                     
+[133] "LAVENDER"                      "LEEDON PARK"                  
+[135] "LEONIE HILL"                   "LIM CHU KANG"                 
+[137] "LITTLE INDIA"                  "LIU FANG"                     
+[139] "LORONG 8 TOA PAYOH"            "LORONG AH SOO"                
+[141] "LORONG CHUAN"                  "LORONG HALUS"                 
+[143] "LORONG HALUS NORTH"            "LOWER SELETAR"                
+[145] "LOYANG EAST"                   "LOYANG WEST"                  
+[147] "MACKENZIE"                     "MACPHERSON"                   
+[149] "MALCOLM"                       "MANDAI EAST"                  
+[151] "MANDAI ESTATE"                 "MANDAI WEST"                  
+[153] "MARGARET DRIVE"                "MARINA CENTRE"                
+[155] "MARINA EAST"                   "MARINA EAST (MP)"             
+[157] "MARINA SOUTH"                  "MARINE PARADE"                
+[159] "MARITIME SQUARE"               "MARYMOUNT"                    
+[161] "MATILDA"                       "MAXWELL"                      
+[163] "MEI CHIN"                      "MIDVIEW"                      
+[165] "MONK'S HILL"                   "MOULMEIN"                     
+[167] "MOUNT EMILY"                   "MOUNT PLEASANT"               
+[169] "MOUNTBATTEN"                   "NASSIM"                       
+[171] "NATIONAL UNIVERSITY OF S'PORE" "NATURE RESERVE"               
+[173] "NEE SOON"                      "NEWTON CIRCUS"                
+[175] "NORTH-EASTERN ISLANDS"         "NORTH COAST"                  
+[177] "NORTHLAND"                     "NORTHSHORE"                   
+[179] "ONE NORTH"                     "ONE TREE HILL"                
+[181] "ORANGE GROVE"                  "OXLEY"                        
+[183] "PANDAN"                        "PANG SUA"                     
+[185] "PASIR PANJANG 1"               "PASIR PANJANG 2"              
+[187] "PASIR RIS CENTRAL"             "PASIR RIS DRIVE"              
+[189] "PASIR RIS PARK"                "PASIR RIS WAFER FAB PARK"     
+[191] "PASIR RIS WEST"                "PATERSON"                     
+[193] "PAYA LEBAR EAST"               "PAYA LEBAR NORTH"             
+[195] "PAYA LEBAR WEST"               "PEARL'S HILL"                 
+[197] "PEI CHUN"                      "PENG SIANG"                   
+[199] "PENJURU CRESCENT"              "PEOPLE'S PARK"                
+[201] "PHILLIP"                       "PIONEER SECTOR"               
+[203] "PLAB"                          "PORT"                         
+[205] "POTONG PASIR"                  "PULAU PUNGGOL BARAT"          
+[207] "PULAU PUNGGOL TIMOR"           "PULAU SELETAR"                
+[209] "PUNGGOL CANAL"                 "PUNGGOL FIELD"                
+[211] "PUNGGOL TOWN CENTRE"           "QUEENSWAY"                    
+[213] "RAFFLES PLACE"                 "REDHILL"                      
+[215] "RESERVOIR VIEW"                "RIDOUT"                       
+[217] "RIVERVALE"                     "ROBERTSON QUAY"               
+[219] "ROCHOR CANAL"                  "SAFTI"                        
+[221] "SAMULUN"                       "SAUJANA"                      
+[223] "SELEGIE"                       "SELETAR"                      
+[225] "SELETAR AEROSPACE PARK"        "SELETAR HILLS"                
+[227] "SEMAKAU"                       "SEMBAWANG CENTRAL"            
+[229] "SEMBAWANG EAST"                "SEMBAWANG HILLS"              
+[231] "SEMBAWANG NORTH"               "SEMBAWANG SPRINGS"            
+[233] "SEMBAWANG STRAITS"             "SENGKANG TOWN CENTRE"         
+[235] "SENGKANG WEST"                 "SENJA"                        
+[237] "SENNETT"                       "SENOKO NORTH"                 
+[239] "SENOKO SOUTH"                  "SENOKO WEST"                  
+[241] "SENTOSA"                       "SERANGOON CENTRAL"            
+[243] "SERANGOON GARDEN"              "SERANGOON NORTH"              
+[245] "SERANGOON NORTH IND ESTATE"    "SHANGRI-LA"                   
+[247] "SHIPYARD"                      "SIGLAP"                       
+[249] "SIMEI"                         "SIMPANG NORTH"                
+[251] "SIMPANG SOUTH"                 "SINGAPORE GENERAL HOSPITAL"   
+[253] "SINGAPORE POLYTECHNIC"         "SOMERSET"                     
+[255] "SOUTHERN GROUP"                "SPRINGLEAF"                   
+[257] "STRAITS VIEW"                  "SUDONG"                       
+[259] "SUNGEI ROAD"                   "SUNSET WAY"                   
+[261] "SWISS CLUB"                    "TAGORE"                       
+[263] "TAI SENG"                      "TAMAN JURONG"                 
+[265] "TAMPINES EAST"                 "TAMPINES NORTH"               
+[267] "TAMPINES WEST"                 "TANGLIN"                      
+[269] "TANGLIN HALT"                  "TANJONG IRAU"                 
+[271] "TANJONG PAGAR"                 "TANJONG RHU"                  
+[273] "TEBAN GARDENS"                 "TECK WHYE"                    
+[275] "TELOK BLANGAH DRIVE"           "TELOK BLANGAH RISE"           
+[277] "TELOK BLANGAH WAY"             "TENGAH"                       
+[279] "TENGEH"                        "THE WHARVES"                  
+[281] "TIONG BAHRU"                   "TIONG BAHRU STATION"          
+[283] "TOA PAYOH CENTRAL"             "TOA PAYOH WEST"               
+[285] "TOH GUAN"                      "TOH TUCK"                     
+[287] "TOWNSVILLE"                    "TRAFALGAR"                    
+[289] "TUAS BAY"                      "TUAS NORTH"                   
+[291] "TUAS PROMENADE"                "TUAS VIEW"                    
+[293] "TUAS VIEW EXTENSION"           "TUKANG"                       
+[295] "TURF CLUB"                     "TYERSALL"                     
+[297] "ULU PANDAN"                    "UPPER PAYA LEBAR"             
+[299] "UPPER THOMSON"                 "VICTORIA"                     
+[301] "WATERWAY EAST"                 "WENYA"                        
+[303] "WEST COAST"                    "WESTERN WATER CATCHMENT"      
+[305] "WOODGROVE"                     "WOODLANDS EAST"               
+[307] "WOODLANDS REGIONAL CENTRE"     "WOODLANDS SOUTH"              
+[309] "WOODLANDS WEST"                "WOODLEIGH"                    
+[311] "XILIN"                         "YEW TEE"                      
+[313] "YIO CHU KANG"                  "YIO CHU KANG EAST"            
+[315] "YIO CHU KANG NORTH"            "YIO CHU KANG WEST"            
+[317] "YISHUN CENTRAL"                "YISHUN EAST"                  
+[319] "YISHUN SOUTH"                  "YISHUN WEST"                  
+[321] "YUHUA EAST"                    "YUHUA WEST"                   
+[323] "YUNNAN"                       </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mpsz <span class="ot">&lt;-</span> mpsz <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SUBZONE_N =</span> <span class="fu">case_when</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"ADMIRALTY"</span> <span class="sc">~</span> <span class="st">"Admiralty"</span>,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"ANG MO KIO TOWN CENTRE"</span> <span class="sc">~</span> <span class="st">"Ang Mo Kio"</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"CHANGI AIRPORT"</span>, <span class="st">"CHANGI BAY"</span>, </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"CHANGI POINT"</span>, <span class="st">"CHANGI WEST"</span>) <span class="sc">~</span> <span class="st">"Changi"</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"CHOA CHU KANG CENTRAL"</span> <span class="sc">~</span> <span class="st">"Choa Chu Kang (South)"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"CLEMENTI CENTRAL"</span> <span class="sc">~</span> <span class="st">"Clementi"</span>,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"EAST COAST"</span> <span class="sc">~</span> <span class="st">"East Coast Parkway"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"JURONG WEST CENTRAL"</span> <span class="sc">~</span> <span class="st">"Jurong (West)"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"JURONG ISLAND AND BUKOM"</span> <span class="sc">~</span> <span class="st">"Jurong Island"</span>,</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"NEWTON CIRCUS"</span> <span class="sc">~</span> <span class="st">"Newton"</span>,</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PASIR PANJANG 1"</span>, <span class="st">"PASIR PANJANG 2"</span>) <span class="sc">~</span> <span class="st">"Pasir Panjang"</span>,</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PAYA LEBAR EAST"</span>, <span class="st">"PAYA LEBAR NORTH"</span>, </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"PAYA LEBAR WEST"</span>) <span class="sc">~</span> <span class="st">"Paya Lebar"</span>,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"PULAU UBIN"</span> <span class="sc">~</span> <span class="st">"Pulau Ubin"</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SELETAR"</span>, <span class="st">"SELETAR AEROSPACE PARK"</span>) <span class="sc">~</span> <span class="st">"Seletar"</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"SEMBAWANG CENTRAL"</span>, <span class="st">"SEMBAWANG EAST"</span>, <span class="st">"SEMBAWANG NORTH"</span>,</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>                     <span class="st">"SEMBAWANG SPRINGS"</span>, <span class="st">"SEMBAWANG STRAITS"</span>) <span class="sc">~</span> <span class="st">"Sembawang"</span>,</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"SENTOSA"</span> <span class="sc">~</span> <span class="st">"Sentosa Island"</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"TAI SENG"</span> <span class="sc">~</span> <span class="st">"Tai Seng"</span>,</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    SUBZONE_N <span class="sc">==</span> <span class="st">"TUAS BAY"</span> <span class="sc">~</span> <span class="st">"Tuas South"</span>,</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> SUBZONE_N</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="join-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="join-dataset">3.2 Join Dataset</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mpsz, weather,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SUBZONE_N"</span> <span class="ot">=</span> <span class="st">"station"</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">relationship =</span> <span class="st">"many-to-many"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="remove-unnecessary-columns" class="level2">
+<h2 class="anchored" data-anchor-id="remove-unnecessary-columns">3.3 Remove Unnecessary Columns</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">subset</span>(weather, <span class="at">select =</span> <span class="sc">-</span><span class="fu">c</span>(OBJECTID, SUBZONE_NO, SUBZONE_C,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                       PLN_AREA_C, REGION_C, FMEL_UPD_D, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                       CA_IND, INC_CRC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rename-columns" class="level2">
+<h2 class="anchored" data-anchor-id="rename-columns">3.4 Rename Columns</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> weather <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Station =</span> SUBZONE_N,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Area =</span> PLN_AREA_N,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Region =</span> REGION_N,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Month =</span> month,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Day =</span> day,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_total =</span> daily_rainfall_total_mm,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_30 =</span> highest_30_min_rainfall_mm,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_60 =</span> highest_60_min_rainfall_mm,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_120 =</span> highest_120_min_rainfall_mm,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_temp =</span> mean_temperature_c,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_temp =</span> maximum_temperature_c,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">min_temp =</span> minimum_temperature_c,</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_wind =</span> mean_wind_speed_km_h,</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_wind =</span> max_wind_speed_km_h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="remove-missing-records" class="level2">
+<h2 class="anchored" data-anchor-id="remove-missing-records">3.5 Remove Missing Records</h2>
+<p>Define list of stations:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Admiralty"</span>, <span class="st">"Ang Mo Kio"</span>, <span class="st">"Changi"</span>, <span class="st">"Choa Chu Kang (South)"</span>,</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Clementi"</span>, <span class="st">"East Coast Parkway"</span>, <span class="st">"Jurong (West)"</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Jurong Island"</span>, <span class="st">"Newton"</span>, <span class="st">"Pasir Panjang"</span>, <span class="st">"Paya Lebar"</span>,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Pulau Ubin"</span>, <span class="st">"Seletar"</span>, <span class="st">"Sembawang"</span>, <span class="st">"Sentosa Island"</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Tai Seng"</span>, <span class="st">"Tuas South"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> weather <span class="sc">%&gt;%</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Station <span class="sc">%in%</span> stations <span class="sc">&amp;</span> (<span class="fu">is.na</span>(rainfall_total) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_30) <span class="sc">|</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(rainfall_60) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_120) <span class="sc">|</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(mean_temp) <span class="sc">|</span> <span class="fu">is.na</span>(max_temp) <span class="sc">|</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(min_temp) <span class="sc">|</span> <span class="fu">is.na</span>(mean_wind) <span class="sc">|</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(max_wind))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
-The downloaded binary packages are in
-    C:\Users\brigi\AppData\Local\Temp\RtmpOiqBtP\downloaded_packages</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-spatstat installed</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.data' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.univar' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.geom' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.random' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.explore' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.model' was built under R version 4.4.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'spatstat.linnet' was built under R version 4.4.3</code></pre>
-</div>
-</div>
 
-
+</section>
 </section>
 
 </main> <!-- /main -->
