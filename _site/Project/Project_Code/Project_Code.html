@@ -185,7 +185,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#save-to-csv-file" id="toc-save-to-csv-file" class="nav-link" data-scroll-target="#save-to-csv-file">1.4 Save to csv File</a></li>
   <li><a href="#remove-individual-files" id="toc-remove-individual-files" class="nav-link" data-scroll-target="#remove-individual-files">1.5 Remove Individual Files</a></li>
   </ul></li>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2 Data Preparation</a>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation">2 Data Preparation</a></li>
+  <li><a href="#import-data" id="toc-import-data" class="nav-link" data-scroll-target="#import-data">2 Import Data</a>
   <ul class="collapse">
   <li><a href="#import-aspatial-data" id="toc-import-aspatial-data" class="nav-link" data-scroll-target="#import-aspatial-data">2.1 Import Aspatial Data</a></li>
   <li><a href="#import-geospatial-data" id="toc-import-geospatial-data" class="nav-link" data-scroll-target="#import-geospatial-data">2.2 Import Geospatial Data</a></li>
@@ -197,6 +198,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#remove-unnecessary-columns" id="toc-remove-unnecessary-columns" class="nav-link" data-scroll-target="#remove-unnecessary-columns">3.3 Remove Unnecessary Columns</a></li>
   <li><a href="#rename-columns" id="toc-rename-columns" class="nav-link" data-scroll-target="#rename-columns">3.4 Rename Columns</a></li>
   <li><a href="#remove-missing-records" id="toc-remove-missing-records" class="nav-link" data-scroll-target="#remove-missing-records">3.5 Remove Missing Records</a></li>
+  <li><a href="#handling-date-data" id="toc-handling-date-data" class="nav-link" data-scroll-target="#handling-date-data">3.6 Handling Date Data</a></li>
+  <li><a href="#combining-geometry" id="toc-combining-geometry" class="nav-link" data-scroll-target="#combining-geometry">3.7 Combining Geometry</a></li>
+  <li><a href="#derive-monthly-data" id="toc-derive-monthly-data" class="nav-link" data-scroll-target="#derive-monthly-data">3.8 Derive Monthly Data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -230,7 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">March 25, 2025</p>
+      <p class="date-modified">March 27, 2025</p>
     </div>
   </div>
     
@@ -381,6 +385,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sp, sf, raster, spatstat, tmap, tidyverse,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>               spNetwork, tmaptools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="import-data" class="level1">
+<h1>2 Import Data</h1>
 <section id="import-aspatial-data" class="level2">
 <h2 class="anchored" data-anchor-id="import-aspatial-data">2.1 Import Aspatial Data</h2>
 <div class="cell">
@@ -627,7 +634,7 @@ Projected CRS: SVY21</code></pre>
 <section id="join-dataset" class="level2">
 <h2 class="anchored" data-anchor-id="join-dataset">3.2 Join Dataset</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mpsz, weather,</span>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mpsz, weather,</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"SUBZONE_N"</span> <span class="ot">=</span> <span class="st">"station"</span>),</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">relationship =</span> <span class="st">"many-to-many"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -635,7 +642,7 @@ Projected CRS: SVY21</code></pre>
 <section id="remove-unnecessary-columns" class="level2">
 <h2 class="anchored" data-anchor-id="remove-unnecessary-columns">3.3 Remove Unnecessary Columns</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> <span class="fu">subset</span>(weather, <span class="at">select =</span> <span class="sc">-</span><span class="fu">c</span>(OBJECTID, SUBZONE_NO, SUBZONE_C,</span>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> <span class="fu">subset</span>(daily_weather, <span class="at">select =</span> <span class="sc">-</span><span class="fu">c</span>(OBJECTID, SUBZONE_NO, SUBZONE_C,</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                       PLN_AREA_C, REGION_C, FMEL_UPD_D, </span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                       CA_IND, INC_CRC))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -644,40 +651,123 @@ Projected CRS: SVY21</code></pre>
 <h2 class="anchored" data-anchor-id="rename-columns">3.4 Rename Columns</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> weather <span class="sc">%&gt;%</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Station =</span> SUBZONE_N,</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Area =</span> PLN_AREA_N,</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Region =</span> REGION_N,</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Month =</span> month,</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Day =</span> day,</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_total =</span> daily_rainfall_total_mm,</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_30 =</span> highest_30_min_rainfall_mm,</span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_60 =</span> highest_60_min_rainfall_mm,</span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_120 =</span> highest_120_min_rainfall_mm,</span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_temp =</span> mean_temperature_c,</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_temp =</span> maximum_temperature_c,</span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">min_temp =</span> minimum_temperature_c,</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_wind =</span> mean_wind_speed_km_h,</span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_wind =</span> max_wind_speed_km_h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Station =</span> station,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Month =</span> month,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Day =</span> day,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_total =</span> daily_rainfall_total_mm,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_30 =</span> highest_30_min_rainfall_mm,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_60 =</span> highest_60_min_rainfall_mm,</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_120 =</span> highest_120_min_rainfall_mm,</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_temp =</span> mean_temperature_c,</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_temp =</span> maximum_temperature_c,</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">min_temp =</span> minimum_temperature_c,</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_wind =</span> mean_wind_speed_km_h,</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_wind =</span> max_wind_speed_km_h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> daily_weather <span class="sc">%&gt;%</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Station =</span> SUBZONE_N,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Area =</span> PLN_AREA_N,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Region =</span> REGION_N,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Year =</span> year,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">Month =</span> month,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">Day =</span> day,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_total =</span> daily_rainfall_total_mm,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_30 =</span> highest_30_min_rainfall_mm,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_60 =</span> highest_60_min_rainfall_mm,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">rainfall_120 =</span> highest_120_min_rainfall_mm,</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_temp =</span> mean_temperature_c,</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_temp =</span> maximum_temperature_c,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">min_temp =</span> minimum_temperature_c,</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">mean_wind =</span> mean_wind_speed_km_h,</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">max_wind =</span> max_wind_speed_km_h)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="remove-missing-records" class="level2">
 <h2 class="anchored" data-anchor-id="remove-missing-records">3.5 Remove Missing Records</h2>
 <p>Define list of stations:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Admiralty"</span>, <span class="st">"Ang Mo Kio"</span>, <span class="st">"Changi"</span>, <span class="st">"Choa Chu Kang (South)"</span>,</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Clementi"</span>, <span class="st">"East Coast Parkway"</span>, <span class="st">"Jurong (West)"</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Jurong Island"</span>, <span class="st">"Newton"</span>, <span class="st">"Pasir Panjang"</span>, <span class="st">"Paya Lebar"</span>,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Pulau Ubin"</span>, <span class="st">"Seletar"</span>, <span class="st">"Sembawang"</span>, <span class="st">"Sentosa Island"</span>,</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Tai Seng"</span>, <span class="st">"Tuas South"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>stations <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Admiralty"</span>, <span class="st">"Ang Mo Kio"</span>, <span class="st">"Changi"</span>, <span class="st">"Choa Chu Kang (South)"</span>,</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Clementi"</span>, <span class="st">"East Coast Parkway"</span>, <span class="st">"Jurong (West)"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Jurong Island"</span>, <span class="st">"Newton"</span>, <span class="st">"Pasir Panjang"</span>, <span class="st">"Paya Lebar"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Pulau Ubin"</span>, <span class="st">"Seletar"</span>, <span class="st">"Sembawang"</span>, <span class="st">"Sentosa Island"</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>              <span class="st">"Tai Seng"</span>, <span class="st">"Tuas South"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> weather <span class="sc">%&gt;%</span> </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Station <span class="sc">%in%</span> stations <span class="sc">&amp;</span> (<span class="fu">is.na</span>(rainfall_total) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_30) <span class="sc">|</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(rainfall_60) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_120) <span class="sc">|</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(mean_temp) <span class="sc">|</span> <span class="fu">is.na</span>(max_temp) <span class="sc">|</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(min_temp) <span class="sc">|</span> <span class="fu">is.na</span>(mean_wind) <span class="sc">|</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(max_wind))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> weather <span class="sc">%&gt;%</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Station <span class="sc">%in%</span> stations <span class="sc">&amp;</span> (<span class="fu">is.na</span>(rainfall_total) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_30) <span class="sc">|</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(rainfall_60) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_120) <span class="sc">|</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(mean_temp) <span class="sc">|</span> <span class="fu">is.na</span>(max_temp) <span class="sc">|</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(min_temp) <span class="sc">|</span> <span class="fu">is.na</span>(mean_wind) <span class="sc">|</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(max_wind))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> daily_weather <span class="sc">%&gt;%</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>(Station <span class="sc">%in%</span> stations <span class="sc">&amp;</span> (<span class="fu">is.na</span>(rainfall_total) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_30) <span class="sc">|</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(rainfall_60) <span class="sc">|</span> <span class="fu">is.na</span>(rainfall_120) <span class="sc">|</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(mean_temp) <span class="sc">|</span> <span class="fu">is.na</span>(max_temp) <span class="sc">|</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(min_temp) <span class="sc">|</span> <span class="fu">is.na</span>(mean_wind) <span class="sc">|</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                                    <span class="fu">is.na</span>(max_wind))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="handling-date-data" class="level2">
+<h2 class="anchored" data-anchor-id="handling-date-data">3.6 Handling Date Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>weather <span class="ot">&lt;-</span> weather <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">yearmonth =</span> <span class="fu">make_date</span>(Year, Month, <span class="dv">1</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> daily_weather <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">yearmonth =</span> <span class="fu">make_date</span>(Year, Month, <span class="dv">1</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combining-geometry" class="level2">
+<h2 class="anchored" data-anchor-id="combining-geometry">3.7 Combining Geometry</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>daily_weather <span class="ot">&lt;-</span> daily_weather <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Station) <span class="sc">%&gt;%</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geometry =</span> <span class="fu">st_union</span>(geometry)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">geometry =</span> <span class="fu">st_cast</span>(geometry, <span class="st">"MULTIPOLYGON"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="derive-monthly-data" class="level2">
+<h2 class="anchored" data-anchor-id="derive-monthly-data">3.8 Derive Monthly Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a dataset with all combinations of yearmonth and Station (to keep all stations)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>all_combinations <span class="ot">&lt;-</span> daily_weather <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_drop_geometry</span>() <span class="sc">%&gt;%</span> <span class="co"># Drop geometry temporarily</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(yearmonth, Station) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge the combinations back to weather_map to fill in missing rainfall data</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>monthly_rainfall <span class="ot">&lt;-</span> daily_weather <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(yearmonth, Station, geometry) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">max_rainfall =</span> <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(rainfall_total))) <span class="cn">NA_real_</span> <span class="cf">else</span> <span class="fu">max</span>(rainfall_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_rainfall =</span> <span class="cf">if</span> (<span class="fu">all</span>(<span class="fu">is.na</span>(rainfall_total))) <span class="cn">NA_real_</span> <span class="cf">else</span> <span class="fu">mean</span>(rainfall_total, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">right_join</span>(all_combinations, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"yearmonth"</span>, <span class="st">"Station"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(yearmonth, Station)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>months_2024 <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">ymd</span>(<span class="st">"2024-01-01"</span>), <span class="fu">ymd</span>(<span class="st">"2024-12-01"</span>), <span class="at">by =</span> <span class="st">"month"</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>stations_missing_yearmonth <span class="ot">&lt;-</span> monthly_rainfall <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(yearmonth)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">yearmonth =</span> <span class="fu">list</span>(months_2024)) <span class="sc">%&gt;%</span> <span class="co"># Append rows for remaining stations</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(yearmonth)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>monthly_rainfall <span class="ot">&lt;-</span> monthly_rainfall <span class="sc">%&gt;%</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(yearmonth)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_rows</span>(stations_missing_yearmonth) <span class="sc">%&gt;%</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(Station, yearmonth)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

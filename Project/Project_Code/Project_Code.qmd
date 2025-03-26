@@ -152,6 +152,8 @@ pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
                spNetwork, tmaptools)
 ```
 
+# 2 Import Data
+
 ## 2.1 Import Aspatial Data
 
 ```{r}
@@ -207,7 +209,7 @@ mpsz <- mpsz %>%
 ## 3.2 Join Dataset
 
 ```{r}
-weather <- left_join(mpsz, weather,
+daily_weather <- left_join(mpsz, weather,
                          by = c("SUBZONE_N" = "station"),
                          relationship = "many-to-many")
 ```
@@ -215,7 +217,7 @@ weather <- left_join(mpsz, weather,
 ## 3.3 Remove Unnecessary Columns
 
 ```{r}
-weather <- subset(weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,
+daily_weather <- subset(daily_weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,
                                        PLN_AREA_C, REGION_C, FMEL_UPD_D, 
                                        CA_IND, INC_CRC))
 ```
@@ -224,6 +226,23 @@ weather <- subset(weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,
 
 ```{r}
 weather <- weather %>%
+  rename(Station = station,
+         Year = year,
+         Month = month,
+         Day = day,
+         rainfall_total = daily_rainfall_total_mm,
+         rainfall_30 = highest_30_min_rainfall_mm,
+         rainfall_60 = highest_60_min_rainfall_mm,
+         rainfall_120 = highest_120_min_rainfall_mm,
+         mean_temp = mean_temperature_c,
+         max_temp = maximum_temperature_c,
+         min_temp = minimum_temperature_c,
+         mean_wind = mean_wind_speed_km_h,
+         max_wind = max_wind_speed_km_h)
+```
+
+```{r}
+daily_weather <- daily_weather %>%
   rename(Station = SUBZONE_N,
          Area = PLN_AREA_N,
          Region = REGION_N,
@@ -255,9 +274,80 @@ stations <- c("Admiralty", "Ang Mo Kio", "Changi", "Choa Chu Kang (South)",
 
 ```{r}
 weather <- weather %>% 
-  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) |
-                                    is.na(rainfall_60) | is.na(rainfall_120) |
-                                    is.na(mean_temp) | is.na(max_temp) |
-                                    is.na(min_temp) | is.na(mean_wind) |
+  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) | 
+                                    is.na(rainfall_60) | is.na(rainfall_120) | 
+                                    is.na(mean_temp) | is.na(max_temp) | 
+                                    is.na(min_temp) | is.na(mean_wind) | 
                                     is.na(max_wind))))
+```
+
+```{r}
+daily_weather <- daily_weather %>% 
+  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) | 
+                                    is.na(rainfall_60) | is.na(rainfall_120) | 
+                                    is.na(mean_temp) | is.na(max_temp) | 
+                                    is.na(min_temp) | is.na(mean_wind) | 
+                                    is.na(max_wind))))
+```
+
+## 3.6 Handling Date Data
+
+```{r}
+weather <- weather %>%
+  mutate(
+    yearmonth = make_date(Year, Month, 1)
+  )
+```
+
+```{r}
+daily_weather <- daily_weather %>%
+  mutate(
+    yearmonth = make_date(Year, Month, 1)
+  )
+```
+
+## 3.7 Combining Geometry
+
+```{r}
+daily_weather <- daily_weather %>%
+  group_by(Station) %>%
+  mutate(geometry = st_union(geometry)) %>%
+  mutate(geometry = st_cast(geometry, "MULTIPOLYGON")) %>%
+  ungroup()
+```
+
+## 3.8 Derive Monthly Data
+
+```{r}
+# Create a dataset with all combinations of yearmonth and Station (to keep all stations)
+all_combinations <- daily_weather %>%
+  st_drop_geometry() %>% # Drop geometry temporarily
+  distinct(yearmonth, Station) 
+```
+
+```{r}
+# Merge the combinations back to weather_map to fill in missing rainfall data
+monthly_rainfall <- daily_weather %>%
+  group_by(yearmonth, Station, geometry) %>%
+  summarize(
+    max_rainfall = if (all(is.na(rainfall_total))) NA_real_ else max(rainfall_total, na.rm = TRUE),
+    mean_rainfall = if (all(is.na(rainfall_total))) NA_real_ else mean(rainfall_total, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  right_join(all_combinations, by = c("yearmonth", "Station")) %>%
+  arrange(yearmonth, Station)
+```
+
+```{r}
+months_2024 <- seq(ymd("2024-01-01"), ymd("2024-12-01"), by = "month")
+
+stations_missing_yearmonth <- monthly_rainfall %>%
+  filter(is.na(yearmonth)) %>%
+  mutate(yearmonth = list(months_2024)) %>% # Append rows for remaining stations
+  unnest(yearmonth)
+
+monthly_rainfall <- monthly_rainfall %>%
+  filter(!is.na(yearmonth)) %>%
+  bind_rows(stations_missing_yearmonth) %>%
+  arrange(Station, yearmonth)
 ```

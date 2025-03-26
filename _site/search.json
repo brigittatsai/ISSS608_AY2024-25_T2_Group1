@@ -172,28 +172,28 @@
     "href": "Project/Project_Code/Project_Code.html#join-dataset",
     "title": "Project Code",
     "section": "3.2 Join Dataset",
-    "text": "3.2 Join Dataset\n\nweather &lt;- left_join(mpsz, weather,\n                         by = c(\"SUBZONE_N\" = \"station\"),\n                         relationship = \"many-to-many\")"
+    "text": "3.2 Join Dataset\n\ndaily_weather &lt;- left_join(mpsz, weather,\n                         by = c(\"SUBZONE_N\" = \"station\"),\n                         relationship = \"many-to-many\")"
   },
   {
     "objectID": "Project/Project_Code/Project_Code.html#remove-unnecessary-columns",
     "href": "Project/Project_Code/Project_Code.html#remove-unnecessary-columns",
     "title": "Project Code",
     "section": "3.3 Remove Unnecessary Columns",
-    "text": "3.3 Remove Unnecessary Columns\n\nweather &lt;- subset(weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,\n                                       PLN_AREA_C, REGION_C, FMEL_UPD_D, \n                                       CA_IND, INC_CRC))"
+    "text": "3.3 Remove Unnecessary Columns\n\ndaily_weather &lt;- subset(daily_weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,\n                                       PLN_AREA_C, REGION_C, FMEL_UPD_D, \n                                       CA_IND, INC_CRC))"
   },
   {
     "objectID": "Project/Project_Code/Project_Code.html#rename-columns",
     "href": "Project/Project_Code/Project_Code.html#rename-columns",
     "title": "Project Code",
     "section": "3.4 Rename Columns",
-    "text": "3.4 Rename Columns\n\nweather &lt;- weather %&gt;%\n  rename(Station = SUBZONE_N,\n         Area = PLN_AREA_N,\n         Region = REGION_N,\n         Year = year,\n         Month = month,\n         Day = day,\n         rainfall_total = daily_rainfall_total_mm,\n         rainfall_30 = highest_30_min_rainfall_mm,\n         rainfall_60 = highest_60_min_rainfall_mm,\n         rainfall_120 = highest_120_min_rainfall_mm,\n         mean_temp = mean_temperature_c,\n         max_temp = maximum_temperature_c,\n         min_temp = minimum_temperature_c,\n         mean_wind = mean_wind_speed_km_h,\n         max_wind = max_wind_speed_km_h)"
+    "text": "3.4 Rename Columns\n\nweather &lt;- weather %&gt;%\n  rename(Station = station,\n         Year = year,\n         Month = month,\n         Day = day,\n         rainfall_total = daily_rainfall_total_mm,\n         rainfall_30 = highest_30_min_rainfall_mm,\n         rainfall_60 = highest_60_min_rainfall_mm,\n         rainfall_120 = highest_120_min_rainfall_mm,\n         mean_temp = mean_temperature_c,\n         max_temp = maximum_temperature_c,\n         min_temp = minimum_temperature_c,\n         mean_wind = mean_wind_speed_km_h,\n         max_wind = max_wind_speed_km_h)\n\n\ndaily_weather &lt;- daily_weather %&gt;%\n  rename(Station = SUBZONE_N,\n         Area = PLN_AREA_N,\n         Region = REGION_N,\n         Year = year,\n         Month = month,\n         Day = day,\n         rainfall_total = daily_rainfall_total_mm,\n         rainfall_30 = highest_30_min_rainfall_mm,\n         rainfall_60 = highest_60_min_rainfall_mm,\n         rainfall_120 = highest_120_min_rainfall_mm,\n         mean_temp = mean_temperature_c,\n         max_temp = maximum_temperature_c,\n         min_temp = minimum_temperature_c,\n         mean_wind = mean_wind_speed_km_h,\n         max_wind = max_wind_speed_km_h)"
   },
   {
     "objectID": "Project/Project_Code/Project_Code.html#remove-missing-records",
     "href": "Project/Project_Code/Project_Code.html#remove-missing-records",
     "title": "Project Code",
     "section": "3.5 Remove Missing Records",
-    "text": "3.5 Remove Missing Records\nDefine list of stations:\n\nstations &lt;- c(\"Admiralty\", \"Ang Mo Kio\", \"Changi\", \"Choa Chu Kang (South)\",\n              \"Clementi\", \"East Coast Parkway\", \"Jurong (West)\",\n              \"Jurong Island\", \"Newton\", \"Pasir Panjang\", \"Paya Lebar\",\n              \"Pulau Ubin\", \"Seletar\", \"Sembawang\", \"Sentosa Island\",\n              \"Tai Seng\", \"Tuas South\")\n\n\nweather &lt;- weather %&gt;% \n  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) |\n                                    is.na(rainfall_60) | is.na(rainfall_120) |\n                                    is.na(mean_temp) | is.na(max_temp) |\n                                    is.na(min_temp) | is.na(mean_wind) |\n                                    is.na(max_wind))))"
+    "text": "3.5 Remove Missing Records\nDefine list of stations:\n\nstations &lt;- c(\"Admiralty\", \"Ang Mo Kio\", \"Changi\", \"Choa Chu Kang (South)\",\n              \"Clementi\", \"East Coast Parkway\", \"Jurong (West)\",\n              \"Jurong Island\", \"Newton\", \"Pasir Panjang\", \"Paya Lebar\",\n              \"Pulau Ubin\", \"Seletar\", \"Sembawang\", \"Sentosa Island\",\n              \"Tai Seng\", \"Tuas South\")\n\n\nweather &lt;- weather %&gt;% \n  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) | \n                                    is.na(rainfall_60) | is.na(rainfall_120) | \n                                    is.na(mean_temp) | is.na(max_temp) | \n                                    is.na(min_temp) | is.na(mean_wind) | \n                                    is.na(max_wind))))\n\n\ndaily_weather &lt;- daily_weather %&gt;% \n  filter(!(Station %in% stations & (is.na(rainfall_total) | is.na(rainfall_30) | \n                                    is.na(rainfall_60) | is.na(rainfall_120) | \n                                    is.na(mean_temp) | is.na(max_temp) | \n                                    is.na(min_temp) | is.na(mean_wind) | \n                                    is.na(max_wind))))"
   },
   {
     "objectID": "Project/Project_Code/data/geospatial/MPSZ-2019.html",
@@ -201,5 +201,26 @@
     "title": "Visual Analytics for Singapore's Weather",
     "section": "",
     "text": "&lt;!DOCTYPE qgis PUBLIC ‘http://mrcc.com/qgis.dtd’ ‘SYSTEM’&gt;     dataset\n\n\n        0 0     false"
+  },
+  {
+    "objectID": "Project/Project_Code/Project_Code.html#handling-date-data",
+    "href": "Project/Project_Code/Project_Code.html#handling-date-data",
+    "title": "Project Code",
+    "section": "3.6 Handling Date Data",
+    "text": "3.6 Handling Date Data\n\nweather &lt;- weather %&gt;%\n  mutate(\n    yearmonth = make_date(Year, Month, 1)\n  )\n\n\ndaily_weather &lt;- daily_weather %&gt;%\n  mutate(\n    yearmonth = make_date(Year, Month, 1)\n  )"
+  },
+  {
+    "objectID": "Project/Project_Code/Project_Code.html#combining-geometry",
+    "href": "Project/Project_Code/Project_Code.html#combining-geometry",
+    "title": "Project Code",
+    "section": "3.7 Combining Geometry",
+    "text": "3.7 Combining Geometry\n\ndaily_weather &lt;- daily_weather %&gt;%\n  group_by(Station) %&gt;%\n  mutate(geometry = st_union(geometry)) %&gt;%\n  mutate(geometry = st_cast(geometry, \"MULTIPOLYGON\")) %&gt;%\n  ungroup()"
+  },
+  {
+    "objectID": "Project/Project_Code/Project_Code.html#derive-monthly-data",
+    "href": "Project/Project_Code/Project_Code.html#derive-monthly-data",
+    "title": "Project Code",
+    "section": "3.8 Derive Monthly Data",
+    "text": "3.8 Derive Monthly Data\n\n# Create a dataset with all combinations of yearmonth and Station (to keep all stations)\nall_combinations &lt;- daily_weather %&gt;%\n  st_drop_geometry() %&gt;% # Drop geometry temporarily\n  distinct(yearmonth, Station) \n\n\n# Merge the combinations back to weather_map to fill in missing rainfall data\nmonthly_rainfall &lt;- daily_weather %&gt;%\n  group_by(yearmonth, Station, geometry) %&gt;%\n  summarize(\n    max_rainfall = if (all(is.na(rainfall_total))) NA_real_ else max(rainfall_total, na.rm = TRUE),\n    mean_rainfall = if (all(is.na(rainfall_total))) NA_real_ else mean(rainfall_total, na.rm = TRUE),\n    .groups = \"drop\"\n  ) %&gt;%\n  right_join(all_combinations, by = c(\"yearmonth\", \"Station\")) %&gt;%\n  arrange(yearmonth, Station)\n\n\nmonths_2024 &lt;- seq(ymd(\"2024-01-01\"), ymd(\"2024-12-01\"), by = \"month\")\n\nstations_missing_yearmonth &lt;- monthly_rainfall %&gt;%\n  filter(is.na(yearmonth)) %&gt;%\n  mutate(yearmonth = list(months_2024)) %&gt;% # Append rows for remaining stations\n  unnest(yearmonth)\n\nmonthly_rainfall &lt;- monthly_rainfall %&gt;%\n  filter(!is.na(yearmonth)) %&gt;%\n  bind_rows(stations_missing_yearmonth) %&gt;%\n  arrange(Station, yearmonth)"
   }
 ]
