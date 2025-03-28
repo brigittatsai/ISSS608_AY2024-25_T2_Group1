@@ -1,0 +1,13 @@
+name: ISSS608_Group1
+title: ISSS608_Group1
+username: brigittatsai
+account: brigittatsai
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 14210624
+bundleId:
+url: https://brigittatsai.shinyapps.io/ISSS608_Group1/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: app.R

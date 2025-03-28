@@ -1,50 +1,50 @@
-pacman::p_load(shiny, tidyverse, rsconnect)
-library(shiny)
-library(tidyverse)
-library(rsconnect)
-library(readxl)
-library(data.table)
+# Load necessary packages
+pacman::p_load(shiny, tidyverse, tmap, sf)
 
-folder_path <- "ISSS608_Group1/data/aspatial/weather"
-file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+# Read spatial data (assuming data is in RDS format)
+daily_weather <- readRDS("data/daily_weather.rds")
+jan_rainfall_with_data <- readRDS("data/jan_rainfall_with_data.rds")
 
-# Read and combine all Excel files using data.table
-combined_data <- rbindlist(lapply(file_list, fread))
+# Ensure jan_rainfall_with_data is an sf object (modify coords if necessary)
+if (!inherits(jan_rainfall_with_data, "sf")) {
+  jan_rainfall_with_data <- st_as_sf(jan_rainfall_with_data, coords = c("longitude", "latitude"), crs = 4326)
+}
 
-# View the merged dataframe
-head(combined_data)
-
-
+# UI
 ui <- fluidPage(
-  titlePanel("Pupil Exam Results Dashboard"),
+  titlePanel("January Max Rainfall Map"),
+  
   sidebarLayout(
     sidebarPanel(
-      selectInput(inputId = "variable",
-                  label = "Subject:",
-                  choices = c("English" = "ENGLISH",
-                              "Maths" = "MATHS",
-                              "Science" = "SCIENCE"),
-                  selected = "ENGLISH"),
-      sliderInput(inputId = "bins",
-                  label = "Number of Bins",
-                  min = 5,
-                  max = 20,
-                  value = 10)
+      helpText("This map displays max rainfall in January at different stations.")
     ),
+    
     mainPanel(
-      plotOutput("distPlot")
+      tmapOutput("rainfallMap")  # Use tmapOutput instead of plotOutput
     )
   )
 )
 
-server <- function(input, output){
-  output$distPlot <- renderPlot({
-    ggplot(exam,
-           aes_string(x = input$variable)) +
-      geom_histogram(bins = input$bins,
-                     color = "black",
-                     fill = "lightblue")
+# Server
+server <- function(input, output, session) {
+  output$rainfallMap <- renderTmap({
+    tmap_mode("view")  # Ensure interactive mode
+    
+    tm_shape(jan_rainfall_with_data) +
+      tm_symbols(
+        col = "max_rainfall", 
+        size = "max_rainfall", 
+        palette = "Blues",
+        title.col = "Max Rainfall (mm)",
+        popup.vars = c("Station", "max_rainfall"),
+        legend.size.show = FALSE
+      ) +
+      tm_layout(title = "January Max Rainfall (mm)", legend.outside = TRUE) +
+      tm_shape(jan_rainfall_with_data) +
+      tm_text("Station", size = 0.7, col = "black",
+              shadow = FALSE, ymod = -1)
   })
 }
+
 
 shinyApp(ui = ui, server = server)

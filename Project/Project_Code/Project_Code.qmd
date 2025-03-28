@@ -149,7 +149,8 @@ cat("🗑️ All individual CSV files have been deleted.\n")
 
 ```{r}
 pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
-               spNetwork, tmaptools)
+               spNetwork, tmaptools, raster, leaflet, patchwork, gridExtra,
+               ggplot2, png, grid)
 ```
 
 # 2 Import Data
@@ -300,6 +301,12 @@ weather <- weather %>%
 ```
 
 ```{r}
+weather <- weather %>% 
+  mutate(Date = make_date(Year, Month, Day)) %>% 
+  arrange(Date)
+```
+
+```{r}
 daily_weather <- daily_weather %>%
   mutate(
     yearmonth = make_date(Year, Month, 1)
@@ -314,6 +321,11 @@ daily_weather <- daily_weather %>%
   mutate(geometry = st_union(geometry)) %>%
   mutate(geometry = st_cast(geometry, "MULTIPOLYGON")) %>%
   ungroup()
+```
+
+```{r}
+write_rds(weather, "data/rds/weather.rds")
+write_rds(daily_weather, "data/rds/daily_weather.rds")
 ```
 
 ## 3.8 Derive Monthly Data
@@ -350,4 +362,212 @@ monthly_rainfall <- monthly_rainfall %>%
   filter(!is.na(yearmonth)) %>%
   bind_rows(stations_missing_yearmonth) %>%
   arrange(Station, yearmonth)
+```
+
+## 3.9 Derive Parameters
+
+In the analysis, we aim to provide several aggregations to see the monthly weather conditions in the form of geospatial map. The following are the variables that we aim to show in the chart:
+
+**Weather Parameter:**
+
+1.  Rainfall
+2.  Wind Speed
+3.  Temperature
+
+**Measurement Options:**
+
+1.  Mean
+2.  Maximum
+3.  Frequency
+
+### 3.9.1 Rainfall Parameters
+
+To define the frequency of rainfall, we will use **"Heavy Rain"** as the baseline to define the frequency of rainfall in a defined period of time (weekly/monthly/quarterly). Any daily rainfall recorded that is above or equal to **31 mm/day** is considered as heavy rain.
+
+::: tabset-pane
+### Rainfall Parameters
+
+::: {.table .table-striped .table-hover .table-bordered}
+| Rain Type            | Total Daily Rainfall (mm) |
+|----------------------|---------------------------|
+| No Rain              | 0                         |
+| Very Light Rain      | 0.1 - 0.9                 |
+| Light Rain           | 1.0 - 10                  |
+| Moderate Rain        | 11 - 30                   |
+| **Heavy Rain**       | **31 - 70**               |
+| Very Heavy Rain      | 71 - 150                  |
+| Extremely Heavy Rain | \> 151                    |
+:::
+:::
+
+```{r}
+# Flag heavy rains in the daily_weather dataframe
+daily_weather <- daily_weather %>%
+  mutate(heavy_rain_count = if_else(rainfall_total > 31, 1, 0))
+```
+
+```{r}
+# Aggregate the total monthly frequency
+frequency_heavy_rain <- daily_weather %>%
+  group_by(Station, yearmonth) %>%
+  summarise(frequency_heavy_rain = sum(heavy_rain_count), .groups = "drop")
+```
+
+```{r}
+# 1. Drop the geometry column (only for non-spatial join)
+monthly_rainfall_no_geom <- st_drop_geometry(monthly_rainfall)
+
+# 2. Perform the left join on the data (without geometry)
+monthly_rainfall_no_geom <- left_join(monthly_rainfall_no_geom, frequency_heavy_rain,
+                                     by = c("Station" = "Station", 
+                                            "yearmonth" = "yearmonth"))
+
+# 3. Add the geometry column back to the joined dataframe
+monthly_rainfall <- st_sf(monthly_rainfall_no_geom,
+                          geometry = st_geometry(monthly_rainfall))
+```
+
+# 4 Plotting Geospatial Map to Visualise Weather Data
+
+## 4.1 Filtering
+
+### 4.1.1 Time Period Filter
+
+```{r}
+jan_rainfall <- monthly_rainfall %>% 
+  filter(yearmonth == "2024-01-01")
+```
+
+```{r}
+jan_rainfall_with_data <- jan_rainfall %>%
+  filter(!is.na(max_rainfall))
+```
+
+```{r}
+write_rds(jan_rainfall, "data/rds/jan_rainfall.rds")
+write_rds(jan_rainfall_with_data, "data/rds/jan_rainfall_with_data.rds")
+```
+
+## 4.2 Visualising Maximum Rainfall in January 2024
+
+```{r, fig.width=10, fig.height=8}
+tmap_mode("plot")
+ 
+tm_shape(jan_rainfall) +
+  tm_layout(
+    main.title = "Maximum Rainfall (mm) in January 2024",
+    main.title.position = "center",
+    main.title.size = 1.2,
+    legend.position = c("RIGHT", "BOTTOM"),
+    legend.title.size = 0.8,
+    legend.text.size = 0.8,
+    legend.outside = TRUE,
+    legend.outside.position = "bottom",
+    legend.frame = FALSE,
+    frame = TRUE
+  ) +
+  tm_shape(jan_rainfall_with_data) +
+  tm_symbols(
+    col = "max_rainfall",  # Measurement Parameters here
+    palette = "Blues",
+    title.col = "Max Rainfall (mm)",
+    popup.vars = c("Station", "max_rainfall"),
+    legend.size.show = FALSE
+  ) +
+  tm_shape(jan_rainfall_with_data) +
+  tm_text("Station", size = 0.7, col = "black", shadow = FALSE, ymod=-1) +
+  tm_grid(alpha = 0.2) +
+  tm_basemap("CartoDB.Positron")
+```
+
+## 4.3 Visualising Frequency of Rainfall
+
+```{r, fig.width=12, fig.height=10}
+min_x <- as.Date("2023-12-01")
+max_x <- as.Date("2024-04-01")
+
+monthly_rainfall_station <- monthly_rainfall %>%
+  filter(Station %in% stations) %>%
+  filter(format(as.Date(yearmonth), "%m") %in% c("01", "02", "03"))
+
+# Plot the bar charts for the selected stations
+ggplot(monthly_rainfall_station, aes(x = yearmonth, y = frequency_heavy_rain)) +
+  geom_bar(stat = "identity", fill = "royalblue") +
+  labs(x = "Month", y = "Frequency of Heavy Rain") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 90, size = 12, vjust = -0.0005),
+    strip.text = element_text(size = 12)
+  ) +
+  scale_x_date(
+    date_labels = "%b",
+    breaks = unique(monthly_rainfall_station$yearmonth),
+    limits = c(min_x, max_x),
+    expand = expansion(mult = c(0, 0))
+  ) +
+  facet_wrap(~Station, ncol = 4)
+```
+
+```{r}
+min_x <- as.Date("2023-12-01")
+max_x <- as.Date("2025-01-01")
+
+ggplot(monthly_rainfall, aes(x = yearmonth, y = frequency_heavy_rain)) +
+  geom_bar(stat = "identity", fill = "royalblue") +
+  labs(x = "Month", y = "Frequency of Heavy Rain") +
+  theme(axis.text.x = element_text(angle = 0)) +
+  scale_x_date(
+    date_labels = "%b",
+    breaks = monthly_rainfall$yearmonth,
+    limits = c(min_x, max_x),
+    expand = expansion(mult = c(0, 0))
+  )
+```
+
+```{r, fig.width=10, fig.height=8}
+tmap_mode("plot")
+ 
+tm_shape(jan_rainfall) +
+  tm_layout(
+    main.title = "January Frequency of Heavy Rain",
+    main.title.position = "center",
+    main.title.size = 1.2,
+    legend.position = c("RIGHT", "BOTTOM"),
+    legend.title.size = 0.8,
+    legend.text.size = 0.8,
+    legend.outside = TRUE,
+    legend.outside.position = "bottom",
+    legend.frame = FALSE,
+    frame = TRUE
+  ) +
+  tm_shape(jan_rainfall_with_data) +
+  tm_symbols(
+    col = "frequency_heavy_rain",  # Measurement Parameters here
+    palette = "-Green",
+    title.col = "Frequency of Heavy Rain",
+    popup.vars = c("Station", "frequency_heavy_rain"),
+    legend.size.show = FALSE
+  ) +
+  tm_shape(jan_rainfall_with_data) +
+  tm_text("Station", size = 0.7, col = "black", shadow = FALSE, ymod=-1) +
+  tm_grid(alpha = 0.2) +
+  tm_basemap("CartoDB.Positron")
+```
+
+```{r}
+tmap_mode("view")
+
+tm_shape(jan_rainfall_with_data) +
+  tm_symbols(
+    col = "max_rainfall", 
+    size = "max_rainfall", 
+    palette = "Blues",
+    title.col = "Max Rainfall (mm)",
+    popup.vars = c("Station", "max_rainfall"),
+    legend.size.show = FALSE
+  ) +
+  tm_layout(title = "January Max Rainfall (mm)", legend.outside = TRUE) +
+  tm_shape(jan_rainfall_with_data) +
+  tm_text("Station", size = 0.7, col = "black",
+          shadow = FALSE, ymod=-1)
 ```
