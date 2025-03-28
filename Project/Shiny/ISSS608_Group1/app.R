@@ -13,12 +13,10 @@ if (!inherits(jan_rainfall_with_data, "sf")) {
 # UI
 ui <- fluidPage(
   titlePanel("January Max Rainfall Map"),
-  
   sidebarLayout(
     sidebarPanel(
       helpText("This map displays max rainfall in January at different stations.")
     ),
-    
     mainPanel(
       tmapOutput("rainfallMap")  # Use tmapOutput instead of plotOutput
     )
@@ -29,7 +27,6 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   output$rainfallMap <- renderTmap({
     tmap_mode("view")  # Ensure interactive mode
-    
     tm_shape(jan_rainfall_with_data) +
       tm_symbols(
         col = "max_rainfall", 
