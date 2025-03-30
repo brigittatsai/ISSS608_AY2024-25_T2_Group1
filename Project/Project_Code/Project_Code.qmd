@@ -150,10 +150,8 @@ cat("🗑️ All individual CSV files have been deleted.\n")
 ```{r}
 pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
                spNetwork, tmaptools, raster, leaflet, patchwork, gridExtra,
-               ggplot2, png, grid)
+               ggplot2, png, grid, terra, gstat, viridis, automap)
 ```
-
-# 2 Import Data
 
 ## 2.1 Import Aspatial Data
 
@@ -161,19 +159,42 @@ pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
 weather <- read_csv("data/aspatial/weather.csv")
 ```
 
+```{r}
+station <- read_csv("data/aspatial/station.csv")
+```
+
 ## 2.2 Import Geospatial Data
 
 ```{r}
 mpsz <- st_read(dsn = "data/geospatial", 
-                layer = "MP14_SUBZONE_WEB_PL")
+                layer = "MPSZ-2019") %>% 
+  st_transform(crs = 3414)
 ```
 
 # 3 Data Preparation
 
-## 3.1 Match Station Names
+## 3.1 Join Weather Data and Station Data
 
 ```{r}
-sort(unique(weather$station))
+daily_weather <- left_join(station, weather,
+                         by = c("Station" = "station"),
+                         relationship = "many-to-many")
+```
+
+## 3.2 Set CRS
+
+```{r}
+daily_weather <- st_as_sf(daily_weather, 
+                      coords = c("Longitude",
+                                 "Latitude"),
+                      crs= 4326) %>%
+  st_transform(crs = 3414)
+```
+
+## 3.3 Match Station Names
+
+```{r}
+sort(unique(daily_weather$Station))
 ```
 
 ```{r}
@@ -184,43 +205,92 @@ sort(unique(mpsz$SUBZONE_N))
 mpsz <- mpsz %>%
   mutate(SUBZONE_N = case_when(
     SUBZONE_N == "ADMIRALTY" ~ "Admiralty",
-    SUBZONE_N == "ANG MO KIO TOWN CENTRE" ~ "Ang Mo Kio",
-    SUBZONE_N %in% c("CHANGI AIRPORT", "CHANGI BAY", 
-                     "CHANGI POINT", "CHANGI WEST") ~ "Changi",
-    SUBZONE_N == "CHOA CHU KANG CENTRAL" ~ "Choa Chu Kang (South)",
-    SUBZONE_N == "CLEMENTI CENTRAL" ~ "Clementi",
-    SUBZONE_N == "EAST COAST" ~ "East Coast Parkway",
-    SUBZONE_N == "JURONG WEST CENTRAL" ~ "Jurong (West)",
-    SUBZONE_N == "JURONG ISLAND AND BUKOM" ~ "Jurong Island",
-    SUBZONE_N == "NEWTON CIRCUS" ~ "Newton",
-    SUBZONE_N %in% c("PASIR PANJANG 1", "PASIR PANJANG 2") ~ "Pasir Panjang",
-    SUBZONE_N %in% c("PAYA LEBAR EAST", "PAYA LEBAR NORTH", 
-                     "PAYA LEBAR WEST") ~ "Paya Lebar",
-    SUBZONE_N == "PULAU UBIN" ~ "Pulau Ubin",
-    SUBZONE_N %in% c("SELETAR", "SELETAR AEROSPACE PARK") ~ "Seletar",
-    SUBZONE_N %in% c("SEMBAWANG CENTRAL", "SEMBAWANG EAST", "SEMBAWANG NORTH",
-                     "SEMBAWANG SPRINGS", "SEMBAWANG STRAITS") ~ "Sembawang",
-    SUBZONE_N == "SENTOSA" ~ "Sentosa Island",
-    SUBZONE_N == "TAI SENG" ~ "Tai Seng",
-    SUBZONE_N == "TUAS BAY" ~ "Tuas South",
-    TRUE ~ SUBZONE_N
+    SUBZONE_N == "AIRPORT ROAD" ~ "Airport Road",
+    SUBZONE_N == "ALEXANDRA HILL" ~ "Alexandra Hill",
+    SUBZONE_N == "ALEXANDRA NORTH" ~ "Alexandra North",
+    SUBZONE_N == "ALJUNIED" ~ "Aljunied",
+    SUBZONE_N == "ANAK BUKIT" ~ "Anak Bukit",
+    SUBZONE_N == "ANCHORVALE" ~ "Anchorvale",
+    SUBZONE_N == "ANG MO KIO" ~ "Ang Mo Kio",
+    SUBZONE_N == "ANSON" ~ "Anson",
+    SUBZONE_N == "BAHAR" ~ "Bahar",
+    SUBZONE_N == "BALESTIER" ~ "Balestier",
+    SUBZONE_N == "BANGKIT" ~ "Bangkit",
+    SUBZONE_N == "BAYFRONT SUBZONE" ~ "Bayfront Subzone",
+    SUBZONE_N == "BAYSHORE" ~ "Bayshore",
+    SUBZONE_N == "BEDOK NORTH" ~ "Bedok North",
+    SUBZONE_N == "BEDOK RESERVOIR" ~ "Bedok Reservoir",
+    SUBZONE_N == "BEDOK SOUTH" ~ "Bedok South",
+    SUBZONE_N == "BENCOOLEN" ~ "Bencoolen",
+    SUBZONE_N == "BENDEMEER" ~ "Bendemeer",
+    SUBZONE_N == "BENOI SECTOR" ~ "Benoi Sector",
+    SUBZONE_N == "BIDADARI" ~ "Bidadari",
+    SUBZONE_N == "BISHAN EAST" ~ "Bishan East",
+    SUBZONE_N == "BOAT QUAY" ~ "Boat Quay",
+    SUBZONE_N == "BOON KENG" ~ "Boon Keng",
+    SUBZONE_N == "BOON LAY (WEST)" ~ "Boon Lay (West)",
+    SUBZONE_N == "BOON TECK" ~ "Boon Teck",
+    SUBZONE_N == "BOULEVARD" ~ "Boulevard",
+    SUBZONE_N == "BRADDELL" ~ "Braddell",
+    SUBZONE_N == "BRAS BASAH" ~ "Bras Basah",
+    SUBZONE_N == "BRICKLAND" ~ "Brickland",
+    SUBZONE_N == "BRICKWORKS" ~ "Brickworks",
+    SUBZONE_N == "BUGIS" ~ "Bugis",
+    SUBZONE_N == "BUKIT BATOK CENTRAL" ~ "Bukit Batok Central",
+    SUBZONE_N == "BUKIT BATOK EAST" ~ "Bukit Batok East",
+    SUBZONE_N == "BUKIT BATOK SOUTH" ~ "Bukit Batok South",
+    SUBZONE_N == "BUKIT BATOK WEST" ~ "Bukit Batok West",
+    SUBZONE_N == "BUKIT HO SWEE" ~ "Bukit Ho Swee",
+    SUBZONE_N == "BUKIT MERAH" ~ "Bukit Merah",
+    SUBZONE_N == "BUKIT PANJANG" ~ "Bukit Panjang",
+    SUBZONE_N == "BUKIT TIMAH" ~ "Bukit Timah",
+    SUBZONE_N == "CAIRNHILL" ~ "Cairnhill",
+    SUBZONE_N == "CECIL" ~ "Cecil",
+    SUBZONE_N == "CENTRAL SUBZONE" ~ "Central Subzone",
+    SUBZONE_N == "CENTRAL WATER CATCHMENT" ~ "Central Water Catchment",
+    SUBZONE_N == "CHAI CHEE" ~ "Chai Chee",
+    SUBZONE_N == "CHANGI" ~ "Changi",
+    SUBZONE_N == "CHANGI BAY" ~ "Changi Bay",
+    SUBZONE_N == "CHANGI POINT" ~ "Changi Point",
+    SUBZONE_N == "CHANGI WEST" ~ "Changi West",
+    SUBZONE_N == "CHATSWORTH" ~ "Chatsworth",
+    SUBZONE_N == "CHENG SAN" ~ "Cheng San",
+    SUBZONE_N == "CHIN BEE" ~ "Chin Bee",
+    SUBZONE_N == "CHINA SQUARE" ~ "China Square",
+    SUBZONE_N == "CHINATOWN" ~ "Chinatown",
+    SUBZONE_N == "CHOA CHU KANG (CENTRAL)" ~ "Choa Chu Kang (Central)",
+    SUBZONE_N == "CHOA CHU KANG (NORTH)" ~ "Choa Chu Kang (North)",
+    SUBZONE_N == "CHONG BOON" ~ "Chong Boon",
+    SUBZONE_N == "CITY HALL" ~ "City Hall",
+    SUBZONE_N == "CITY TERMINALS" ~ "City Terminals",
+    SUBZONE_N == "CLARKE QUAY" ~ "Clarke Quay",
+    SUBZONE_N == "CLEANTECH" ~ "Cleantech",
+    SUBZONE_N == "CLEMENTI" ~ "Clementi",
+    SUBZONE_N == "CLEMENTI NORTH" ~ "Clementi North",
+    SUBZONE_N == "CLEMENTI WEST" ~ "Clementi West",
+    SUBZONE_N == "CLEMENTI WOODS" ~ "Clementi Woods",
+    SUBZONE_N == "CLIFFORD PIER" ~ "Clifford Pier",
+    SUBZONE_N == "COMMONWEALTH" ~ "Commonwealth",
+    SUBZONE_N == "COMPASSVALE" ~ "Compassvale",
+    SUBZONE_N == "CONEY ISLAND" ~ "Coney Island",
+    SUBZONE_N == "CORONATION ROAD" ~ "Coronation Road",
+    SUBZONE_N == "CRAWFORD" ~ "Crawford",
+    SUBZONE_N == "DAIRY FARM" ~ "Dairy Farm",
+    SUBZONE_N == "DEFU INDUSTRIAL PARK" ~ "Defu Industrial Park",
+    SUBZONE_N == "DEPOT ROAD" ~ "Depot Road",
+    SUBZONE_N == "DHOBY GHAUT" ~ "Dhoby Ghaut",
+    SUBZONE_N == "DOVER" ~ "Dover",
+    SUBZONE_N == "DUNEARN" ~ "Dunearn",
+    SUBZONE_N == "EAST COAST PARKWAY" ~ "East Coast Parkway",
+    SUBZONE_N == "EVERTON PARK" ~ "Everton Park",
+    SUBZONE_N == "FABER" ~ "Faber",
+    SUBZONE_N == "FAJAR" ~ "Fajar",
+    SUBZONE_N == "FARRER COURT" ~ "Farrer Court",
+    SUBZONE_N == "FARRER PARK" ~ "Farrer Park",
+    SUBZONE_N == "FERNVALE" ~ "Fernvale",
+    TRUE ~ SUBZONE_N  # Keep other values unchanged
   ))
-```
 
-## 3.2 Join Dataset
-
-```{r}
-daily_weather <- left_join(mpsz, weather,
-                         by = c("SUBZONE_N" = "station"),
-                         relationship = "many-to-many")
-```
-
-## 3.3 Remove Unnecessary Columns
-
-```{r}
-daily_weather <- subset(daily_weather, select = -c(OBJECTID, SUBZONE_NO, SUBZONE_C,
-                                       PLN_AREA_C, REGION_C, FMEL_UPD_D, 
-                                       CA_IND, INC_CRC))
 ```
 
 ## 3.4 Rename Columns
@@ -244,10 +314,7 @@ weather <- weather %>%
 
 ```{r}
 daily_weather <- daily_weather %>%
-  rename(Station = SUBZONE_N,
-         Area = PLN_AREA_N,
-         Region = REGION_N,
-         Year = year,
+  rename(Year = year,
          Month = month,
          Day = day,
          rainfall_total = daily_rainfall_total_mm,
@@ -301,34 +368,13 @@ weather <- weather %>%
 ```
 
 ```{r}
-weather <- weather %>% 
-  mutate(Date = make_date(Year, Month, Day)) %>% 
-  arrange(Date)
-```
-
-```{r}
 daily_weather <- daily_weather %>%
   mutate(
     yearmonth = make_date(Year, Month, 1)
   )
 ```
 
-## 3.7 Combining Geometry
-
-```{r}
-daily_weather <- daily_weather %>%
-  group_by(Station) %>%
-  mutate(geometry = st_union(geometry)) %>%
-  mutate(geometry = st_cast(geometry, "MULTIPOLYGON")) %>%
-  ungroup()
-```
-
-```{r}
-write_rds(weather, "data/rds/weather.rds")
-write_rds(daily_weather, "data/rds/daily_weather.rds")
-```
-
-## 3.8 Derive Monthly Data
+## 3.7 Derive Monthly Data
 
 ```{r}
 # Create a dataset with all combinations of yearmonth and Station (to keep all stations)
@@ -336,6 +382,8 @@ all_combinations <- daily_weather %>%
   st_drop_geometry() %>% # Drop geometry temporarily
   distinct(yearmonth, Station) 
 ```
+
+### 3.7.1 Monthly Rainfall
 
 ```{r}
 # Merge the combinations back to weather_map to fill in missing rainfall data
@@ -364,6 +412,74 @@ monthly_rainfall <- monthly_rainfall %>%
   arrange(Station, yearmonth)
 ```
 
+### 3.7.2 Monthly Temperature
+
+```{r}
+monthly_temp <- daily_weather %>%
+  group_by(yearmonth, Station, geometry) %>%
+  summarize(
+    max_temp = if (all(is.na(max_temp))) NA_real_ else max(max_temp, na.rm = TRUE),
+    mean_temp = if (all(is.na(mean_temp))) NA_real_ else mean(mean_temp, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  right_join(all_combinations, by = c("yearmonth", "Station")) %>%
+  arrange(yearmonth, Station)
+```
+
+```{r}
+months_2024 <- seq(ymd("2024-01-01"), ymd("2024-12-01"), by = "month")
+
+stations_missing_yearmonth <- monthly_temp %>%
+  filter(is.na(yearmonth)) %>%
+  mutate(yearmonth = list(months_2024)) %>% # Append rows for remaining stations
+  unnest(yearmonth)
+
+monthly_temp <- monthly_temp %>%
+  filter(!is.na(yearmonth)) %>%
+  bind_rows(stations_missing_yearmonth) %>%
+  arrange(Station, yearmonth)
+```
+
+### 3.7.3 Monthly Wind Speed
+
+```{r}
+monthly_wind <- daily_weather %>%
+  group_by(yearmonth, Station, geometry) %>%
+  summarize(
+    max_wind = if (all(is.na(max_wind))) NA_real_ else max(max_wind, na.rm = TRUE),
+    mean_wind = if (all(is.na(mean_wind))) NA_real_ else mean(mean_wind, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  right_join(all_combinations, by = c("yearmonth", "Station")) %>%
+  arrange(yearmonth, Station)
+```
+
+```{r}
+months_2024 <- seq(ymd("2024-01-01"), ymd("2024-12-01"), by = "month")
+
+stations_missing_yearmonth <- monthly_wind %>%
+  filter(is.na(yearmonth)) %>%
+  mutate(yearmonth = list(months_2024)) %>% # Append rows for remaining stations
+  unnest(yearmonth)
+
+monthly_wind <- monthly_wind %>%
+  filter(!is.na(yearmonth)) %>%
+  bind_rows(stations_missing_yearmonth) %>%
+  arrange(Station, yearmonth)
+```
+
+## 3.8 Join mpsz and weather
+
+```{r}
+weather_nogeom <- st_drop_geometry(daily_weather)
+```
+
+```{r}
+map <- left_join(mpsz, weather_nogeom,
+                         by = c("SUBZONE_N" = "Station"),
+                         relationship = "many-to-many")
+```
+
 ## 3.9 Derive Parameters
 
 In the analysis, we aim to provide several aggregations to see the monthly weather conditions in the form of geospatial map. The following are the variables that we aim to show in the chart:
@@ -379,6 +495,10 @@ In the analysis, we aim to provide several aggregations to see the monthly weath
 1.  Mean
 2.  Maximum
 3.  Frequency
+
+**Time Period:**
+
+1.  Monthly
 
 ### 3.9.1 Rainfall Parameters
 
@@ -399,6 +519,8 @@ To define the frequency of rainfall, we will use **"Heavy Rain"** as the baselin
 | Extremely Heavy Rain | \> 151                    |
 :::
 :::
+
+source: https://www.nchm.gov.bt/attachment/ckfinder/userfiles/files/Rainfall%20intensity%20classification.pdf
 
 ```{r}
 # Flag heavy rains in the daily_weather dataframe
@@ -427,33 +549,197 @@ monthly_rainfall <- st_sf(monthly_rainfall_no_geom,
                           geometry = st_geometry(monthly_rainfall))
 ```
 
-# 4 Plotting Geospatial Map to Visualise Weather Data
+### 3.9.2 Temperature Parameter
 
-## 4.1 Filtering
+::: tabset-pane
+### Temperature Parameters
 
-### 4.1.1 Time Period Filter
+::: {.table .table-striped .table-hover .table-bordered}
+| Heat Stress          | Temperature (°C) |
+|----------------------|------------------|
+| Low Heat Stress      | \< 31            |
+| Moderate Heat Stress | 31 ≤ °C \< 33    |
+| **High Heat Stress** | **≥ 33**         |
+:::
+:::
+
+source: https://www.weather.gov.sg/heat-stress/
+
+```{r}
+range(daily_weather$max_temp, na.rm=TRUE)
+```
+
+```{r}
+daily_weather <- daily_weather %>%
+  mutate(high_heat_count = if_else(max_temp >= 33, 1, 0))
+```
+
+```{r}
+frequency_high_heat <- daily_weather %>%
+  group_by(Station, yearmonth) %>%
+  summarise(frequency_high_heat = sum(high_heat_count), .groups = "drop")
+```
+
+```{r}
+# 1. Drop the geometry column (only for non-spatial join)
+monthly_temp_no_geom <- st_drop_geometry(monthly_temp)
+
+# 2. Perform the left join on the data (without geometry)
+monthly_temp_no_geom <- left_join(monthly_temp_no_geom, frequency_high_heat,
+                                     by = c("Station" = "Station", 
+                                            "yearmonth" = "yearmonth"))
+
+# 3. Add the geometry column back to the joined dataframe
+monthly_temp <- st_sf(monthly_temp_no_geom,
+                          geometry = st_geometry(monthly_temp))
+```
+
+### 3.9.3 Wind Speed Parameter
+
+The parameter for wind speed is based on **Beaufort Wind Scale**. To define strong wind force, we will use wind force **7** to determine frequency of strong winds in Singapore.
+
+::: tabset-pane
+### Wind Speed Parameters
+
+::: {.table .table-striped .table-hover .table-bordered}
+| Wind Force | Description     | Speed (km/h) |
+|------------|-----------------|--------------|
+| 0          | Calm            | \< 1         |
+| 1          | Light Air       | 1 - 5        |
+| 2          | Light Breeze    | 6 - 11       |
+| 3          | Gentle Breeze   | 12 - 19      |
+| 4          | Moderate Breeze | 20 - 28      |
+| 5          | Fresh Breeze    | 29 - 38      |
+| 6          | Strong Breeze   | 38 - 49      |
+| **7**      | **Near Gale**   | **50 - 61**  |
+| 8          | Gale            | 62 - 74      |
+| 9          | Strong Gale     | 75 - 88      |
+| 10         | Storm           | 89 - 102     |
+| 11         | Violent Storm   | 103 - 117    |
+| 12         | Hurricane       | ≥ 118        |
+:::
+:::
+
+source: https://www.rmets.org/metmatters/beaufort-wind-scale
+
+```{r}
+range(daily_weather$max_wind, na.rm=TRUE)
+```
+
+```{r}
+daily_weather <- daily_weather %>%
+  mutate(strong_wind_count = if_else(max_wind >= 50, 1, 0))
+```
+
+```{r}
+frequency_strong_wind <- daily_weather %>%
+  group_by(Station, yearmonth) %>%
+  summarise(frequency_strong_wind = sum(strong_wind_count), .groups = "drop")
+```
+
+```{r}
+# 1. Drop the geometry column (only for non-spatial join)
+monthly_wind_no_geom <- st_drop_geometry(monthly_wind)
+
+# 2. Perform the left join on the data (without geometry)
+monthly_wind_no_geom <- left_join(monthly_wind_no_geom, frequency_strong_wind,
+                                     by = c("Station" = "Station", 
+                                            "yearmonth" = "yearmonth"))
+
+# 3. Add the geometry column back to the joined dataframe
+monthly_wind <- st_sf(monthly_wind_no_geom,
+                          geometry = st_geometry(monthly_wind))
+```
+
+## 3.10 Clean Missing Values
+
+In this section, we will clear out the missing values in weather data. For the visuals, we will use the **map** dataframe as the basemap.
+
+```{r}
+monthly_rainfall <- na.omit(monthly_rainfall)
+monthly_temp <- na.omit(monthly_temp)
+monthly_wind <- na.omit(monthly_wind)
+```
+
+## 3.11 Write Data to RDS for Shiny App
+
+```{r}
+write_rds(map, "data/rds/map.rds")
+write_rds(daily_weather, "data/rds/daily_weather.rds")
+write_rds(monthly_rainfall, "data/rds/monthly_rainfall.rds")
+write_rds(monthly_temp, "data/rds/monthly_temp.rds")
+write_rds(monthly_wind, "data/rds/monthly_wind.rds")
+```
+
+# 4 Prototype
+
+## 4.1 Inverse Distance Weighted (IDW)
+
+```{r}
+grid <- terra::rast(mpsz, 
+                    nrows = 690, 
+                    ncols = 1075)
+grid
+```
+
+```{r}
+xy <- terra::xyFromCell(grid, 
+                        1:ncell(grid))
+head(xy)
+```
+
+```{r}
+coop <- st_as_sf(as.data.frame(xy), 
+                 coords = c("x", "y"),
+                 crs = st_crs(mpsz))
+coop <- st_filter(coop, mpsz)
+head(coop)
+```
+
+```{r}
+res <- gstat(formula = frequency_heavy_rain ~ 1, 
+             locations = monthly_rainfall, 
+             nmax = 5,
+             set = list(idp = 0))
+```
+
+```{r}
+resp <- predict(res, coop)
+```
+
+```{r}
+resp$x <- st_coordinates(resp)[,1]
+resp$y <- st_coordinates(resp)[,2]
+resp$pred <- resp$var1.pred
+
+pred <- terra::rasterize(resp, grid, 
+                         field = "pred", 
+                         fun = "mean")
+```
+
+```{r, fig.width=12, fig.height=10}
+tm_check_fix()
+tmap_mode("plot")
+tm_shape(pred) +
+  tm_raster(col_alpha = 0.6,
+            col.scale = tm_scale(
+              values = "brewer.blues")) +
+  tm_title("IDW Mean Frequency of Heavy Rain", size=1.5) +
+  tm_shape(monthly_rainfall) +
+  tm_text("Station", size=1, col="black", alpha = 0.7)
+```
+
+## 4.2 Monthly Maximum Rainfall by Station
 
 ```{r}
 jan_rainfall <- monthly_rainfall %>% 
   filter(yearmonth == "2024-01-01")
 ```
 
-```{r}
-jan_rainfall_with_data <- jan_rainfall %>%
-  filter(!is.na(max_rainfall))
-```
-
-```{r}
-write_rds(jan_rainfall, "data/rds/jan_rainfall.rds")
-write_rds(jan_rainfall_with_data, "data/rds/jan_rainfall_with_data.rds")
-```
-
-## 4.2 Visualising Maximum Rainfall in January 2024
-
 ```{r, fig.width=10, fig.height=8}
 tmap_mode("plot")
- 
-tm_shape(jan_rainfall) +
+
+tm_shape(map) +
   tm_layout(
     main.title = "Maximum Rainfall (mm) in January 2024",
     main.title.position = "center",
@@ -466,7 +752,7 @@ tm_shape(jan_rainfall) +
     legend.frame = FALSE,
     frame = TRUE
   ) +
-  tm_shape(jan_rainfall_with_data) +
+  tm_shape(jan_rainfall) +
   tm_symbols(
     col = "max_rainfall",  # Measurement Parameters here
     palette = "Blues",
@@ -552,22 +838,4 @@ tm_shape(jan_rainfall) +
   tm_text("Station", size = 0.7, col = "black", shadow = FALSE, ymod=-1) +
   tm_grid(alpha = 0.2) +
   tm_basemap("CartoDB.Positron")
-```
-
-```{r}
-tmap_mode("view")
-
-tm_shape(jan_rainfall_with_data) +
-  tm_symbols(
-    col = "max_rainfall", 
-    size = "max_rainfall", 
-    palette = "Blues",
-    title.col = "Max Rainfall (mm)",
-    popup.vars = c("Station", "max_rainfall"),
-    legend.size.show = FALSE
-  ) +
-  tm_layout(title = "January Max Rainfall (mm)", legend.outside = TRUE) +
-  tm_shape(jan_rainfall_with_data) +
-  tm_text("Station", size = 0.7, col = "black",
-          shadow = FALSE, ymod=-1)
 ```
