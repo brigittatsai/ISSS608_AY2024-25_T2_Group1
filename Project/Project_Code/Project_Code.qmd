@@ -504,7 +504,7 @@ In the analysis, we aim to provide several aggregations to see the monthly weath
 
 To define the frequency of rainfall, we will use **"Heavy Rain"** as the baseline to define the frequency of rainfall in a defined period of time (weekly/monthly/quarterly). Any daily rainfall recorded that is above or equal to **31 mm/day** is considered as heavy rain.
 
-::: tabset-pane
+:::: tabset-pane
 ### Rainfall Parameters
 
 ::: {.table .table-striped .table-hover .table-bordered}
@@ -518,7 +518,7 @@ To define the frequency of rainfall, we will use **"Heavy Rain"** as the baselin
 | Very Heavy Rain      | 71 - 150                  |
 | Extremely Heavy Rain | \> 151                    |
 :::
-:::
+::::
 
 source: https://www.nchm.gov.bt/attachment/ckfinder/userfiles/files/Rainfall%20intensity%20classification.pdf
 
@@ -551,7 +551,7 @@ monthly_rainfall <- st_sf(monthly_rainfall_no_geom,
 
 ### 3.9.2 Temperature Parameter
 
-::: tabset-pane
+:::: tabset-pane
 ### Temperature Parameters
 
 ::: {.table .table-striped .table-hover .table-bordered}
@@ -561,7 +561,7 @@ monthly_rainfall <- st_sf(monthly_rainfall_no_geom,
 | Moderate Heat Stress | 31 ≤ °C \< 33    |
 | **High Heat Stress** | **≥ 33**         |
 :::
-:::
+::::
 
 source: https://www.weather.gov.sg/heat-stress/
 
@@ -598,7 +598,7 @@ monthly_temp <- st_sf(monthly_temp_no_geom,
 
 The parameter for wind speed is based on **Beaufort Wind Scale**. To define strong wind force, we will use wind force **7** to determine frequency of strong winds in Singapore.
 
-::: tabset-pane
+:::: tabset-pane
 ### Wind Speed Parameters
 
 ::: {.table .table-striped .table-hover .table-bordered}
@@ -618,7 +618,7 @@ The parameter for wind speed is based on **Beaufort Wind Scale**. To define stro
 | 11         | Violent Storm   | 103 - 117    |
 | 12         | Hurricane       | ≥ 118        |
 :::
-:::
+::::
 
 source: https://www.rmets.org/metmatters/beaufort-wind-scale
 
