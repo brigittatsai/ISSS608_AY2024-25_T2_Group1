@@ -1,4 +1,7 @@
 # Load necessary packages
+pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse,
+               spNetwork, tmaptools, raster, leaflet, patchwork, gridExtra,
+               ggplot2, grid, terra, gstat, viridis, automap)
 library(shiny)
 library(sf)
 library(raster)
@@ -19,19 +22,18 @@ library(viridis)
 library(automap)
 
 # Read spatial data (assuming data is in RDS format)
-map <- readRDS("data/map.rds")
-daily_weather <- readRDS("data/daily_weather.rds")
-jan_rainfall <- readRDS("data/jan_rainfall.rds")
+monthly_weather <- readRDS("data/monthly_weather.rds")
 monthly_rainfall <- readRDS("data/monthly_rainfall.rds")
-monthly_temp <- readRDS("data/monthly_temp.rds")
-monthly_wind <- readRDS("data/monthly_wind.rds")
+
+available_months <- unique(monthly_rainfall$month)
 
 # UI
 ui <- fluidPage(
   titlePanel("Rainfall Map"),
   sidebarLayout(
     sidebarPanel(
-      helpText("This map displays max rainfall in January at different stations.")
+      helpText("Select a month to display max rainfall at different stations."),
+      selectInput("selected_month", "Choose Month:", choices = available_months, selected = available_months[1])
     ),
     mainPanel(
       tmapOutput("rainfallMap")
@@ -42,35 +44,25 @@ ui <- fluidPage(
 # Server
 server <- function(input, output, session) {
   output$rainfallMap <- renderTmap({
-    tmap_mode("view")  # Interactive map mode
     
-    tm_shape(map) +
-      tm_layout(
-        main.title = "Maximum Rainfall (mm) in January 2024",
-        main.title.position = "center",
-        main.title.size = 1.2,
-        legend.position = c("RIGHT", "BOTTOM"),
-        legend.title.size = 0.8,
-        legend.text.size = 0.8,
-        legend.outside = TRUE,
-        legend.outside.position = "bottom",
-        legend.frame = FALSE,
-        frame = TRUE
-      ) +
-      tm_shape(monthly_rainfall) +
+    # Filter dataset based on selected month
+    filtered_data <- monthly_rainfall %>% filter(month == input$selected_month)
+    
+    # Render tmap
+    tmap_mode("view")
+    tm_shape(filtered_data) +
       tm_symbols(
-        col = "max_rainfall",
-        palette = "Blues",
-        title.col = "Max Rainfall (mm)",
-        popup.vars = c("Station", "max_rainfall"),  # Make sure column names are correct
-        legend.size.show = FALSE
+        fill = "max_rainfall",
+        fill.scale = tm_scale("Blues"),
+        size.legend = tm_legend_hide()
       ) +
-      tm_text("Station", size = 0.7, col = "black", shadow = FALSE, ymod=-0.4) +
-      tm_basemap("CartoDB.Positron")
+      tm_title(paste(input$selected_month, "Rainfall (mm)")) +
+      tm_shape(filtered_data) +
+      tm_text("Station", size = 0.7, col = "black", ymod = -1)
   })
 }
 
 
 
-
+# Run the app
 shinyApp(ui = ui, server = server)
