@@ -225,11 +225,11 @@ server <- function(input, output, session) {
     updateSelectInput(session, "selected_variable", selected = "frequency_heavy_rain")
   })
   output$parameter_table <- renderTable({
-    if (input$selected_variable == "frequency_heavy_rain") {
+    if (input$selected_variable == "Frequency of Heavy Rain") {
       rainfall_parameter
-    } else if (input$selected_variable == "frequency_high_heat") {
+    } else if (input$selected_variable == "Frequency of Extreme Heat") {
       temp_parameter
-    } else if (input$selected_variable == "frequency_strong_wind") {
+    } else if (input$selected_variable == "Frequency of Strong Wind") {
       wind_parameter
     }
   })
