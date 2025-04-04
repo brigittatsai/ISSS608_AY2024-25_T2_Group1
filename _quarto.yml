@@ -19,6 +19,14 @@ website:
     - text: "Project Code"
       href: "Project/Project_Code/Project_Code.html"
       
+    - text: "User Guide"
+      menu: 
+      - text: "Forecasting User Guide"
+        href: "Project/UserGuide/UserGuide.html"
+      menu:
+      - text: "Geospatial User Guide"
+        href: "Project/User_Geospatial/User_Geospatial.html"
+        
     - text: "Shiny App"
       href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
 
