@@ -2,6 +2,7 @@ pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse, plotly, dplyr,
                spNetwork, tmaptools, raster, leaflet, patchwork, gridExtra,
                ggplot2, grid, terra, gstat, viridis, automap, DT, shinydashboard)
 
+tmap_mode("view")
 
 monthly_weather <- readRDS("data/monthly_weather.rds")
 weather <- read.csv("data/weather_clean.csv", stringsAsFactors = FALSE)
@@ -189,7 +190,7 @@ server <- function(input, output, session) {
     
     filtered_data <- monthly_weather %>% filter(month == input$selected_month)
     selected_variable <- input$selected_variable
-    tmap_mode("view")
+    
     tm_shape(filtered_data) +
       tm_symbols(
         fill = selected_variable,
@@ -225,11 +226,11 @@ server <- function(input, output, session) {
     updateSelectInput(session, "selected_variable", selected = "frequency_heavy_rain")
   })
   output$parameter_table <- renderTable({
-    if (input$selected_variable == "frequency_heavy_rain") {
+    if (input$selected_variable == "Frequency of Heavy Rain") {
       rainfall_parameter
-    } else if (input$selected_variable == "frequency_high_heat") {
+    } else if (input$selected_variable == "Frequency of Extreme Heat") {
       temp_parameter
-    } else if (input$selected_variable == "frequency_strong_wind") {
+    } else if (input$selected_variable == "Frequency of Strong Wind") {
       wind_parameter
     }
   })
