@@ -5,7 +5,7 @@ website:
   title: "Visual Analytics for Singapore's Weather"
   navbar:
     left:
-    - text: "Proposal"
+    - text: "Main Page"
       href: "Project/Project_Proposal/Project_Proposal.html"
         
     - text: "Meeting Minutes"
@@ -22,10 +22,9 @@ website:
     - text: "User Guide"
       menu: 
       - text: "Forecasting User Guide"
-        href: "Project/UserGuide/UserGuide.html"
-      menu:
+        href: "Project/UserGuide/User_Forecasting.html"
       - text: "Geospatial User Guide"
-        href: "Project/User_Geospatial/User_Geospatial.html"
+        href: "Project/UserGuide/User_Geospatial.html"
         
     - text: "Shiny App"
       href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
@@ -33,7 +32,6 @@ website:
     right: 
       - href: index.qmd
         text: Home
-      - about.qmd
 format:
   html:
     theme: sandstone
