@@ -507,7 +507,7 @@ In the analysis, we aim to provide several aggregations to see the monthly weath
 
 To define the frequency of rainfall, we will use **"Heavy Rain"** as the baseline to define the frequency of rainfall in a defined period of time (weekly/monthly/quarterly). Any daily rainfall recorded that is above or equal to **31 mm/day** is considered as heavy rain.
 
-:::: tabset-pane
+::: tabset-pane
 ### Rainfall Parameters
 
 ::: {.table .table-striped .table-hover .table-bordered}
@@ -521,7 +521,7 @@ To define the frequency of rainfall, we will use **"Heavy Rain"** as the baselin
 | Very Heavy Rain      | 71 - 150                  |
 | Extremely Heavy Rain | \> 151                    |
 :::
-::::
+:::
 
 source: https://www.nchm.gov.bt/attachment/ckfinder/userfiles/files/Rainfall%20intensity%20classification.pdf
 
@@ -559,7 +559,7 @@ monthly_rainfall <- monthly_rainfall %>%
 
 ### 3.9.2 Temperature Parameter
 
-:::: tabset-pane
+::: tabset-pane
 ### Temperature Parameters
 
 ::: {.table .table-striped .table-hover .table-bordered}
@@ -569,7 +569,7 @@ monthly_rainfall <- monthly_rainfall %>%
 | Moderate Heat Stress | 31 ≤ °C \< 33    |
 | **High Heat Stress** | **≥ 33**         |
 :::
-::::
+:::
 
 source: https://www.weather.gov.sg/heat-stress/
 
@@ -607,12 +607,11 @@ monthly_temp <- monthly_temp %>%
   mutate(month = format(ymd(yearmonth), "%B"))
 ```
 
-
 ### 3.9.3 Wind Speed Parameter
 
 The parameter for wind speed is based on **Beaufort Wind Scale**. To define strong wind force, we will use wind force **7** to determine frequency of strong winds in Singapore.
 
-:::: tabset-pane
+::: tabset-pane
 ### Wind Speed Parameters
 
 ::: {.table .table-striped .table-hover .table-bordered}
@@ -632,7 +631,7 @@ The parameter for wind speed is based on **Beaufort Wind Scale**. To define stro
 | 11         | Violent Storm   | 103 - 117    |
 | 12         | Hurricane       | ≥ 118        |
 :::
-::::
+:::
 
 source: https://www.rmets.org/metmatters/beaufort-wind-scale
 
@@ -701,6 +700,22 @@ monthly_weather <- left_join(monthly_weather_no_geom, geometry_data, by = c("Sta
 monthly_weather <- st_as_sf(monthly_weather)
 ```
 
+```{r}
+# Rename column
+monthly_weather <- monthly_weather %>% 
+  rename(
+    "Maximum Temperature" = max_temp,
+    "Mean Temperature" = mean_temp,
+    "Frequency of Extreme Heat" = frequency_high_heat,
+    "Maximum Rainfall" = max_rainfall,
+    "Mean Rainfall" = mean_rainfall,
+    "Frequency of Heavy Rain" = frequency_heavy_rain,
+    "Maximum Wind Speed" = max_wind,
+    "Mean Wind Speed" = mean_wind,
+    "Frequency of Strong Wind" = frequency_strong_wind
+  )
+```
+
 ## 3.12 Write Data to RDS
 
 ```{r}
@@ -710,4 +725,3 @@ write_rds(monthly_rainfall, "data/rds/monthly_rainfall.rds")
 write_rds(monthly_temp, "data/rds/monthly_temp.rds")
 write_rds(monthly_wind, "data/rds/monthly_wind.rds")
 ```
-

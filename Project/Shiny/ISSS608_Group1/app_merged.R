@@ -1,54 +1,133 @@
-# 載入必要套件
+pacman::p_load(sp, sf, raster, spatstat, tmap, tidyverse, plotly,
+               spNetwork, tmaptools, raster, leaflet, patchwork, gridExtra,
+               ggplot2, grid, terra, gstat, viridis, automap, DT, shinydashboard)
 library(shiny)
 library(tmap)
 library(dplyr)
 library(ggplot2)
 library(plotly)
 library(DT)
-library(shinydashboard)  # 若要使用 box() 等佈局函數，需保留
+library(shinydashboard)
+library(sf)
+library(raster)
+library(spatstat)
+library(tidyverse)
+library(spNetwork)
+library(tmaptools)
+library(raster)
+library(leaflet)
+library(patchwork)
+library(gridExtra)
+library(ggplot2)
+library(grid)
+library(terra)
+library(gstat)
+library(viridis)
+library(automap)
+library(plotly)
 
 
-map <- readRDS("data/map.rds")
-daily_weather <- readRDS("data/daily_weather.rds")
-jan_rainfall <- readRDS("data/jan_rainfall.rds")
-monthly_rainfall <- readRDS("data/monthly_rainfall.rds")
-monthly_temp <- readRDS("data/monthly_temp.rds")
-monthly_wind <- readRDS("data/monthly_wind.rds")
-
-
+monthly_weather <- readRDS("data/monthly_weather.rds")
 weather <- read.csv("data/weather_clean.csv", stringsAsFactors = FALSE)
 weather$date <- as.Date(weather$date, format = "%Y-%m-%d")
+
+variable_titles <- list(
+  "frequency_heavy_rain" = "Heavy Rain",
+  "frequency_high_heat" = "Extreme Heat",
+  "frequency_strong_wind" = "Strong Wind"
+)
+
+category_columns <- list(
+  "Rainfall" = c("max_rainfall", "mean_rainfall", "frequency_heavy_rain"),
+  "Wind" = c("max_wind", "mean_wind", "frequency_strong_wind"),
+  "Temperature" = c("max_temp", "mean_temp", "frequency_high_heat")
+)
+
+
+variable_labels <- list(
+  "max_rainfall" = "Max",
+  "mean_rainfall" = "Mean",
+  "frequency_heavy_rain" = "Frequency",
+  "max_wind" = "Max",
+  "mean_wind" = "Mean",
+  "frequency_strong_wind" = "Frequency",
+  "max_temp" = "Max",
+  "mean_temp" = "Mean",
+  "frequency_high_heat" = "Frequency"
+)
+
+rainfall_parameter <- data.frame(
+  "Rain Type" = c("No Rain", "Very Light Rain", "Light Rain", "Moderate Rain", "Heavy Rain", "Very Heavy Rain", "Extremely Heavy Rain"),
+  "Total Daily Rainfall (mm)" = c("0", "0.1 - 0.9", "1 - 10", "11 - 30", "31 - 70", "71 - 150", "> 151")
+)
+
+colnames(rainfall_parameter) <- c("Rain Type", "Total Daily Rainfall (mm)")
+
+temp_parameter <- data.frame(
+  "Heat Stress" = c("Low Heat Stress", "Moderate Heat Stress", "High Heat Stress"),
+  "Temperature (°C)" = c("< 31", "31 ≤ °C < 33", "≥ 33")
+)
+
+colnames(temp_parameter) <- c("Heat Stress", "Temperature (°C)")
+
+wind_parameter <- data.frame(
+  "Wind Force" = c(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+  "Description" = c("Calm", "Light Air", "Light Breeze", "Gentle Breeze", "Moderate Breeze", "Fresh Breeze", "Strong Breeze", "Near Gale", "Gale", "Strong Gale", "Storm", "Violent Storm", "Hurricane"),
+  "Speed (km/h)" = c("< 1", "1 - 5", "6 - 11", "12 - 19", "20 - 28", "29 - 38", "38 - 49", "50 - 61", "62 - 74", "75 - 88", "89 - 102", "103 - 117", "≥ 118")
+)
+
+colnames(wind_parameter) <- c("Wind Force", "Description", "Speed (km/h)")
+
+
+available_months <- unique(monthly_weather$month)
+
+
 #====================
 #  UI
 #====================
 ui <- navbarPage(
-  "Rainfall App",
+  "Weather Map",
   
   #------------------------------------------------
-  #  (Rainfall Map)
+  #  (Map)
   #------------------------------------------------
   tabPanel(
-    "Rainfall Map",
-    
+    "Map",
     fluidPage(
-      titlePanel("Rainfall Map"),
+      titlePanel("Weather Data Visualization"),
+      textOutput("current_tab"),
       sidebarLayout(
         sidebarPanel(
-          helpText("This map displays max rainfall in January at different stations.")
+          selectInput("selected_month", "Select Month (2024):", choices = available_months, selected = available_months[1]),
+          conditionalPanel(
+            condition = "input.tabs === 'Weather Map'",
+            selectInput("selected_category", "Select Category:", choices = names(category_columns), selected = "Rainfall"),
+            selectInput("selected_variable", "Select Measurement:", choices = NULL)
+          ),
+          conditionalPanel(
+            condition = "input.tabs === 'Weather Frequency'",
+            selectInput("selected_variable", "Select Frequency Variable:", 
+                        choices = setNames(names(variable_titles), variable_titles),
+                        selected = "frequency_heavy_rain")
+          ),
+          tableOutput("parameter_table")
         ),
         mainPanel(
-          tmapOutput("rainfallMap")
+          tabsetPanel(
+            id = "tabs",
+            tabPanel("Weather Map", tmapOutput("weather_map", height = "600px")),
+            tabPanel("Weather Frequency", plotOutput("weather_plot", height = "600px"))
+          )
         )
       )
     )
   ),
   
   #------------------------------------------------
-  # (Time Series & Data Table)
+  # (Explore)
   #------------------------------------------------
   tabPanel(
     "Explore",
-    
     fluidPage(
       # 使用 tabsetPanel 來區分「Time Series & Stats」與「Data Table」兩個子分頁
       tabsetPanel(
@@ -112,39 +191,73 @@ ui <- navbarPage(
   )
 )
 
+
+
 #====================
 #  Server
 #====================
 server <- function(input, output, session) {
-  
-  #--- (A) ：Rainfall Map ---
-  output$rainfallMap <- renderTmap({
-    tmap_mode("view")  # Interactive map mode
-    
-    tm_shape(map) +
-      tm_layout(
-        main.title = "Maximum Rainfall (mm) in January 2024",
-        main.title.position = "center",
-        main.title.size = 1.2,
-        legend.position = c("RIGHT", "BOTTOM"),
-        legend.title.size = 0.8,
-        legend.text.size = 0.8,
-        legend.outside = TRUE,
-        legend.outside.position = "bottom",
-        legend.frame = FALSE,
-        frame = TRUE
-      ) +
-      tm_shape(monthly_rainfall) +
-      tm_symbols(
-        col = "max_rainfall",
-        palette = "Blues",
-        title.col = "Max Rainfall (mm)",
-        popup.vars = c("Station", "max_rainfall"),  
-        legend.size.show = FALSE
-      ) +
-      tm_text("Station", size = 0.7, col = "black", shadow = FALSE, ymod = -0.4) +
-      tm_basemap("CartoDB.Positron")
+  output$current_tab <- renderText({
+    paste("Current Tab:", input$tabs)
   })
+  
+  observe({
+    category_vars <- category_columns[[input$selected_category]]
+    
+    variable_choices <- setNames(category_vars, sapply(category_vars, function(x) variable_labels[[x]]))
+    updateSelectInput(session, "selected_variable", 
+                      choices = variable_choices,
+                      selected = category_vars[1])
+  })
+  output$weather_map <- renderTmap({
+    
+    filtered_data <- monthly_weather %>% filter(month == input$selected_month)
+    selected_variable <- input$selected_variable
+    tmap_mode("view")
+    tm_shape(filtered_data) +
+      tm_symbols(
+        fill = selected_variable,
+        fill.scale = tm_scale("Blues"),
+        size.legend = tm_legend_hide()
+      ) +
+      tm_title(paste(input$selected_month, selected_variable)) +
+      tm_shape(filtered_data) +
+      tm_text("Station", size = 0.7, col = "black", ymod = -1)
+  })
+  
+  output$weather_plot <- renderPlot({
+    selected_variable_title <- variable_titles[[input$selected_variable]]
+    monthly_weather_filtered <- monthly_weather %>%
+      filter(month == input$selected_month)
+    ggplot(monthly_weather_filtered, aes(x = Station, y = .data[[input$selected_variable]], fill = Station)) +
+      geom_bar(stat = "identity", fill="royalblue") +
+      labs(
+        title = paste("Frequency of", selected_variable_title, "in", input$selected_month),
+        x = "Station", 
+        y = "Frequency"
+      ) +
+      theme_minimal() +
+      theme(
+        axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5),
+        strip.text = element_text(size = 12),
+        legend.position = "none"
+      ) +
+      scale_x_discrete(expand = expansion(mult = c(0, 0))) +
+      coord_cartesian(ylim = c(0, max(monthly_weather_filtered[[input$selected_variable]], na.rm = TRUE) * 1.2))
+  })
+  observe({
+    updateSelectInput(session, "selected_variable", selected = "frequency_heavy_rain")
+  })
+  output$parameter_table <- renderTable({
+    if (input$selected_variable == "frequency_heavy_rain") {
+      rainfall_parameter
+    } else if (input$selected_variable == "frequency_high_heat") {
+      temp_parameter
+    } else if (input$selected_variable == "frequency_strong_wind") {
+      wind_parameter
+    }
+  })
+  
   
   #--- (B) ：Reactive ---
   filtered_data <- reactive({

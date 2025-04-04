@@ -5,7 +5,7 @@ account: brigittatsai
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 14377842
-bundleId: 10030779
+bundleId: 10054650
 url: https://brigittatsai.shinyapps.io/ISSS608_Group1/
 version: 1
 asMultiple: FALSE
