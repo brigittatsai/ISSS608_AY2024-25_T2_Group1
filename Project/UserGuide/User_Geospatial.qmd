@@ -19,17 +19,19 @@ This section of the app allows users to **explore weather patterns across differ
 
     -   **Temperature**
 
--   Based on your choice, the variable selector will automatically update to show relevant options (e.g., "Maximum Rainfall", "Frequency of Extreme Heat").
+    -   **Wind Speed**
+
+-   Based on your choice, the variable selector will automatically update to show relevant options (e.g., "Maximum Rainfall", "Frequency of Extreme Heat", "Maximum Wind Speed").
 
 #### 2. **Select a Variable**
 
--   Choose a **specific weather variable** under the selected category.\
+-   Choose a **specific weather variable** under the selected category. **Frequency** variable is pre-defined based on weather parameters listed on the frequency table. The table guide will show when users select **Frequency** for measurement filter.\
     E.g., If you select *Rainfall*, you might choose *Frequency of Heavy Rain*.
 
 #### 3. **Select a Month**
 
 -   Pick a **month** from the dropdown list.\
-    This filters data to only show weather observations from that month.
+    This filters data to only show weather observations from the selected month.
 
 ### 🗺️ **Map View (Left Panel)**
 
@@ -41,6 +43,6 @@ This section of the app allows users to **explore weather patterns across differ
 
 ### 📊 **Bar Plot (Right Panel)**
 
--   This chart visualizes the **frequency or average value of the selected variable by station**.
+-   This chart visualizes the **frequency value of extreme weather event** based on the listed parameters.
 
 -   Helpful for quickly comparing different locations.
