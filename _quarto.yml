@@ -6,6 +6,9 @@ website:
   navbar:
     left:
     - text: "Main Page"
+      href: "Project/Main/Main_Page.html"
+      
+    - text: "Project Proposal"
       href: "Project/Project_Proposal/Project_Proposal.html"
         
     - text: "Meeting Minutes"
