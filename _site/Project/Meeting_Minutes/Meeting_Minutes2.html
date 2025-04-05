@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Enrico Limberg">
-<meta name="dcterms.date" content="2025-03-12">
 
-<title>Meeting Minutes 2 – Visual Analytics for Singapore’s Weather</title>
+<title>Meeting Minutes 2 – Singapore Weather Demystified: Visualizing Atmospheric Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -81,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../../index.html">
-    <span class="navbar-title">Visual Analytics for Singapore’s Weather</span>
+    <span class="navbar-title">Singapore Weather Demystified: Visualizing Atmospheric Data</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -92,7 +91,7 @@ ul.task-list li input[type="checkbox"] {
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
     <a class="nav-link" href="../../Project/Project_Proposal/Project_Proposal.html"> 
-<span class="menu-text">Proposal</span></a>
+<span class="menu-text">Main Page</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-meeting-minutes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -107,12 +106,35 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../../Project/Meeting_Minutes/Meeting_Minutes2.html">
  <span class="dropdown-text">Meeting Minutes 2</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Project/Meeting_Minutes/Meeting_Minutes3.html">
+ <span class="dropdown-text">Meeting Minutes 3</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="../../Project/Project_Code/Project_Code.html"> 
 <span class="menu-text">Project Code</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-user-guide" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">User Guide</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-user-guide">    
+        <li>
+    <a class="dropdown-item" href="../../Project/UserGuide/User_Forecasting.html">
+ <span class="dropdown-text">Forecasting User Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Project/UserGuide/User_Geospatial.html">
+ <span class="dropdown-text">Geospatial User Guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Project/UserGuide/User_EDA.html">
+ <span class="dropdown-text">Time Series &amp; EDA User Guide</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="https://brigittatsai.shinyapps.io/ISSS608_Group1/"> 
 <span class="menu-text">Shiny App</span></a>
@@ -122,10 +144,6 @@ ul.task-list li input[type="checkbox"] {
   <li class="nav-item">
     <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
-<span class="menu-text">About</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -143,16 +161,30 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#minutes-of-meeting-2" id="toc-minutes-of-meeting-2" class="nav-link active" data-scroll-target="#minutes-of-meeting-2">Minutes of Meeting 2</a></li>
-  <li><a href="#meeting-objectives" id="toc-meeting-objectives" class="nav-link" data-scroll-target="#meeting-objectives">1 Meeting Objectives</a></li>
-  <li><a href="#meeting-agenda" id="toc-meeting-agenda" class="nav-link" data-scroll-target="#meeting-agenda">2 Meeting Agenda</a>
+  <li><a href="#minutes-of-meeting-2" id="toc-minutes-of-meeting-2" class="nav-link active" data-scroll-target="#minutes-of-meeting-2">📋Minutes of Meeting 2</a>
   <ul class="collapse">
-  <li><a href="#review-of-available-topics-discussions" id="toc-review-of-available-topics-discussions" class="nav-link" data-scroll-target="#review-of-available-topics-discussions">2.1 Review of Available Topics Discussions</a></li>
-  <li><a href="#assessment-of-data-availability" id="toc-assessment-of-data-availability" class="nav-link" data-scroll-target="#assessment-of-data-availability">2.2 Assessment of Data Availability</a></li>
-  <li><a href="#formulation-of-problem-statement" id="toc-formulation-of-problem-statement" class="nav-link" data-scroll-target="#formulation-of-problem-statement">2.3 Formulation of Problem Statement</a></li>
+  <li><a href="#meeting-details" id="toc-meeting-details" class="nav-link" data-scroll-target="#meeting-details">🗓️ Meeting Details</a></li>
+  <li><a href="#meetings-objectives" id="toc-meetings-objectives" class="nav-link" data-scroll-target="#meetings-objectives">📝 Meeting’s Objectives</a></li>
+  <li><a href="#meeting-agenda" id="toc-meeting-agenda" class="nav-link" data-scroll-target="#meeting-agenda">📋 Meeting Agenda:</a></li>
+  <li><a href="#recap-of-professors-feedback" id="toc-recap-of-professors-feedback" class="nav-link" data-scroll-target="#recap-of-professors-feedback">1. Recap of Professor’s Feedback</a>
+  <ul class="collapse">
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion:</a></li>
   </ul></li>
-  <li><a href="#follow-up-meeting" id="toc-follow-up-meeting" class="nav-link" data-scroll-target="#follow-up-meeting">3 Follow-up Meeting</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">4 Conclusion</a></li>
+  <li><a href="#revision-of-project-proposal-and-analytical-approach" id="toc-revision-of-project-proposal-and-analytical-approach" class="nav-link" data-scroll-target="#revision-of-project-proposal-and-analytical-approach">2. Revision of Project Proposal and Analytical Approach</a>
+  <ul class="collapse">
+  <li><a href="#discussion-1" id="toc-discussion-1" class="nav-link" data-scroll-target="#discussion-1">Discussion:</a></li>
+  </ul></li>
+  <li><a href="#allocation-of-analytical-focus-areas" id="toc-allocation-of-analytical-focus-areas" class="nav-link" data-scroll-target="#allocation-of-analytical-focus-areas">3. Allocation of Analytical Focus Areas</a>
+  <ul class="collapse">
+  <li><a href="#discussion-2" id="toc-discussion-2" class="nav-link" data-scroll-target="#discussion-2">Discussion:</a></li>
+  </ul></li>
+  <li><a href="#planning-for-next-physical-meeting" id="toc-planning-for-next-physical-meeting" class="nav-link" data-scroll-target="#planning-for-next-physical-meeting">4. Planning for Next Physical Meeting</a>
+  <ul class="collapse">
+  <li><a href="#discussion-3" id="toc-discussion-3" class="nav-link" data-scroll-target="#discussion-3">Discussion:</a></li>
+  </ul></li>
+  <li><a href="#next-meeting" id="toc-next-meeting" class="nav-link" data-scroll-target="#next-meeting">Next Meeting:</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">✅ Conclusion</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -175,19 +207,7 @@ ul.task-list li input[type="checkbox"] {
           </div>
   </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">March 12, 2025</p>
-    </div>
-  </div>
   
-    <div>
-    <div class="quarto-title-meta-heading">Modified</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date-modified">April 5, 2025</p>
-    </div>
-  </div>
     
   </div>
   
@@ -197,103 +217,94 @@ ul.task-list li input[type="checkbox"] {
 
 
 <section id="minutes-of-meeting-2" class="level1">
-<h1>Minutes of Meeting 2</h1>
-<p><strong>Date:</strong> March 7, 2025</p>
-<p><strong>Attendees:</strong> Brigitta Karen Tsai, Enrico Limberg, Hannah</p>
-<p><strong>Agenda:</strong> Finalising Topic and Visual Storyboard</p>
+<h1>📋Minutes of Meeting 2</h1>
+<section id="meeting-details" class="level2">
+<h2 class="anchored" data-anchor-id="meeting-details">🗓️ Meeting Details</h2>
+<ul>
+<li><strong>Meeting Title:</strong> Project Meeting for Refinement of Project Proposal and Task Allocation</li>
+<li><strong>Date:</strong> Saturday, 23rd March 2025</li>
+<li><strong>Time:</strong> 01:00 PM to 02:00 PM</li>
+<li><strong>Attendees:</strong> Brigitta Karen Tsai, Enrico Limberg, Hannah</li>
+</ul>
+<hr>
 </section>
-<section id="meeting-objectives" class="level1">
-<h1>1 Meeting Objectives</h1>
-<p>The objective of our meetings is to review the available topics and identify a suitable problem statement for our project, ensuring that the necessary data is accessible to support our chosen direction.</p>
+<section id="meetings-objectives" class="level2">
+<h2 class="anchored" data-anchor-id="meetings-objectives">📝 Meeting’s Objectives</h2>
+<p>The objective of this meeting was to revise the project proposal and re-align the team on the expected deliverables and analysis directions, following feedback from the Professor during the call on 21st March 2025.</p>
+<hr>
 </section>
-<section id="meeting-agenda" class="level1">
-<h1>2 Meeting Agenda</h1>
+<section id="meeting-agenda" class="level2">
+<h2 class="anchored" data-anchor-id="meeting-agenda">📋 Meeting Agenda:</h2>
 <ol type="1">
-<li>Review of Available Topics</li>
-<li>Assessment of Data Availability</li>
-<li>Formulation of Problem Statement</li>
+<li>Recap of Professor’s Feedback</li>
+<li>Revision of Project Proposal and Analytical Approach</li>
+<li>Allocation of Analytical Focus Areas</li>
+<li>Planning for Next Physical Meeting</li>
 </ol>
-<section id="review-of-available-topics-discussions" class="level2">
-<h2 class="anchored" data-anchor-id="review-of-available-topics-discussions">2.1 Review of Available Topics Discussions</h2>
-<ul>
-<li><p>Brigitta: Examined the first topic, PISA 2022, and determined it was not a suitable choice due to:</p>
-<ul>
-<li><p>The complexity and extensiveness of the dataset, primarily questionnaire based.</p></li>
-<li><p>The high level of data manipulation and preprocessing required.</p></li>
-<li><p><strong>Task</strong>: Brigitta to document key challenges and findings.</p></li>
-<li><p><strong>Conclusion</strong>: The team decided to drop this topic.</p></li>
-</ul></li>
-<li><p>Enrico &amp; Hannah: Explored the second topic, Be Weatherwise or Otherwise, and found challenges due to:</p>
-<ul>
-<li><p>Data being too scattered (recorded on a monthly basis), making it hard to analyze long-term trends.</p></li>
-<li><p>Climate trends being influenced by multiple external factors not fully captured in the dataset.</p></li>
-<li><p>Task: Enrico and Hannah to summarize the data gaps and challenges.</p></li>
-</ul></li>
-</ul>
+<hr>
 </section>
-<section id="assessment-of-data-availability" class="level2">
-<h2 class="anchored" data-anchor-id="assessment-of-data-availability">2.2 Assessment of Data Availability</h2>
+<section id="recap-of-professors-feedback" class="level2">
+<h2 class="anchored" data-anchor-id="recap-of-professors-feedback">1. Recap of Professor’s Feedback</h2>
+<section id="discussion" class="level3">
+<h3 class="anchored" data-anchor-id="discussion">Discussion:</h3>
 <ul>
-<li><p>Brigitta and Hannah explored two potential extensions, “Impact of Climate Change on Carbon Emissions” and “Impact of Carbon Emissions on Climate Change”. Both extensions faced data fragmentation issues and lack of comprehensive datasets.</p></li>
-<li><p>Brigitta and Hannah expressed concerns that the Be Weatherwise topic would be overwhelming due to the need for large datasets.</p></li>
-<li><p>Enrico provided a different perspective. He suggested that instead of analyzing all areas, the team could focus on specific key areas based on available data such as dengue fever, coastal areas, and flood-prone regions. This approach would narrow the scope and make the project more manageable, despite the fragmentation in the available datasets.</p></li>
-<li><p>Enrico to explore how to refine the focus based on specific areas. 3. Formulation of Problem Statement</p></li>
-<li><p>Brigitta and Hannah investigated the impact of Changi’s weather data on flight arrivals and departures.</p></li>
-<li><p>Brigitta, Enrico, and Hannah realized it was too much to collect all the flight data, leading to a reconsideration of the topic.</p></li>
-<li><p>Enrico exolored the impact of rain intensity in specific Singapore areas on rising sea levels (coastal impact analysis), Dengue fever outbreaks (potential mosquito breeding correlations), Rising temperatures and urban heat island effects.</p></li>
-<li><p>Brigitta then questioned how to identify the areas with the highest dengue cases.</p></li>
-<li><p>Enrico suggested analyzing dengue fever cases first, then selecting the area for further data collection.</p></li>
-<li><p>Brigitta reviewed available dengue data sources, but only found records from 2014 to 2018.</p></li>
-<li><p>Hannah verified the fact that there is no more recent datas on dengue.</p></li>
-<li><p>Brigitta and Enrico researched flood-prone areas in Singapore to refine focus.</p></li>
-<li><p>Brigitta, Enrico and Hannah chose to focus only on rising temperatures, rising sea levels and flood risks.</p></li>
-<li><p>Enrico drafted initial problem statement.</p></li>
+<li><strong>Enrico</strong>: Summarized the key points from the call with the Professor on 21st March, which he documented during the discussion. He clarified the expected outcomes and goals of the project as advised by the Professor, as the team previously had differing understandings.</li>
 </ul>
-</section>
-<section id="formulation-of-problem-statement" class="level2">
-<h2 class="anchored" data-anchor-id="formulation-of-problem-statement">2.3 Formulation of Problem Statement</h2>
-<ul>
-<li><p>Brigitta and Hannah investigated the impact of Changi’s weather data on flight arrivals and departures.</p></li>
-<li><p>Brigitta, Enrico, and Hannah realized it was too much to collect all the flight data, leading to a reconsideration of the topic.</p></li>
-<li><p>Enrico exolored the impact of rain intensity in specific Singapore areas on rising sea levels (coastal impact analysis), Dengue fever outbreaks (potential mosquito breeding correlations), Rising temperatures and urban heat island effects.</p></li>
-<li><p>Brigitta then questioned how to identify the areas with the highest dengue cases.</p></li>
-<li><p>Enrico suggested analyzing dengue fever cases first, then selecting the area for further data collection.</p></li>
-<li><p>Brigitta reviewed available dengue data sources, but only found records from 2014 to 2018.</p></li>
-<li><p>Hannah verified the fact that there is no more recent datas on dengue. • Brigitta and Enrico researched flood-prone areas in Singapore to refine focus.</p></li>
-<li><p>Brigitta, Enrico and Hannah chose to focus only on rising temperatures, rising sea levels and flood risks.</p></li>
-<li><p>Enrico drafted initial problem statement.</p></li>
-</ul>
+<hr>
 </section>
 </section>
-<section id="follow-up-meeting" class="level1">
-<h1>3 Follow-up Meeting</h1>
-<p><strong>Date</strong>: 13th March 2025</p>
-<p><strong>Objective</strong>: Review progress, share findings, and finalize next steps based on new data collected.</p>
-<p><strong>Agenda</strong>:</p>
+<section id="revision-of-project-proposal-and-analytical-approach" class="level2">
+<h2 class="anchored" data-anchor-id="revision-of-project-proposal-and-analytical-approach">2. Revision of Project Proposal and Analytical Approach</h2>
+<section id="discussion-1" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-1">Discussion:</h3>
 <ul>
-<li><p><strong>Review of Data Collection Progress</strong></p>
-<ul>
-<li><p>Brigitta &amp; Hannah: Share findings from continued search for datasets on temperature rise and flood risks.</p></li>
-<li><p>Enrico: Present research findings from news sources and climate-related papers on climate changes in Singapore.</p></li>
-</ul></li>
-<li><p><strong>Discussion of New Data and Information</strong></p>
-<ul>
-<li><p>Team to evaluate the newly gathered data and information.</p></li>
-<li><p>Analyze the relevance and quality of datasets for the project.</p></li>
-</ul></li>
-<li><p><strong>Finalize Next Steps</strong></p>
-<ul>
-<li>Identify any additional data collection needs. o Outline actions for the next phase of the project based on current findings.</li>
-</ul></li>
+<li><strong>Brigitta</strong>, <strong>Enrico,</strong> <strong>and</strong> <strong>Hannah</strong> discussed revising the project proposal, particularly the motivation, objectives, and main features of the proposed <strong>ShinyApp</strong>.</li>
+<li><strong>Enrico</strong> to draft the updated proposal including clarified objectives and refined scope.</li>
 </ul>
+<hr>
 </section>
-<section id="conclusion" class="level1">
-<h1>4 Conclusion</h1>
+</section>
+<section id="allocation-of-analytical-focus-areas" class="level2">
+<h2 class="anchored" data-anchor-id="allocation-of-analytical-focus-areas">3. Allocation of Analytical Focus Areas</h2>
+<section id="discussion-2" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-2">Discussion:</h3>
 <ul>
-<li>During the meetings on 4th and 7th March 2025, the team reviewed various topics and datasets. The PISA 2022 dataset was discarded due to its complexity, while the Be Weatherwise or Otherwise topic was also set aside due to fragmented data. The team then focused on exploring the impact of rain intensity in specific Singaporean areas, addressing rising sea levels, dengue outbreaks, and urban heat islands. Despite data gaps, particularly with dengue data from 2014-2018, the team decided to proceed with the problem statement on rising temperatures, sea levels, and flood risks. The</li>
+<li><strong>Brigitta</strong>, <strong>Enrico</strong>, and <strong>Hannah</strong> had an open discussion to assign the specific components of the analysis based on individual interests and strengths. After a mutual agreement, the tasks were divided as follows:
+<ul>
+<li><strong>Brigitta</strong>: Spatial Analysis</li>
+<li><strong>Enrico</strong>: Forecasting</li>
+<li><strong>Hannah</strong>: Time Series Analysis and Exploratory Data Analysis (EDA)</li>
+</ul></li>
 </ul>
+<hr>
+</section>
+</section>
+<section id="planning-for-next-physical-meeting" class="level2">
+<h2 class="anchored" data-anchor-id="planning-for-next-physical-meeting">4. Planning for Next Physical Meeting</h2>
+<section id="discussion-3" class="level3">
+<h3 class="anchored" data-anchor-id="discussion-3">Discussion:</h3>
+<ul>
+<li><strong>Enrico</strong> proposed scheduling a physical meeting to facilitate better collaboration, especially for code sharing and clarification of individual tasks.</li>
+<li><strong>Brigitta</strong> and <strong>Hannah</strong> agreed that working together in-person would be more effective than remote discussions.</li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="next-meeting" class="level2">
+<h2 class="anchored" data-anchor-id="next-meeting">Next Meeting:</h2>
+<ul>
+<li><strong>Date:</strong> Friday, 28th March 2025</li>
+<li><strong>Time:</strong> 11:00 AM to 04:00 PM</li>
+<li><strong>Objective:</strong> Share individual progress, resolve technical challenges, and align on integration</li>
+</ul>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">✅ Conclusion</h2>
+<p>During the meeting on <strong>23rd March 2025</strong>, the team realigned their understanding of the project direction based on feedback from the Professor. <strong>Enrico</strong> was assigned to revise the proposal, and individual analytical components were allocated to each member. The team planned a physical follow-up session on <strong>28th March 2025</strong> to ensure collaborative development and efficient problem-solving.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

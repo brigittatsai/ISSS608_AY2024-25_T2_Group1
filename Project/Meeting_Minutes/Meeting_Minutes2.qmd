@@ -1,127 +1,79 @@
 ---
 title: "Meeting Minutes 2"
 author: "Enrico Limberg"
-date: "March 12, 2025"
-date-modified: "last-modified"
-execute: 
-  eval: true
-  echo: true
-  message: false
-  freeze: true
 ---
 
-# Minutes of Meeting 2
+# 📋Minutes of Meeting 2
 
-**Date:** March 7, 2025
+## 🗓️ Meeting Details
 
-**Attendees:** Brigitta Karen Tsai, Enrico Limberg, Hannah
+-   **Meeting Title:** Project Meeting for Refinement of Project Proposal and Task Allocation
+-   **Date:** Saturday, 23rd March 2025
+-   **Time:** 01:00 PM to 02:00 PM
+-   **Attendees:** Brigitta Karen Tsai, Enrico Limberg, Hannah
 
-**Agenda:** Finalising Topic and Visual Storyboard
+------------------------------------------------------------------------
 
-# 1 Meeting Objectives
+## 📝 Meeting's Objectives
 
-The objective of our meetings is to review the available topics and identify a suitable problem statement for our project, ensuring that the necessary data is accessible to support our chosen direction.
+The objective of this meeting was to revise the project proposal and re-align the team on the expected deliverables and analysis directions, following feedback from the Professor during the call on 21st March 2025.
 
-# 2 Meeting Agenda
+------------------------------------------------------------------------
 
-1.  Review of Available Topics
-2.  Assessment of Data Availability
-3.  Formulation of Problem Statement
+## 📋 Meeting Agenda:
 
-## 2.1 Review of Available Topics Discussions
+1.  Recap of Professor’s Feedback
+2.  Revision of Project Proposal and Analytical Approach
+3.  Allocation of Analytical Focus Areas
+4.  Planning for Next Physical Meeting
 
--   Brigitta: Examined the first topic, PISA 2022, and determined it was not a suitable choice due to:
+------------------------------------------------------------------------
 
-    -   The complexity and extensiveness of the dataset, primarily questionnaire based.
+## 1. Recap of Professor’s Feedback
 
-    -   The high level of data manipulation and preprocessing required.
+### Discussion:
 
-    -   **Task**: Brigitta to document key challenges and findings.
+-   **Enrico**: Summarized the key points from the call with the Professor on 21st March, which he documented during the discussion. He clarified the expected outcomes and goals of the project as advised by the Professor, as the team previously had differing understandings.
 
-    -   **Conclusion**: The team decided to drop this topic.
+------------------------------------------------------------------------
 
--   Enrico & Hannah: Explored the second topic, Be Weatherwise or Otherwise, and found challenges due to:
+## 2. Revision of Project Proposal and Analytical Approach
 
-    -   Data being too scattered (recorded on a monthly basis), making it hard to analyze long-term trends.
+### Discussion:
 
-    -   Climate trends being influenced by multiple external factors not fully captured in the dataset.
+-   **Brigitta**, **Enrico,** **and** **Hannah** discussed revising the project proposal, particularly the motivation, objectives, and main features of the proposed **ShinyApp**.
+-   **Enrico** to draft the updated proposal including clarified objectives and refined scope.
 
-    -   Task: Enrico and Hannah to summarize the data gaps and challenges.
+------------------------------------------------------------------------
 
-## 2.2 Assessment of Data Availability
+## 3. Allocation of Analytical Focus Areas
 
--   Brigitta and Hannah explored two potential extensions, “Impact of Climate Change on Carbon Emissions” and “Impact of Carbon Emissions on Climate Change”. Both extensions faced data fragmentation issues and lack of comprehensive datasets.
+### Discussion:
 
--   Brigitta and Hannah expressed concerns that the Be Weatherwise topic would be overwhelming due to the need for large datasets.
+-   **Brigitta**, **Enrico**, and **Hannah** had an open discussion to assign the specific components of the analysis based on individual interests and strengths. After a mutual agreement, the tasks were divided as follows:
+    -   **Brigitta**: Spatial Analysis
+    -   **Enrico**: Forecasting
+    -   **Hannah**: Time Series Analysis and Exploratory Data Analysis (EDA)
 
--   Enrico provided a different perspective. He suggested that instead of analyzing all areas, the team could focus on specific key areas based on available data such as dengue fever, coastal areas, and flood-prone regions. This approach would narrow the scope and make the project more manageable, despite the fragmentation in the available datasets.
+------------------------------------------------------------------------
 
--   Enrico to explore how to refine the focus based on specific areas. 3. Formulation of Problem Statement
+## 4. Planning for Next Physical Meeting
 
--   Brigitta and Hannah investigated the impact of Changi’s weather data on flight arrivals and departures.
+### Discussion:
 
--   Brigitta, Enrico, and Hannah realized it was too much to collect all the flight data, leading to a reconsideration of the topic.
+-   **Enrico** proposed scheduling a physical meeting to facilitate better collaboration, especially for code sharing and clarification of individual tasks.
+-   **Brigitta** and **Hannah** agreed that working together in-person would be more effective than remote discussions.
 
--   Enrico exolored the impact of rain intensity in specific Singapore areas on rising sea levels (coastal impact analysis), Dengue fever outbreaks (potential mosquito breeding correlations), Rising temperatures and urban heat island effects.
+------------------------------------------------------------------------
 
--   Brigitta then questioned how to identify the areas with the highest dengue cases.
+## Next Meeting:
 
--   Enrico suggested analyzing dengue fever cases first, then selecting the area for further data collection.
+-   **Date:** Friday, 28th March 2025
+-   **Time:** 11:00 AM to 04:00 PM
+-   **Objective:** Share individual progress, resolve technical challenges, and align on integration
 
--   Brigitta reviewed available dengue data sources, but only found records from 2014 to 2018.
+------------------------------------------------------------------------
 
--   Hannah verified the fact that there is no more recent datas on dengue.
+## ✅ Conclusion
 
--   Brigitta and Enrico researched flood-prone areas in Singapore to refine focus.
-
--   Brigitta, Enrico and Hannah chose to focus only on rising temperatures, rising sea levels and flood risks.
-
--   Enrico drafted initial problem statement.
-
-## 2.3 Formulation of Problem Statement
-
--   Brigitta and Hannah investigated the impact of Changi’s weather data on flight arrivals and departures.
-
--   Brigitta, Enrico, and Hannah realized it was too much to collect all the flight data, leading to a reconsideration of the topic.
-
--   Enrico exolored the impact of rain intensity in specific Singapore areas on rising sea levels (coastal impact analysis), Dengue fever outbreaks (potential mosquito breeding correlations), Rising temperatures and urban heat island effects.
-
--   Brigitta then questioned how to identify the areas with the highest dengue cases.
-
--   Enrico suggested analyzing dengue fever cases first, then selecting the area for further data collection.
-
--   Brigitta reviewed available dengue data sources, but only found records from 2014 to 2018.
-
--   Hannah verified the fact that there is no more recent datas on dengue. • Brigitta and Enrico researched flood-prone areas in Singapore to refine focus.
-
--   Brigitta, Enrico and Hannah chose to focus only on rising temperatures, rising sea levels and flood risks.
-
--   Enrico drafted initial problem statement.
-
-# 3 Follow-up Meeting
-
-**Date**: 13th March 2025
-
-**Objective**: Review progress, share findings, and finalize next steps based on new data collected.
-
-**Agenda**:
-
--   **Review of Data Collection Progress**
-
-    -   Brigitta & Hannah: Share findings from continued search for datasets on temperature rise and flood risks.
-
-    -   Enrico: Present research findings from news sources and climate-related papers on climate changes in Singapore.
-
--   **Discussion of New Data and Information**
-
-    -   Team to evaluate the newly gathered data and information.
-
-    -   Analyze the relevance and quality of datasets for the project.
-
--   **Finalize Next Steps**
-
-    -   Identify any additional data collection needs. o Outline actions for the next phase of the project based on current findings.
-
-# 4 Conclusion
-
--   During the meetings on 4th and 7th March 2025, the team reviewed various topics and datasets. The PISA 2022 dataset was discarded due to its complexity, while the Be Weatherwise or Otherwise topic was also set aside due to fragmented data. The team then focused on exploring the impact of rain intensity in specific Singaporean areas, addressing rising sea levels, dengue outbreaks, and urban heat islands. Despite data gaps, particularly with dengue data from 2014-2018, the team decided to proceed with the problem statement on rising temperatures, sea levels, and flood risks. The
+During the meeting on **23rd March 2025**, the team realigned their understanding of the project direction based on feedback from the Professor. **Enrico** was assigned to revise the proposal, and individual analytical components were allocated to each member. The team planned a physical follow-up session on **28th March 2025** to ensure collaborative development and efficient problem-solving.

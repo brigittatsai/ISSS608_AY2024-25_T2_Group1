@@ -2,7 +2,7 @@ project:
   type: website
   
 website:
-  title: "Visual Analytics for Singapore's Weather"
+  title: "Singapore Weather Demystified: Visualizing Atmospheric Data"
   navbar:
     left:
     - text: "Main Page"
@@ -15,6 +15,9 @@ website:
         
       - text: "Meeting Minutes 2"
         href: "Project/Meeting_Minutes/Meeting_Minutes2.html"
+        
+      - text: "Meeting Minutes 3"
+        href: "Project/Meeting_Minutes/Meeting_Minutes3.html"
       
     - text: "Project Code"
       href: "Project/Project_Code/Project_Code.html"

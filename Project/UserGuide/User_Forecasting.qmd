@@ -11,7 +11,7 @@ Welcome to the **Forecasting** section of the app! 🌤️ This feature helps yo
 
 🔽 Use the **"Weather Parameter"** dropdown to choose what you'd like to forecast:
 
--    Rainfall ☔
+-   Rainfall ☔
 
 -   Temperature 🌡️
 
@@ -34,8 +34,8 @@ The app will process historical trends and provide a forecast for the selected v
 
 📊 Once the forecast is ready, you'll see:
 
--    A **forecast plot** showing the trend and predicted values 📈
+-   A **forecast plot** showing the trend and predicted values 📈
 
--    A **forecast table** with detailed numbers 📋
+-   A **forecast table** with detailed numbers 📋
 
 -   Use this to gain insights and plan ahead based on the expected weather conditions!

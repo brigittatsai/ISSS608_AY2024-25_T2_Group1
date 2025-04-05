@@ -28,14 +28,14 @@ This section of the app allows users to **explore weather patterns across differ
 
 #### 3. **Select a Month**
 
--    Pick a **month** from the dropdown list.\
+-   Pick a **month** from the dropdown list.\
     This filters data to only show weather observations from that month.
 
 ### 🗺️ **Map View (Left Panel)**
 
--    The interactive map displays **weather data points across stations**.
+-   The interactive map displays **weather data points across stations**.
 
--    Circle **size and color intensity** represent the value of the selected variable.
+-   Circle **size and color intensity** represent the value of the selected variable.
 
 -   Station names are displayed to help locate regions with high or low weather metrics.
 
