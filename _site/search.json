@@ -474,5 +474,61 @@
     "title": "Meeting Minutes 3",
     "section": "",
     "text": "Meeting Title: Project Meeting for Progress Sharing, Issue Resolution, and Poster Planning\nDate: Friday, 28th March 2025\nTime: 11:00 AM to 04:00 PM\nAttendees: Brigitta Karen Tsai, Enrico Limberg, Hannah"
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "Meeting Title: Project Meeting for Progress Sharing, Issue Resolution, and Poster Planning\nDate: Friday, 28th March 2025\nTime: 11:00 AM to 04:00 PM\nAttendees: Brigitta Karen Tsai, Enrico Limberg, Hannah\n\n\n\n\n\nThe objective of this meeting is to share individual progress on each member’s ShinyApp, address technical challenges, and begin planning for the upcoming poster submission.\n\n\n\n\n\nIndividual Progress Sharing & Troubleshooting\nInitial Poster Drafting\nAgreement on Code Submission Deadline and Final Coordination\n\n\n\n\n\n\n\n\nBrigitta, Enrico, and Hannah began by sharing their current progress on their respective ShinyApp components.\nBrigitta raised a question regarding whether she needed to convert the dataset into .rds format for the ShinyApp.\nBrigitta also shared an issue where she was able to load the app but was unable to successfully launch it.\nEnrico and Hannah helped by asking Brigitta to send over her code so they could attempt to debug it on their devices.\nEnrico encountered a similar issue with the data used in his app.\nBrigitta provided helpful suggestions that contributed to resolving the problem.\nEnrico also sought feedback from Brigitta and Hannah regarding potential parameters that could be added to improve his ShinyApp.\nHannah reached out to a friend for additional advice and solutions to help with the technical issues faced by both Enrico and Brigitta.\nAfter addressing these concerns, Brigitta, Enrico, and Hannah continued working on and refining their respective parts.\nThroughout the meeting, Brigitta, Enrico, and Hannah communicated actively and supported one another by clarifying doubts and exchanging feedback on individual components.\n\n\n\n\n\n\n\nAs the poster submission deadline was approaching, Enrico proposed initiating the poster draft.\nEnrico created a poster template and shared it with Brigitta and Hannah.\nBrigitta, Enrico, and Hannah began contributing their respective content into the shared document.\nAt this stage, the poster served as an initial draft and layout illustration, not the final version.\nBrigitta, Enrico, and Hannah agreed to complete the poster by 1st April 2025, as the submission is due on 2nd April 2025.\nEnrico volunteered to do the final adjustments and handle the submission on behalf of the team.\n\n\n\n\n\n\n\n\nBrigitta, Enrico, and Hannah agreed on the following next steps:\n\nDeadline for final code sharing: 2nd April 2025 (to allow buffer time in case of issues).\nCode consolidation: Brigitta volunteered to merge all final code into the unified application.\nFurther communication: The team agreed to coordinate via group chat for any questions or issues due to upcoming final exams, which made scheduling another full meeting challenging.\n\n\n\n\n\n\n\nDuring this physical meeting, the team reviewed their individual progress, resolved major technical issues collaboratively, and initiated poster drafting. A clear deadline for final code sharing was set, and responsibilities were divided to ensure smooth integration. The meeting concluded with all members aligned on the plan moving forward and committed to completing their tasks on schedule."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#meeting-details",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#meeting-details",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "Meeting Title: Project Meeting for Progress Sharing, Issue Resolution, and Poster Planning\nDate: Friday, 28th March 2025\nTime: 11:00 AM to 04:00 PM\nAttendees: Brigitta Karen Tsai, Enrico Limberg, Hannah"
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#meetings-objectives",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#meetings-objectives",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "The objective of this meeting is to share individual progress on each member’s ShinyApp, address technical challenges, and begin planning for the upcoming poster submission."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#meeting-agenda",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#meeting-agenda",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "Individual Progress Sharing & Troubleshooting\nInitial Poster Drafting\nAgreement on Code Submission Deadline and Final Coordination"
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#individual-progress-sharing-troubleshooting",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#individual-progress-sharing-troubleshooting",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "Brigitta, Enrico, and Hannah began by sharing their current progress on their respective ShinyApp components.\nBrigitta raised a question regarding whether she needed to convert the dataset into .rds format for the ShinyApp.\nBrigitta also shared an issue where she was able to load the app but was unable to successfully launch it.\nEnrico and Hannah helped by asking Brigitta to send over her code so they could attempt to debug it on their devices.\nEnrico encountered a similar issue with the data used in his app.\nBrigitta provided helpful suggestions that contributed to resolving the problem.\nEnrico also sought feedback from Brigitta and Hannah regarding potential parameters that could be added to improve his ShinyApp.\nHannah reached out to a friend for additional advice and solutions to help with the technical issues faced by both Enrico and Brigitta.\nAfter addressing these concerns, Brigitta, Enrico, and Hannah continued working on and refining their respective parts.\nThroughout the meeting, Brigitta, Enrico, and Hannah communicated actively and supported one another by clarifying doubts and exchanging feedback on individual components."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#initial-poster-drafting",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#initial-poster-drafting",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "As the poster submission deadline was approaching, Enrico proposed initiating the poster draft.\nEnrico created a poster template and shared it with Brigitta and Hannah.\nBrigitta, Enrico, and Hannah began contributing their respective content into the shared document.\nAt this stage, the poster served as an initial draft and layout illustration, not the final version.\nBrigitta, Enrico, and Hannah agreed to complete the poster by 1st April 2025, as the submission is due on 2nd April 2025.\nEnrico volunteered to do the final adjustments and handle the submission on behalf of the team."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#agreement-on-code-submission-deadline-and-final-coordination",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#agreement-on-code-submission-deadline-and-final-coordination",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "Brigitta, Enrico, and Hannah agreed on the following next steps:\n\nDeadline for final code sharing: 2nd April 2025 (to allow buffer time in case of issues).\nCode consolidation: Brigitta volunteered to merge all final code into the unified application.\nFurther communication: The team agreed to coordinate via group chat for any questions or issues due to upcoming final exams, which made scheduling another full meeting challenging."
+  },
+  {
+    "objectID": "Project/Meeting_Minutes/Meeting_Minutes4.html#conclusion",
+    "href": "Project/Meeting_Minutes/Meeting_Minutes4.html#conclusion",
+    "title": "Meeting Minutes 4",
+    "section": "",
+    "text": "During this physical meeting, the team reviewed their individual progress, resolved major technical issues collaboratively, and initiated poster drafting. A clear deadline for final code sharing was set, and responsibilities were divided to ensure smooth integration. The meeting concluded with all members aligned on the plan moving forward and committed to completing their tasks on schedule."
   }
 ]
