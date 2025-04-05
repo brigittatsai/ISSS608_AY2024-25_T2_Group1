@@ -233,8 +233,64 @@
   {
     "objectID": "Project/UserGuide/User_Forecasting.html",
     "href": "Project/UserGuide/User_Forecasting.html",
-    "title": "UserGuide",
+    "title": "User Guide for Forecasting Weather Data",
     "section": "",
-    "text": "User Guide: Forecasting Weather Data\nWelcome to the Forecasting section of the app! This feature allows you to explore weather predictions, such as rainfall, temperature, and wind speed, based on historical data. Here’s how to navigate through the forecasting tools:\n\n1. Select the Weather Parameter\n\nUse the “Weather Parameter” dropdown to choose the variable you want to forecast (e.g., rainfall, temperature, or wind speed).\n\n\n\n2. Choose the Station\n\nSelect the “Station” dropdown to choose the specific weather station from which to generate forecasts. The data for each station is available in the app for the entire year.\n\n\n\n3. Define the Forecast Horizon\n\nInput the forecast horizon (e.g., number of days or months) in the “Forecast Horizon” field. This defines how far ahead you want to forecast weather data.\n\n\n\n4. Generate Forecast\n\nClick the “Generate Forecast” button to start the forecasting process. The app will use historical weather data to create predictions.\n\n\n\n5. View Forecast Results\n\nOnce the forecast is generated, you can view the forecast plot that shows the predicted weather values over time.\nA forecast table with detailed numerical values for the forecast period will also be displayed."
+    "text": "Welcome to the Forecasting section of the app! 🌤️ This feature helps you generate predictions for rainfall, temperature, and wind speed using historical data from different weather stations. Here’s how to get started:\n\n\n🔽 Use the “Weather Parameter” dropdown to choose what you’d like to forecast:\n\nRainfall ☔\nTemperature 🌡️\n\n\n\n\n📍 Pick a location from the “Station” dropdown.\nYou can forecast weather using data from any available station across the year.\n\n\n\n📅 In the “Forecast Horizon” field, input how far ahead you’d like to forecast (e.g., number of days or months).\nThis tells the app how long into the future to predict the weather.\n\n\n\n⚙️ Click the “Generate Forecast” button.\nThe app will process historical trends and provide a forecast for the selected variable and station.\n\n\n\n📊 Once the forecast is ready, you’ll see:\n\nA forecast plot showing the trend and predicted values 📈\nA forecast table with detailed numbers 📋\nUse this to gain insights and plan ahead based on the expected weather conditions!"
+  },
+  {
+    "objectID": "Project/UserGuide/User_Forecasting.html#select-the-weather-parameter",
+    "href": "Project/UserGuide/User_Forecasting.html#select-the-weather-parameter",
+    "title": "User Guide for Forecasting Weather Data",
+    "section": "",
+    "text": "🔽 Use the “Weather Parameter” dropdown to choose what you’d like to forecast:\n\nRainfall ☔\nTemperature 🌡️"
+  },
+  {
+    "objectID": "Project/UserGuide/User_Forecasting.html#choose-the-station",
+    "href": "Project/UserGuide/User_Forecasting.html#choose-the-station",
+    "title": "User Guide for Forecasting Weather Data",
+    "section": "",
+    "text": "📍 Pick a location from the “Station” dropdown.\nYou can forecast weather using data from any available station across the year."
+  },
+  {
+    "objectID": "Project/UserGuide/User_Forecasting.html#set-the-forecast-horizon",
+    "href": "Project/UserGuide/User_Forecasting.html#set-the-forecast-horizon",
+    "title": "User Guide for Forecasting Weather Data",
+    "section": "",
+    "text": "📅 In the “Forecast Horizon” field, input how far ahead you’d like to forecast (e.g., number of days or months).\nThis tells the app how long into the future to predict the weather."
+  },
+  {
+    "objectID": "Project/UserGuide/User_Forecasting.html#generate-the-forecast",
+    "href": "Project/UserGuide/User_Forecasting.html#generate-the-forecast",
+    "title": "User Guide for Forecasting Weather Data",
+    "section": "",
+    "text": "⚙️ Click the “Generate Forecast” button.\nThe app will process historical trends and provide a forecast for the selected variable and station."
+  },
+  {
+    "objectID": "Project/UserGuide/User_Forecasting.html#view-the-forecast-results",
+    "href": "Project/UserGuide/User_Forecasting.html#view-the-forecast-results",
+    "title": "User Guide for Forecasting Weather Data",
+    "section": "",
+    "text": "📊 Once the forecast is ready, you’ll see:\n\nA forecast plot showing the trend and predicted values 📈\nA forecast table with detailed numbers 📋\nUse this to gain insights and plan ahead based on the expected weather conditions!"
+  },
+  {
+    "objectID": "Project/UserGuide/User_Geospatial.html",
+    "href": "Project/UserGuide/User_Geospatial.html",
+    "title": "User Guide for Geospatial Mapping",
+    "section": "",
+    "text": "This section of the app allows users to explore weather patterns across different stations in Singapore using interactive maps, bar plots, and weather parameter references. It’s ideal for users seeking insights into rainfall, temperature, and wind trends over specific months.\n\n\n\n\n\n\nAt the top of the interface, select a weather category:\n\nRainfall\nTemperature\n\nBased on your choice, the variable selector will automatically update to show relevant options (e.g., “Maximum Rainfall”, “Frequency of Extreme Heat”).\n\n\n\n\nChoose a specific weather variable under the selected category.\nE.g., If you select Rainfall, you might choose Frequency of Heavy Rain.\n\n\n\n\n\nPick a month from the dropdown list.\nThis filters data to only show weather observations from that month.\n\n\n\n\n\n\nThe interactive map displays weather data points across stations.\nCircle size and color intensity represent the value of the selected variable.\nStation names are displayed to help locate regions with high or low weather metrics.\n\n\n\n\n\nThis chart visualizes the frequency or average value of the selected variable by station.\nHelpful for quickly comparing different locations."
+  },
+  {
+    "objectID": "Project/UserGuide/User_Geospatial.html#overview",
+    "href": "Project/UserGuide/User_Geospatial.html#overview",
+    "title": "User Guide for Geospatial Mapping",
+    "section": "",
+    "text": "This section of the app allows users to explore weather patterns across different stations in Singapore using interactive maps, bar plots, and weather parameter references. It’s ideal for users seeking insights into rainfall, temperature, and wind trends over specific months."
+  },
+  {
+    "objectID": "Project/UserGuide/User_Geospatial.html#how-to-use-this-section",
+    "href": "Project/UserGuide/User_Geospatial.html#how-to-use-this-section",
+    "title": "User Guide for Geospatial Mapping",
+    "section": "",
+    "text": "At the top of the interface, select a weather category:\n\nRainfall\nTemperature\n\nBased on your choice, the variable selector will automatically update to show relevant options (e.g., “Maximum Rainfall”, “Frequency of Extreme Heat”).\n\n\n\n\nChoose a specific weather variable under the selected category.\nE.g., If you select Rainfall, you might choose Frequency of Heavy Rain.\n\n\n\n\n\nPick a month from the dropdown list.\nThis filters data to only show weather observations from that month.\n\n\n\n\n\n\nThe interactive map displays weather data points across stations.\nCircle size and color intensity represent the value of the selected variable.\nStation names are displayed to help locate regions with high or low weather metrics.\n\n\n\n\n\nThis chart visualizes the frequency or average value of the selected variable by station.\nHelpful for quickly comparing different locations."
   }
 ]

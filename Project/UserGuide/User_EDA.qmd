@@ -1,0 +1,4 @@
+---
+title: "User Guide for EDA & Time Series"
+author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
+---

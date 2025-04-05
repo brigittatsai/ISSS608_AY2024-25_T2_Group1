@@ -1,4 +1,46 @@
 ---
-title: "User_Geospatial"
+title: "User Guide for Geospatial Mapping"
 author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
 ---
+
+# 🌦️ **User Guide: Spatial Weather Pattern Analysis**
+
+## 📍 Overview
+
+This section of the app allows users to **explore weather patterns across different stations in Singapore** using **interactive maps**, **bar plots**, and **weather parameter references**. It’s ideal for users seeking insights into **rainfall, temperature, and wind trends** over specific months.
+
+## 🧭 **How to Use This Section**
+
+### 1. **Choose a Weather Category**
+
+-   At the top of the interface, select a weather **category**:
+
+    -   **Rainfall**
+
+    -   **Temperature**
+
+-   Based on your choice, the variable selector will automatically update to show relevant options (e.g., "Maximum Rainfall", "Frequency of Extreme Heat").
+
+#### 2. **Select a Variable**
+
+-   Choose a **specific weather variable** under the selected category.\
+    E.g., If you select *Rainfall*, you might choose *Frequency of Heavy Rain*.
+
+#### 3. **Select a Month**
+
+-    Pick a **month** from the dropdown list.\
+    This filters data to only show weather observations from that month.
+
+### 🗺️ **Map View (Left Panel)**
+
+-    The interactive map displays **weather data points across stations**.
+
+-    Circle **size and color intensity** represent the value of the selected variable.
+
+-   Station names are displayed to help locate regions with high or low weather metrics.
+
+### 📊 **Bar Plot (Right Panel)**
+
+-   This chart visualizes the **frequency or average value of the selected variable by station**.
+
+-   Helpful for quickly comparing different locations.

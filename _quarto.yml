@@ -25,6 +25,8 @@ website:
         href: "Project/UserGuide/User_Forecasting.html"
       - text: "Geospatial User Guide"
         href: "Project/UserGuide/User_Geospatial.html"
+      - text: "Time Series & EDA User Guide"
+        href: "Project/UserGuide/User_EDA.html"
         
     - text: "Shiny App"
       href: https://brigittatsai.shinyapps.io/ISSS608_Group1/

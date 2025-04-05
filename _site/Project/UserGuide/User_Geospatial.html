@@ -8,7 +8,7 @@
 
 <meta name="author" content="Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang">
 
-<title>User_Geospatial – Visual Analytics for Singapore’s Weather</title>
+<title>User Guide for Geospatial Mapping – Visual Analytics for Singapore’s Weather</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -125,6 +125,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="../../Project/UserGuide/User_Geospatial.html">
  <span class="dropdown-text">Geospatial User Guide</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="../../Project/UserGuide/User_EDA.html">
+ <span class="dropdown-text">Time Series &amp; EDA User Guide</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -148,15 +152,30 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#user-guide-spatial-weather-pattern-analysis" id="toc-user-guide-spatial-weather-pattern-analysis" class="nav-link active" data-scroll-target="#user-guide-spatial-weather-pattern-analysis">🌦️ <strong>User Guide: Spatial Weather Pattern Analysis</strong></a>
+  <ul class="collapse">
+  <li><a href="#overview" id="toc-overview" class="nav-link" data-scroll-target="#overview">📍 Overview</a></li>
+  <li><a href="#how-to-use-this-section" id="toc-how-to-use-this-section" class="nav-link" data-scroll-target="#how-to-use-this-section">🧭 <strong>How to Use This Section</strong></a>
+  <ul class="collapse">
+  <li><a href="#choose-a-weather-category" id="toc-choose-a-weather-category" class="nav-link" data-scroll-target="#choose-a-weather-category">1. <strong>Choose a Weather Category</strong></a></li>
+  <li><a href="#map-view-left-panel" id="toc-map-view-left-panel" class="nav-link" data-scroll-target="#map-view-left-panel">🗺️ <strong>Map View (Left Panel)</strong></a></li>
+  <li><a href="#bar-plot-right-panel" id="toc-bar-plot-right-panel" class="nav-link" data-scroll-target="#bar-plot-right-panel">📊 <strong>Bar Plot (Right Panel)</strong></a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">User_Geospatial</h1>
+<h1 class="title">User Guide for Geospatial Mapping</h1>
 </div>
 
 
@@ -179,8 +198,58 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="user-guide-spatial-weather-pattern-analysis" class="level1">
+<h1>🌦️ <strong>User Guide: Spatial Weather Pattern Analysis</strong></h1>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">📍 Overview</h2>
+<p>This section of the app allows users to <strong>explore weather patterns across different stations in Singapore</strong> using <strong>interactive maps</strong>, <strong>bar plots</strong>, and <strong>weather parameter references</strong>. It’s ideal for users seeking insights into <strong>rainfall, temperature, and wind trends</strong> over specific months.</p>
+</section>
+<section id="how-to-use-this-section" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-use-this-section">🧭 <strong>How to Use This Section</strong></h2>
+<section id="choose-a-weather-category" class="level3">
+<h3 class="anchored" data-anchor-id="choose-a-weather-category">1. <strong>Choose a Weather Category</strong></h3>
+<ul>
+<li><p>At the top of the interface, select a weather <strong>category</strong>:</p>
+<ul>
+<li><p><strong>Rainfall</strong></p></li>
+<li><p><strong>Temperature</strong></p></li>
+</ul></li>
+<li><p>Based on your choice, the variable selector will automatically update to show relevant options (e.g., “Maximum Rainfall”, “Frequency of Extreme Heat”).</p></li>
+</ul>
+<section id="select-a-variable" class="level4">
+<h4 class="anchored" data-anchor-id="select-a-variable">2. <strong>Select a Variable</strong></h4>
+<ul>
+<li>Choose a <strong>specific weather variable</strong> under the selected category.<br>
+E.g., If you select <em>Rainfall</em>, you might choose <em>Frequency of Heavy Rain</em>.</li>
+</ul>
+</section>
+<section id="select-a-month" class="level4">
+<h4 class="anchored" data-anchor-id="select-a-month">3. <strong>Select a Month</strong></h4>
+<ul>
+<li>Pick a <strong>month</strong> from the dropdown list.<br>
+This filters data to only show weather observations from that month.</li>
+</ul>
+</section>
+</section>
+<section id="map-view-left-panel" class="level3">
+<h3 class="anchored" data-anchor-id="map-view-left-panel">🗺️ <strong>Map View (Left Panel)</strong></h3>
+<ul>
+<li><p>The interactive map displays <strong>weather data points across stations</strong>.</p></li>
+<li><p>Circle <strong>size and color intensity</strong> represent the value of the selected variable.</p></li>
+<li><p>Station names are displayed to help locate regions with high or low weather metrics.</p></li>
+</ul>
+</section>
+<section id="bar-plot-right-panel" class="level3">
+<h3 class="anchored" data-anchor-id="bar-plot-right-panel">📊 <strong>Bar Plot (Right Panel)</strong></h3>
+<ul>
+<li><p>This chart visualizes the <strong>frequency or average value of the selected variable by station</strong>.</p></li>
+<li><p>Helpful for quickly comparing different locations.</p></li>
+</ul>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
