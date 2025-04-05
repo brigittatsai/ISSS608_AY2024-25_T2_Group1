@@ -1,0 +1,30 @@
+---
+title: "UserGuide"
+author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
+---
+
+### **User Guide: Forecasting Weather Data**
+
+Welcome to the **Forecasting** section of the app! This feature allows you to explore weather predictions, such as rainfall, temperature, and wind speed, based on historical data. Here’s how to navigate through the forecasting tools:
+
+#### **1. Select the Weather Parameter**
+
+-   Use the **"Weather Parameter"** dropdown to choose the variable you want to forecast (e.g., rainfall, temperature, or wind speed).
+
+#### **2. Choose the Station**
+
+-   Select the **"Station"** dropdown to choose the specific weather station from which to generate forecasts. The data for each station is available in the app for the entire year.
+
+#### **3. Define the Forecast Horizon**
+
+-   Input the **forecast horizon** (e.g., number of days or months) in the **"Forecast Horizon"** field. This defines how far ahead you want to forecast weather data.
+
+#### **4. Generate Forecast**
+
+-   Click the **"Generate Forecast"** button to start the forecasting process. The app will use historical weather data to create predictions.
+
+#### **5. View Forecast Results**
+
+-   Once the forecast is generated, you can view the **forecast plot** that shows the predicted weather values over time.
+
+-   A **forecast table** with detailed numerical values for the forecast period will also be displayed.

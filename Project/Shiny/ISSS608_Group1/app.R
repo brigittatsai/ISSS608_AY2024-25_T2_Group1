@@ -399,6 +399,7 @@ server <- function(input, output, session) {
   observe({
     updateSelectInput(session, "selected_variable", selected = "Frequency of Heavy Rain")
   })
+<<<<<<< HEAD
   output$parameter_table <- renderUI({
     if (input$selected_variable == "Frequency of Heavy Rain") {
       df <- rainfall_parameter
@@ -458,6 +459,15 @@ server <- function(input, output, session) {
         )),
         tags$tbody(rows)
       )
+=======
+  output$parameter_table <- renderTable({
+    if (input$selected_variable == "Frequency of Heavy Rain") {
+      rainfall_parameter
+    } else if (input$selected_variable == "Frequency of Extreme Heat") {
+      temp_parameter
+    } else if (input$selected_variable == "Frequency of Strong Wind") {
+      wind_parameter
+>>>>>>> 47c31765f36e0e6025f4b479d9c76048faa02c12
     }
   })
   
