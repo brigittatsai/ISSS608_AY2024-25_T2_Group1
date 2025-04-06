@@ -1,8 +1,7 @@
 pacman::p_load(sf, tmap, tidyverse, plotly, dplyr, tmaptools, leaflet, shinyWidgets, reshape2,
                ggplot2, DT, shinydashboard, fable, fabletools, lubridate, zoo, tsibble, forecast)
 
-# 1. Variables set for Weather Map
-# Set Interactive Mode
+# 1. Weather Map 
 tmap_mode("view")
 
 monthly_weather <- readRDS("data/monthly_weather.rds")
@@ -23,7 +22,6 @@ category_columns <- list(
   "Temperature" = c("Maximum Temperature", "Mean Temperature", "Frequency of Extreme Heat")
 )
 
-
 variable_labels <- list(
   "Maximum Rainfall" = "Max",
   "Mean Rainfall" = "Mean",
@@ -36,24 +34,20 @@ variable_labels <- list(
   "Frequency of Extreme Heat" = "Frequency"
 )
 
-
 choices <- names(variable_labels)
-selected_var <- variable_labels[["Maximum Rainfall"]]  # This will return "Max"
-
+selected_var <- variable_labels[["Maximum Rainfall"]]  # 此處回傳 "Max"
 print(choices)
 
 rainfall_parameter <- data.frame(
   "Rain Type" = c("No Rain", "Very Light Rain", "Light Rain", "Moderate Rain", "Heavy Rain", "Very Heavy Rain", "Extremely Heavy Rain"),
   "Total Daily Rainfall (mm)" = c("0", "0.1 - 0.9", "1 - 10", "11 - 30", "31 - 70", "71 - 150", "> 151")
 )
-
 colnames(rainfall_parameter) <- c("Rain Type", "Total Daily Rainfall (mm)")
 
 temp_parameter <- data.frame(
   "Heat Stress" = c("Low Heat Stress", "Moderate Heat Stress", "High Heat Stress"),
   "Temperature (°C)" = c("< 31", "31 ≤ °C < 33", "≥ 33")
 )
-
 colnames(temp_parameter) <- c("Heat Stress", "Temperature (°C)")
 
 wind_parameter <- data.frame(
@@ -61,14 +55,11 @@ wind_parameter <- data.frame(
   "Description" = c("Calm", "Light Air", "Light Breeze", "Gentle Breeze", "Moderate Breeze", "Fresh Breeze", "Strong Breeze", "Near Gale", "Gale", "Strong Gale", "Storm", "Violent Storm", "Hurricane"),
   "Speed (km/h)" = c("< 1", "1 - 5", "6 - 11", "12 - 19", "20 - 28", "29 - 38", "38 - 49", "50 - 61", "62 - 74", "75 - 88", "89 - 102", "103 - 117", "≥ 118")
 )
-
 colnames(wind_parameter) <- c("Wind Force", "Description", "Speed (km/h)")
 
 available_months <- unique(monthly_weather$month)
 
-# 2. Variables set for forecasting module
-
-# Sample data generation (replace this with your actual data loading)
+# 2. Forecasting 模組相關變數設定
 set.seed(123)
 stations <- c("Admiralty", "Ang Mo Kio", "Changi", "Choa Chu Kang (South)", "Clementi",
               "East Coast Parkway", "Jurong (West)", "Jurong Island", "Newton", "Pasir Panjang",
@@ -80,20 +71,17 @@ ts_data <- tibble(
   mean_temperature_c = rnorm(365 * 17, 30, 2)
 )
 
-# Prepare the data and split into Training/Hold-out sets for each station
 ts_data <- ts_data %>%
   mutate(Type = if_else(date >= "2024-10-01", "Hold-out", "Training"))
 
-# Sample weather station names
 station_names <- c("Admiralty", "Ang Mo Kio", "Changi", "Choa Chu Kang (South)", "Clementi",
                    "East Coast Parkway", "Jurong (West)", "Jurong Island", "Newton", "Pasir Panjang",
                    "Paya Lebar", "Pulau Ubin", "Seletar", "Sembawang", "Sentosa Island",
                    "Tai Seng", "Tuas South")
 
-# Create sample daily data
-set.seed(123)  # Set seed for reproducibility
+set.seed(123)
 ts_data <- tibble(
-  station = rep(station_names, each = 365),  # 17 stations, each with 365 entries
+  station = rep(station_names, each = 365),
   date = rep(seq(as.Date("2024-01-01"), as.Date("2024-12-31"), by = "day"), length.out = 365 * 17),
   mean_temperature = rnorm(365 * 17, 28, 2),
   min_temperature = rnorm(365 * 17, 26, 2),
@@ -102,15 +90,13 @@ ts_data <- tibble(
 ) %>%
   as_tsibble(index = date, key = station)
 
-# Introduce missing values randomly (simulating missing data)
-set.seed(456)  # For reproducibility of missing values
-missing_indices <- sample(1:nrow(ts_data), size = floor(0.05 * nrow(ts_data)))  # 5% missing
+set.seed(456)
+missing_indices <- sample(1:nrow(ts_data), size = floor(0.05 * nrow(ts_data)))
 ts_data[missing_indices, "mean_temperature"] <- NA
 ts_data[missing_indices, "min_temperature"] <- NA
 ts_data[missing_indices, "max_temperature"] <- NA
 ts_data[missing_indices, "total_rainfall"] <- NA
 
-# Fill missing values with the mean of the respective column
 ts_data_filled <- ts_data %>%
   mutate(
     mean_temperature = if_else(is.na(mean_temperature), mean(mean_temperature, na.rm = TRUE), mean_temperature),
@@ -119,56 +105,32 @@ ts_data_filled <- ts_data %>%
     total_rainfall = if_else(is.na(total_rainfall), mean(total_rainfall, na.rm = TRUE), total_rainfall)
   )
 
-# Split into Training and Hold-out sets
 ts_data_split <- ts_data_filled %>%
   mutate(Type = if_else(date >= "2024-10-01", "Hold-out", "Training")) %>%
   as_tsibble(index = date, key = station)
 
-
 #====================
-#  UI
+# UI 
 #====================
 ui <- navbarPage(
   title = div(icon("cloud-sun"), "Singapore's 2024 Weather Data Visualization"),
   
   tags$head(
     tags$style(HTML("
-      body {
-        background-color: #f5f7fa;
-        color: #333;
-      }
-      .navbar {
-        background-color: #007acc;
-      }
-      .navbar .navbar-brand,
-      .navbar-nav > li > a {
-        color: white !important;
-      }
-      .navbar-nav > li > a:hover {
-        background-color: #005f99 !important;
-      }
-      .selectize-input, .selectize-dropdown {
-        background-color: #e6f2ff;
-        color: #003366;
-      }
-      .sidebar-panel {
-        background-color: #e3f2fd;
-      }
-      .btn-primary {
-        background-color: #005f99;
-        border-color: #005f99;
-      }
-      .btn-primary:hover {
-        background-color: #3399cc;
-      }
-      .box {
-        border-top: 3px solid #007acc;
-      }
+      body { background-color: #f5f7fa; color: #333; }
+      .navbar { background-color: #007acc; }
+      .navbar .navbar-brand, .navbar-nav > li > a { color: white !important; }
+      .navbar-nav > li > a:hover { background-color: #005f99 !important; }
+      .selectize-input, .selectize-dropdown { background-color: #e6f2ff; color: #003366; }
+      .sidebar-panel { background-color: #e3f2fd; }
+      .btn-primary { background-color: #005f99; border-color: #005f99; }
+      .btn-primary:hover { background-color: #3399cc; }
+      .box { border-top: 3px solid #007acc; }
     "))
   ),
   
   #------------------------------------------------
-  # 🌍 Map
+  # 🌍 Map 
   #------------------------------------------------
   tabPanel(
     title = tagList(icon("map-marked-alt"), "Map"),
@@ -195,6 +157,7 @@ ui <- navbarPage(
                         selected = "Frequency of Heavy Rain")
           ),
           br(),
+          # renderUI 自訂表格格式
           tableOutput("parameter_table")
         ),
         mainPanel(
@@ -209,71 +172,84 @@ ui <- navbarPage(
   ),
   
   #------------------------------------------------
-  # 📊 Explore
+  # 📊 Explore & Time Series 分頁
   #------------------------------------------------
   tabPanel(
-    title = tagList(icon("chart-line"), "Time Series Analysis"),
+    title = tagList(icon("chart-line"), "Explore & Time Series"),
     fluidPage(
-      tabsetPanel(
-        tabPanel("Time Series & Stats",
-                 fluidRow(
-                   box(
-                     title = tagList(icon("map-marker-alt"), "Station Selection"),
-                     selectInput("station", "Station:", choices = unique(weather$station)),
-                     width = 4
-                   ),
-                   box(
-                     title = tagList(icon("cogs"), "Variable"),
-                     selectInput("variable", "Variable:",
-                                 choices = c("daily_rainfall_total_mm",
-                                             "highest_30_min_rainfall_mm",
-                                             "highest_60_min_rainfall_mm",
-                                             "highest_120_min_rainfall_mm",
-                                             "mean_temperature_c",
-                                             "maximum_temperature_c",
-                                             "minimum_temperature_c",
-                                             "mean_wind_speed_km_h",
-                                             "max_wind_speed_km_h")),
-                     width = 4
-                   ),
-                   box(
-                     title = tagList(icon("calendar-day"), "Date Range"),
-                     dateRangeInput("daterange", "Range:",
-                                    start = min(weather$date),
-                                    end = max(weather$date)),
-                     width = 4
-                   )
-                 ),
-                 fluidRow(
-                   box(
-                     title = tagList(icon("chart-line"), "Time Series Plot"),
-                     plotlyOutput("ts_plot"),
-                     width = 12
-                   )
-                 ),
-                 fluidRow(
-                   box(
-                     title = tagList(icon("calculator"), "Summary Stats"),
-                     verbatimTextOutput("summary_stats"),
-                     width = 12
-                   )
-                 )
+      sidebarLayout(
+        sidebarPanel(
+          checkboxGroupInput(
+            inputId = "station",
+            label = "Select Station(s):",
+            choices = unique(weather$station),
+            selected = unique(weather$station)[1:2]
+          ),
+          selectInput("variable", "Select Variable:",
+                      choices = c("daily_rainfall_total_mm",
+                                  "highest_30_min_rainfall_mm",
+                                  "highest_60_min_rainfall_mm",
+                                  "highest_120_min_rainfall_mm",
+                                  "mean_temperature_c",
+                                  "maximum_temperature_c",
+                                  "minimum_temperature_c",
+                                  "mean_wind_speed_km_h",
+                                  "max_wind_speed_km_h")),
+          dateRangeInput("daterange", "Select Date Range:",
+                         start = min(weather$date),
+                         end   = max(weather$date))
         ),
-        tabPanel("Data Table",
-                 fluidRow(
-                   box(
-                     title = tagList(icon("table"), "Weather Data Table"),
-                     DTOutput("table"),
-                     width = 12
-                   )
-                 )
+        mainPanel(
+          tabsetPanel(
+            # 子分頁 1: Time Series & Comparison
+            tabPanel("Time Series & Comparison",
+                     box(
+                       title = tagList(icon("chart-line"), "Comparison Time Series Plot"),
+                       plotlyOutput("comparison_plot"),
+                       width = 12
+                     )
+            ),
+            # 子分頁 2: Exploratory Data Analysis
+            tabPanel("Exploratory Data Analysis",
+                     tabsetPanel(
+                       tabPanel("Distribution",
+                                box(
+                                  title = tagList(icon("chart-bar"), "Distribution Analysis"),
+                                  plotlyOutput("dist_plot"),
+                                  width = 12
+                                )
+                       ),
+                       tabPanel("Boxplot and Violin Charts",
+                                fluidRow(
+                                  box(
+                                    title = tagList(icon("box"), "Boxplot by Station"),
+                                    plotlyOutput("box_plot"),
+                                    width = 6
+                                  ),
+                                  box(
+                                    title = tagList(icon("circle"), "Violin Plot by Station"),
+                                    plotlyOutput("violin_plot"),
+                                    width = 6
+                                  )
+                                )
+                       ),
+                       tabPanel("Trend",
+                                box(
+                                  title = tagList(icon("line-chart"), "Trend Analysis"),
+                                  plotlyOutput("trend_plot"),
+                                  width = 12
+                                )
+                       )
+                     )
+            )
+          )
         )
       )
     )
   ),
   
   #------------------------------------------------
-  # 🔮 Univariate Forecasting
+  # 🔮 Forecasting 分頁
   #------------------------------------------------
   tabPanel(
     title = tagList(icon("chart-area"), "Forecasting"),
@@ -281,9 +257,9 @@ ui <- navbarPage(
       sidebarLayout(
         sidebarPanel(
           h4(icon("map-pin"), "Station"),
-          selectInput("station", "Weather Station:", choices = unique(ts_data$station)),
+          selectInput("station_forecast", "Weather Station:", choices = unique(ts_data$station)),
           h4(icon("sliders-h"), "Variable"),
-          selectInput("variable", "Variable:", 
+          selectInput("variable_forecast", "Variable:", 
                       choices = c("Mean Temperature" = "mean_temperature",
                                   "Minimum Temperature" = "min_temperature",
                                   "Maximum Temperature" = "max_temperature",
@@ -312,16 +288,20 @@ ui <- navbarPage(
 )
 
 #====================
-#  Server
+# Server
 #====================
 server <- function(input, output, session) {
+  
+  #====================
+  # Map 
+  #====================
   output$current_tab <- renderText({
     paste("Current Tab:", input$tabs)
   })
   
   observe({
+    req(input$selected_category)
     category_vars <- category_columns[[input$selected_category]]
-    
     variable_choices <- setNames(category_vars, sapply(category_vars, function(x) variable_labels[[x]]))
     updateSelectInput(session, "selected_variable", 
                       choices = variable_choices,
@@ -329,7 +309,6 @@ server <- function(input, output, session) {
   })
   
   output$weather_map <- renderTmap({
-    
     filtered_month <- monthly_weather %>% filter(month == input$selected_month)
     selected_variable <- input$selected_variable
     
@@ -346,8 +325,7 @@ server <- function(input, output, session) {
   
   output$weather_plot <- renderPlot({
     selected_variable_title <- variable_titles[[input$selected_variable]]
-    monthly_weather_filtered <- monthly_weather %>%
-      filter(month == input$selected_month)
+    monthly_weather_filtered <- monthly_weather %>% filter(month == input$selected_month)
     ggplot(monthly_weather_filtered, aes(x = Station, y = .data[[input$selected_variable]], fill = Station)) +
       geom_bar(stat = "identity", fill="royalblue") +
       labs(
@@ -358,15 +336,12 @@ server <- function(input, output, session) {
       theme_minimal() +
       theme(
         axis.text.x = element_text(angle = 90, size = 10, vjust = 0.5),
-        strip.text = element_text(size = 12),
         legend.position = "none"
       ) +
       scale_x_discrete(expand = expansion(mult = c(0, 0))) +
       coord_cartesian(ylim = c(0, max(monthly_weather_filtered[[input$selected_variable]], na.rm = TRUE) * 1.2))
   })
-  observe({
-    updateSelectInput(session, "selected_variable", selected = "Frequency of Heavy Rain")
-  })
+  
   output$parameter_table <- renderUI({
     if (input$selected_variable == "Frequency of Heavy Rain") {
       df <- rainfall_parameter
@@ -386,7 +361,6 @@ server <- function(input, output, session) {
         )),
         tags$tbody(rows)
       )
-      
     } else if (input$selected_variable == "Frequency of Extreme Heat") {
       df <- temp_parameter
       rows <- lapply(1:nrow(df), function(i) {
@@ -405,7 +379,6 @@ server <- function(input, output, session) {
         )),
         tags$tbody(rows)
       )
-      
     } else if (input$selected_variable == "Frequency of Strong Wind") {
       df <- wind_parameter
       rows <- lapply(1:nrow(df), function(i) {
@@ -429,132 +402,154 @@ server <- function(input, output, session) {
     }
   })
   
-  
-  
-  
-  
-  #--- (B) ：Reactive ---
-  filtered_data <- reactive({
-    req(input$station, input$daterange) 
-    
+  #====================
+  # Explore & Time Series 
+  #====================
+  explore_filtered_data <- reactive({
+    req(input$station, input$daterange)
     weather %>%
       filter(
-        station == input$station,
+        station %in% input$station,
         date >= input$daterange[1],
         date <= input$daterange[2]
       )
   })
   
-  #--- (C) Time Series Plot ---
-  output$ts_plot <- renderPlotly({
-    data <- filtered_data()
-    req(nrow(data) > 0) 
+  # comparison_time_plot
+  output$comparison_plot <- renderPlotly({
+    data <- explore_filtered_data()
+    req(nrow(data) > 0)
     
-    p <- ggplot(data, aes(x = date, y = .data[[input$variable]])) +
-      geom_line(color = "steelblue") +
+    p <- ggplot(data, aes(x = date, y = .data[[input$variable]], color = station)) +
+      geom_line() +
       labs(
-        title = paste("Time Series of", input$variable),
+        title = paste("Comparison of", input$variable, "across Stations"),
         x = NULL,
         y = input$variable
       )
-    
-    ggplotly(p, tooltip = c("x", "y"))
+    ggplotly(p, tooltip = c("x", "y", "station"))
   })
   
-  #--- (D) Summary Stats ---
-  output$summary_stats <- renderPrint({
-    data <- filtered_data()
+  # plot
+  output$dist_plot <- renderPlotly({
+    data <- explore_filtered_data()
     req(nrow(data) > 0)
     
-    summary(data[[input$variable]])
+    p <- ggplot(data, aes(x = .data[[input$variable]], fill = station)) +
+      geom_histogram(alpha = 0.6, position = "identity", bins = 30) +
+      labs(
+        title = paste("Distribution of", input$variable),
+        x = input$variable,
+        y = "Count"
+      ) +
+      theme_minimal()
+    ggplotly(p)
   })
   
-  #--- (E) Data Table ---
-  output$table <- renderDT({
-    data <- filtered_data()
+  # box_plot
+  output$box_plot <- renderPlotly({
+    data <- explore_filtered_data()
     req(nrow(data) > 0)
     
-    datatable(data, options = list(pageLength = 10, scrollX = TRUE))
-  })
-  
-
-# Forecasting section
-observeEvent(input$generate_forecast, {
-  req(input$station, input$variable, input$forecast_days)
-  
-  # Filter the training data for the selected station
-  train_data <- ts_data_split %>%
-    filter(station == input$station, Type == "Training") %>%
-    fill_gaps()
-  
-  # Fill gaps and impute missing values
-  train_data <- train_data %>%
-    mutate(variable_value = zoo::na.approx(!!sym(input$variable), na.rm = FALSE))
-  
-  # Fit the selected model
-  model <- switch(input$forecast_model,
-                  "ETS" = train_data %>% model(ETS(variable_value)),
-                  "ARIMA" = train_data %>% model(ARIMA(variable_value)),
-                  "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
-                  "SES" = train_data %>% model(SNAIVE(variable_value)),
-                  "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
-  )
-  
-  # Forecasting the future values
-  forecast_result <- model %>%
-    forecast(h = input$forecast_days)
-  
-  # Forecast plot
-  output$calibration_plot <- renderPlot({
-    autoplot(forecast_result, train_data) +
-      ggtitle(paste("Forecast for", input$variable, "at", input$station)) +
+    p <- ggplot(data, aes(x = station, y = .data[[input$variable]], fill = station)) +
+      geom_boxplot() +
+      labs(
+        title = paste("Boxplot of", input$variable, "by Station"),
+        x = "Station",
+        y = input$variable
+      ) +
       theme_minimal()
+    ggplotly(p)
   })
   
-  train_data <- ts_data_split %>%
-    filter(station == input$station, Type == "Training") %>%
-    fill_gaps()  # Filling missing dates if any
-  
-  # Impute missing values
-  train_data <- train_data %>%
-    mutate(variable_value = zoo::na.approx(!!sym(input$variable), na.rm = FALSE))
-  
-  # Fit the selected model
-  model <- switch(input$forecast_model,
-                  "ETS" = train_data %>% model(ETS(variable_value)),
-                  "ARIMA" = train_data %>% model(ARIMA(variable_value)),
-                  "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
-                  "SES" = train_data %>% model(SNAIVE(variable_value)),
-                  "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
-  )
-  
-  # Forecast future values
-  forecast_result <- model %>% forecast(h = input$forecast_days)
-  
-  # Plot forecast
-  output$forecast_plot <- renderPlot({
-    autoplot(forecast_result) +
-      ggtitle(paste("Forecast for", input$variable, "at", input$station)) +
+  # violin_plot
+  output$violin_plot <- renderPlotly({
+    data <- explore_filtered_data()
+    req(nrow(data) > 0)
+    
+    p <- ggplot(data, aes(x = station, y = .data[[input$variable]], fill = station)) +
+      geom_violin(trim = FALSE, alpha = 0.6) +
+      labs(
+        title = paste("Violin Plot of", input$variable, "by Station"),
+        x = "Station",
+        y = input$variable
+      ) +
       theme_minimal()
+    ggplotly(p)
   })
   
-  
-  # Forecast table
-  output$forecast_table <- renderTable({
-    forecast_result %>%
-      as_tibble() %>%
-      select(date, .mean) %>%
-      rename(Forecasted_Value = .mean) %>%
-      mutate(date = format(as.Date(date), "%d %b %Y")) %>%
-      mutate(Station = input$station) %>%
-      select(Station, date, Forecasted_Value)
+  # trend_plot
+  output$trend_plot <- renderPlotly({
+    data <- explore_filtered_data()
+    req(nrow(data) > 0)
+    
+    p <- ggplot(data, aes(x = date, y = .data[[input$variable]], color = station)) +
+      geom_point(alpha = 0.5) +
+      geom_smooth(method = "loess", se = FALSE) +
+      labs(
+        title = paste("Trend Analysis of", input$variable),
+        x = "Date",
+        y = input$variable
+      ) +
+      theme_minimal()
+    ggplotly(p, tooltip = c("x", "y", "station"))
   })
-})
-
+  
+  #====================
+  # Forecasting 
+  #====================
+  observeEvent(input$generate_forecast, {
+    req(input$station_forecast, input$variable_forecast, input$forecast_days)
+    
+    # Forecasting
+    train_data <- ts_data_split %>%
+      filter(station == input$station_forecast, Type == "Training") %>%
+      fill_gaps() %>%
+      mutate(variable_value = zoo::na.approx(!!sym(input$variable_forecast), na.rm = FALSE))
+    
+    # Forecasting
+    model <- switch(input$forecast_model,
+                    "ETS" = train_data %>% model(ETS(variable_value)),
+                    "ARIMA" = train_data %>% model(ARIMA(variable_value)),
+                    "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
+                    "SES" = train_data %>% model(SNAIVE(variable_value)),
+                    "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
+    )
+    
+    # forecast_result
+    forecast_result <- model %>% forecast(h = input$forecast_days)
+    
+    # Model Calibration Report 
+    output$model_report <- renderTable({
+      # Calibration report not implemented
+      tibble(Message = "Calibration report not implemented")
+    })
+    
+    output$calibration_plot <- renderPlot({
+      autoplot(forecast_result, train_data) +
+        ggtitle(paste("Forecast for", input$variable_forecast, "at", input$station_forecast)) +
+        theme_minimal()
+    })
+    
+    output$forecast_plot <- renderPlot({
+      autoplot(forecast_result) +
+        ggtitle(paste("Forecast for", input$variable_forecast, "at", input$station_forecast)) +
+        theme_minimal()
+    })
+    
+    output$forecast_table <- renderTable({
+      forecast_result %>%
+        as_tibble() %>%
+        select(date, .mean) %>%
+        rename(Forecasted_Value = .mean) %>%
+        mutate(date = format(as.Date(date), "%d %b %Y")) %>%
+        mutate(Station = input$station_forecast) %>%
+        select(Station, date, Forecasted_Value)
+    })
+  })
 }
 
 #====================
 # Shiny App
 #====================
 shinyApp(ui = ui, server = server)
-
