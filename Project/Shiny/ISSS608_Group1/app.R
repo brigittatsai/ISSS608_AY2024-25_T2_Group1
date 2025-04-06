@@ -124,82 +124,77 @@ ts_data_split <- ts_data_filled %>%
   mutate(Type = if_else(date >= "2024-10-01", "Hold-out", "Training")) %>%
   as_tsibble(index = date, key = station)
 
+
 #====================
 #  UI
 #====================
 ui <- navbarPage(
-  "Singapore's 2024 Weather Data Visualization",
+  title = div(icon("cloud-sun"), "Singapore's 2024 Weather Data Visualization"),
   
   tags$head(
     tags$style(HTML("
-    body {
-      background-color: #f9f9f9;  /* Lighter background */
-      color: #4a4a4a;  /* Soft gray text */
-    }
-    .navbar {
-      background-color: #4a7a8c;  /* Softer blue-gray */
-      color: white;
-    }
-    .navbar .navbar-nav > li > a {
-      color: white;
-    }
-    .navbar .navbar-header .navbar-brand {
-      color: white !important;  /* App title in white */
-      font-weight: bold;
-    }
-    .navbar .navbar-nav > li > a:hover {
-      color: #a8c9d8;  /* Lighter hover color */
-    }
-    .sidebar-panel {
-      background-color: #d4f1e3;  /* Soft pastel green for the filter bar */
-    }
-    .selectize-input {
-      background-color: #e3f2f7;  /* Same soft pastel blue */
-    }
-    .selectize-dropdown {
-      background-color: #e3f2f7;  /* Same soft pastel blue */
-      color: #4a4a4a;  /* Soft gray text */
-    }
-    .btn-primary {
-      background-color: #3c5c6e;  /* Muted blue-gray */
-      border-color: #3c5c6e;
-    }
-    .btn-primary:hover {
-      background-color: #6b8fa1;  /* Softer hover effect */
-      border-color: #6b8fa1;
-    }
-    .panel-title {
-      color: white;  /* Title text in white */
-    }
-  "))
-  )
-  ,
-  
+      body {
+        background-color: #f5f7fa;
+        color: #333;
+      }
+      .navbar {
+        background-color: #007acc;
+      }
+      .navbar .navbar-brand,
+      .navbar-nav > li > a {
+        color: white !important;
+      }
+      .navbar-nav > li > a:hover {
+        background-color: #005f99 !important;
+      }
+      .selectize-input, .selectize-dropdown {
+        background-color: #e6f2ff;
+        color: #003366;
+      }
+      .sidebar-panel {
+        background-color: #e3f2fd;
+      }
+      .btn-primary {
+        background-color: #005f99;
+        border-color: #005f99;
+      }
+      .btn-primary:hover {
+        background-color: #3399cc;
+      }
+      .box {
+        border-top: 3px solid #007acc;
+      }
+    "))
+  ),
   
   #------------------------------------------------
-  #  (Map)
+  # 🌍 Map
   #------------------------------------------------
   tabPanel(
-    "Map",
+    title = tagList(icon("map-marked-alt"), "Map"),
     fluidPage(
       titlePanel("Weather Data Visualization"),
       textOutput("current_tab"),
       sidebarLayout(
         sidebarPanel(
-          selectInput("selected_month", "Select Month (2024):", choices = available_months, selected = available_months[1]),
+          h4(icon("calendar-alt"), "Select Month"),
+          selectInput("selected_month", "Month (2024):", choices = available_months, selected = available_months[1]),
+          hr(),
           conditionalPanel(
             condition = "input.tabs === 'Weather Map'",
-            selectInput("selected_category", "Select Category:", choices = names(category_columns), selected = "Rainfall"),
-            selectInput("selected_variable", "Select Measurement:", 
-                        choices = c("Max", "Mean", "Frequency"), 
-                        selected = "Max")
+            h4(icon("cloud"), "Map Options"),
+            selectInput("selected_category", "Category:", choices = names(category_columns), selected = "Rainfall"),
+            selectInput("selected_variable", "Measurement:", 
+                        choices = c("Max", "Mean", "Frequency"), selected = "Max")
           ),
           conditionalPanel(
             condition = "input.tabs === 'Weather Frequency'",
-            selectInput("selected_variable", "Select Frequency Variable:", 
+            h4(icon("chart-bar"), "Frequency Options"),
+            selectInput("selected_variable", "Variable:", 
                         choices = setNames(names(variable_titles), variable_titles),
                         selected = "Frequency of Heavy Rain")
           ),
+          br(),
           tableOutput("parameter_table")
         ),
         mainPanel(
@@ -214,24 +209,22 @@ ui <- navbarPage(
   ),
   
   #------------------------------------------------
-  # (Explore)
+  # 📊 Explore
   #------------------------------------------------
   tabPanel(
-    "Explore",
+    title = tagList(icon("chart-line"), "Time Series Analysis"),
     fluidPage(
-      # 使用 tabsetPanel 來區分「Time Series & Stats」與「Data Table」兩個子分頁
       tabsetPanel(
-        
-        #---- 子分頁 1: Time Series & Stats ----
         tabPanel("Time Series & Stats",
                  fluidRow(
                    box(
-                     selectInput("station", "Select Station:",
-                                 choices = unique(weather$station)),
+                     title = tagList(icon("map-marker-alt"), "Station Selection"),
+                     selectInput("station", "Station:", choices = unique(weather$station)),
                      width = 4
                    ),
                    box(
-                     selectInput("variable", "Select Variable:",
+                     title = tagList(icon("cogs"), "Variable"),
+                     selectInput("variable", "Variable:",
                                  choices = c("daily_rainfall_total_mm",
                                              "highest_30_min_rainfall_mm",
                                              "highest_60_min_rainfall_mm",
@@ -244,33 +237,32 @@ ui <- navbarPage(
                      width = 4
                    ),
                    box(
-                     dateRangeInput("daterange", "Select Date Range:",
+                     title = tagList(icon("calendar-day"), "Date Range"),
+                     dateRangeInput("daterange", "Range:",
                                     start = min(weather$date),
-                                    end   = max(weather$date)),
+                                    end = max(weather$date)),
                      width = 4
                    )
                  ),
                  fluidRow(
                    box(
-                     title = "Time Series Plot",
+                     title = tagList(icon("chart-line"), "Time Series Plot"),
                      plotlyOutput("ts_plot"),
                      width = 12
                    )
                  ),
                  fluidRow(
                    box(
-                     title = "Summary Stats",
+                     title = tagList(icon("calculator"), "Summary Stats"),
                      verbatimTextOutput("summary_stats"),
                      width = 12
                    )
                  )
         ),
-        
-        #---- 子分頁 2: Data Table ----
         tabPanel("Data Table",
                  fluidRow(
                    box(
-                     title = "Weather Data Table",
+                     title = tagList(icon("table"), "Weather Data Table"),
                      DTOutput("table"),
                      width = 12
                    )
@@ -279,69 +271,45 @@ ui <- navbarPage(
       )
     )
   ),
-  tabPanel("Univariate Forecasting",
-           tabsetPanel(
-             tabPanel("Forecasting", 
-                      sidebarLayout(
-                        sidebarPanel(
-                          selectInput("station", "Select Weather Station:", choices = unique(ts_data$station)),
-                          selectInput("variable", "Select Variable:", 
-                                      choices = c("Mean Temperature" = "mean_temperature",
-                                                  "Minimum Temperature" = "min_temperature",
-                                                  "Maximum Temperature" = "max_temperature",
-                                                  "Total Rainfall (mm)" = "total_rainfall")),
-                          dateRangeInput("forecast_date_range", "Select Date Range:", 
-                                         start = min(ts_data$date), end = max(ts_data$date)),
-                          sliderInput("forecast_days", "Select Number of Forecast Days:", 
-                                      min = 7, max = 100, value = 30),
-                          selectInput("forecast_model", "Select Forecasting Model:",
-                                      choices = c("ETS", "ARIMA", "Holt's Linear", "SES", "Multi-ETS")),
-                          actionButton("generate_forecast", "Generate Forecast")
-                        ),
-                        mainPanel(
-                          h3("Model Calibration Report"),
-                          tableOutput("model_report"),  # Model Metrics
-                          plotOutput("calibration_plot"),  # Model Diagnostics
-                          
-                          h3("Forecast Result"),
-                          plotOutput("forecast_plot"),  # Line Graph for Forecast
-                          tableOutput("forecast_table")  # Forecast Report Table
-                        )
-                      )
-             ),
-             tabPanel("Time Series Visualization",
-                      sidebarLayout(
-                        sidebarPanel(
-                          radioButtons("ts_freq", "Select Frequency:", 
-                                       choices = c("Daily" = "daily", "Weekly" = "weekly")),
-                          radioButtons("ts_type", "Select Time-Series Type:", 
-                                       choices = c("Single Station" = "single", "Multiple Stations" = "multi")),
-                          conditionalPanel(
-                            condition = "input.ts_type == 'single'",
-                            selectInput("single_station", "Select Station:", choices = station_names)
-                          ),
-                          conditionalPanel(
-                            condition = "input.ts_type == 'multi'",
-                            checkboxGroupInput("multi_stations", "Select Stations:", choices = station_names)
-                          ),
-                          selectInput("ts_variable", "Select Variable:",
-                                      choices = c("Mean Temperature" = "mean_temperature",
-                                                  "Minimum Temperature" = "min_temperature",
-                                                  "Maximum Temperature" = "max_temperature",
-                                                  "Total Rainfall" = "total_rainfall")),
-                          actionButton("generate_report", "Generate Report")
-                        ),
-                        mainPanel(
-                          plotOutput("ts_plot"),
-                          tableOutput("report_table")
-                        )
-                      )
-             )
-           )
-  )
   
+  #------------------------------------------------
+  # 🔮 Univariate Forecasting
+  #------------------------------------------------
+  tabPanel(
+    title = tagList(icon("chart-area"), "Forecasting"),
+    fluidPage(
+      sidebarLayout(
+        sidebarPanel(
+          h4(icon("map-pin"), "Station"),
+          selectInput("station", "Weather Station:", choices = unique(ts_data$station)),
+          h4(icon("sliders-h"), "Variable"),
+          selectInput("variable", "Variable:", 
+                      choices = c("Mean Temperature" = "mean_temperature",
+                                  "Minimum Temperature" = "min_temperature",
+                                  "Maximum Temperature" = "max_temperature",
+                                  "Total Rainfall (mm)" = "total_rainfall")),
+          h4(icon("calendar-range"), "Date & Forecast"),
+          dateRangeInput("forecast_date_range", "Date Range:", 
+                         start = min(ts_data$date), end = max(ts_data$date)),
+          sliderInput("forecast_days", "Forecast Days:", min = 7, max = 100, value = 30),
+          h4(icon("project-diagram"), "Model"),
+          selectInput("forecast_model", "Model:",
+                      choices = c("ETS", "ARIMA", "Holt's Linear", "SES", "Multi-ETS")),
+          actionButton("generate_forecast", "Generate Forecast", icon = icon("play"))
+        ),
+        mainPanel(
+          h3(icon("clipboard-check"), "Model Calibration Report"),
+          tableOutput("model_report"),
+          plotOutput("calibration_plot"),
+          
+          h3(icon("chart-line"), "Forecast Result"),
+          plotOutput("forecast_plot"),
+          tableOutput("forecast_table")
+        )
+      )
+    )
+  )
 )
-
 
 #====================
 #  Server
@@ -399,7 +367,6 @@ server <- function(input, output, session) {
   observe({
     updateSelectInput(session, "selected_variable", selected = "Frequency of Heavy Rain")
   })
-<<<<<<< HEAD
   output$parameter_table <- renderUI({
     if (input$selected_variable == "Frequency of Heavy Rain") {
       df <- rainfall_parameter
@@ -459,15 +426,6 @@ server <- function(input, output, session) {
         )),
         tags$tbody(rows)
       )
-=======
-  output$parameter_table <- renderTable({
-    if (input$selected_variable == "Frequency of Heavy Rain") {
-      rainfall_parameter
-    } else if (input$selected_variable == "Frequency of Extreme Heat") {
-      temp_parameter
-    } else if (input$selected_variable == "Frequency of Strong Wind") {
-      wind_parameter
->>>>>>> 47c31765f36e0e6025f4b479d9c76048faa02c12
     }
   })
   
@@ -519,109 +477,81 @@ server <- function(input, output, session) {
     datatable(data, options = list(pageLength = 10, scrollX = TRUE))
   })
   
-  # Reactive expression for the filtered station data
-  station_data <- reactive({
-    req(input$station)  # Ensure a station is selected
-    ts_data_split %>% filter(station == input$station)
-  })
-  
-  # Forecasting section
-  observeEvent(input$generate_forecast, {
-    req(input$station, input$variable, input$forecast_days)
-    
-    # Filter the training data for the selected station
-    train_data <- ts_data_split %>%
-      filter(station == input$station, Type == "Training") %>%
-      fill_gaps()
-    
-    # Fill gaps and impute missing values
-    train_data <- train_data %>%
-      mutate(variable_value = zoo::na.approx(!!sym(input$variable), na.rm = FALSE))
-    
-    # Fit the selected model
-    model <- switch(input$forecast_model,
-                    "ETS" = train_data %>% model(ETS(variable_value)),
-                    "ARIMA" = train_data %>% model(ARIMA(variable_value)),
-                    "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
-                    "SES" = train_data %>% model(SNAIVE(variable_value)),
-                    "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
-    )
-    
-    # Forecasting the future values
-    forecast_result <- model %>%
-      forecast(h = input$forecast_days)
-    
-    # Forecast plot
-    output$calibration_plot <- renderPlot({
-      autoplot(forecast_result, train_data) +
-        ggtitle(paste("Forecast for", input$variable, "at", input$station)) +
-        theme_minimal()
-    })
-    
-    train_data <- ts_data_split %>%
-      filter(station == input$station, Type == "Training") %>%
-      fill_gaps()  # Filling missing dates if any
-    
-    # Impute missing values
-    train_data <- train_data %>%
-      mutate(variable_value = zoo::na.approx(!!sym(input$variable), na.rm = FALSE))
-    
-    # Fit the selected model
-    model <- switch(input$forecast_model,
-                    "ETS" = train_data %>% model(ETS(variable_value)),
-                    "ARIMA" = train_data %>% model(ARIMA(variable_value)),
-                    "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
-                    "SES" = train_data %>% model(SNAIVE(variable_value)),
-                    "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
-    )
-    
-    # Forecast future values
-    forecast_result <- model %>% forecast(h = input$forecast_days)
-    
-    # Plot forecast
-    output$forecast_plot <- renderPlot({
-      autoplot(forecast_result) +
-        ggtitle(paste("Forecast for", input$variable, "at", input$station)) +
-        theme_minimal()
-    })
-    
-    
-    # Forecast table
-    output$forecast_table <- renderTable({
-      forecast_result %>%
-        as_tibble() %>%
-        select(date, .mean) %>%
-        rename(Forecasted_Value = .mean) %>%
-        mutate(date = format(as.Date(date), "%d %b %Y")) %>%
-        mutate(Station = input$station) %>%
-        select(Station, date, Forecasted_Value)
-    })
-  })
-  
-  # Time Series Visualization
-  observeEvent(input$generate_report, {
-    req(input$ts_freq, input$ts_type, input$ts_variable)  # Ensure all inputs are selected
-    
-    ts_data_filtered <- ts_data_split %>%
-      filter(station %in% (if(input$ts_type == "single") input$single_station else input$multi_stations)) %>%
-      filter(date >= as.Date(input$forecast_date_range[1]) & date <= as.Date(input$forecast_date_range[2])) %>%
-      mutate(variable_value = zoo::na.approx(!!sym(input$ts_variable), na.rm = FALSE))
-    
-    output$ts_plot <- renderPlot({
-      ggplot(ts_data_filtered, aes(x = date, y = variable_value, color = station)) +
-        geom_line() +
-        labs(title = paste("Time Series of", input$ts_variable, "for selected station(s)"), x = "Date", y = input$ts_variable) +
-        theme_minimal()
-    })
-    
-    output$report_table <- renderTable({
-      ts_data_filtered %>%
-        select(station, date, variable_value)
-    })
-  })
-  
-}
 
+# Forecasting section
+observeEvent(input$generate_forecast, {
+  req(input$station, input$variable, input$forecast_days)
+  
+  # Filter the training data for the selected station
+  train_data <- ts_data_split %>%
+    filter(station == input$station, Type == "Training") %>%
+    fill_gaps()
+  
+  # Fill gaps and impute missing values
+  train_data <- train_data %>%
+    mutate(variable_value = zoo::na.approx(!!sym(input$variable), na.rm = FALSE))
+  
+  # Fit the selected model
+  model <- switch(input$forecast_model,
+                  "ETS" = train_data %>% model(ETS(variable_value)),
+                  "ARIMA" = train_data %>% model(ARIMA(variable_value)),
+                  "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
+                  "SES" = train_data %>% model(SNAIVE(variable_value)),
+                  "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
+  )
+  
+  # Forecasting the future values
+  forecast_result <- model %>%
+    forecast(h = input$forecast_days)
+  
+  # Forecast plot
+  output$calibration_plot <- renderPlot({
+    autoplot(forecast_result, train_data) +
+      ggtitle(paste("Forecast for", input$variable, "at", input$station)) +
+      theme_minimal()
+  })
+  
+  train_data <- ts_data_split %>%
+    filter(station == input$station, Type == "Training") %>%
+    fill_gaps()  # Filling missing dates if any
+  
+  # Impute missing values
+  train_data <- train_data %>%
+    mutate(variable_value = zoo::na.approx(!!sym(input$variable), na.rm = FALSE))
+  
+  # Fit the selected model
+  model <- switch(input$forecast_model,
+                  "ETS" = train_data %>% model(ETS(variable_value)),
+                  "ARIMA" = train_data %>% model(ARIMA(variable_value)),
+                  "Holt's Linear" = train_data %>% model(ETS(variable_value ~ trend("A"))),
+                  "SES" = train_data %>% model(SNAIVE(variable_value)),
+                  "Multi-ETS" = train_data %>% model(ETS(variable_value ~ error("A") + trend("A") + season("A")))
+  )
+  
+  # Forecast future values
+  forecast_result <- model %>% forecast(h = input$forecast_days)
+  
+  # Plot forecast
+  output$forecast_plot <- renderPlot({
+    autoplot(forecast_result) +
+      ggtitle(paste("Forecast for", input$variable, "at", input$station)) +
+      theme_minimal()
+  })
+  
+  
+  # Forecast table
+  output$forecast_table <- renderTable({
+    forecast_result %>%
+      as_tibble() %>%
+      select(date, .mean) %>%
+      rename(Forecasted_Value = .mean) %>%
+      mutate(date = format(as.Date(date), "%d %b %Y")) %>%
+      mutate(Station = input$station) %>%
+      select(Station, date, Forecasted_Value)
+  })
+})
+
+}
 
 #====================
 # Shiny App
