@@ -2,18 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang">
 <meta name="dcterms.date" content="2025-03-11">
 
-<<<<<<< Updated upstream
-<title>Singapore Weather Demystified: Visualizing Atmospheric Data - Project Proposal</title>
-=======
-<title>Main Page – Singapore Weather Demystified: Visualizing Atmospheric Data</title>
->>>>>>> Stashed changes
+<title>Project Proposal – Singapore Weather Demystified: Visualizing Atmospheric Data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -89,26 +85,18 @@ ul.task-list li input[type="checkbox"] {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-<<<<<<< Updated upstream
-    <a class="nav-link" href="../../Project/Main/Main_Page.html"> 
-=======
     <a class="nav-link active" href="../../Project/Project_Proposal/Project_Proposal.html" aria-current="page"> <i class="bi bi-fas fa-home" role="img">
 </i> 
->>>>>>> Stashed changes
 <span class="menu-text">Main Page</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link active" href="../../Project/Project_Proposal/Project_Proposal.html" aria-current="page"> 
-<span class="menu-text">Project Proposal</span></a>
-  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-meeting-minutes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-meeting-minutes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Meeting Minutes</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-meeting-minutes">    
@@ -123,12 +111,8 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Meeting Minutes 2</span></a>
   </li>  
         <li>
-<<<<<<< Updated upstream
-    <a class="dropdown-item" href="../../Project/Meeting_Minutes/Meeting_Minutes3.html">
-=======
     <a class="dropdown-item" href="../../Project/Meeting_Minutes/Meeting_Minutes3.html"><i class="bi bi-fas fa-calendar-day" role="img">
 </i> 
->>>>>>> Stashed changes
  <span class="dropdown-text">Meeting Minutes 3</span></a>
   </li>  
     </ul>
@@ -139,7 +123,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Project Code</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-user-guide" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-user-guide" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">User Guide</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-user-guide">    
@@ -154,12 +138,8 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Geospatial User Guide</span></a>
   </li>  
         <li>
-<<<<<<< Updated upstream
-    <a class="dropdown-item" href="../../Project/UserGuide/User_EDA.html">
-=======
     <a class="dropdown-item" href="../../Project/UserGuide/User_EDA.html"><i class="bi bi-fas fa-chart-line" role="img">
 </i> 
->>>>>>> Stashed changes
  <span class="dropdown-text">Time Series &amp; EDA User Guide</span></a>
   </li>  
     </ul>
@@ -178,7 +158,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -356,18 +336,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -399,7 +368,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -407,7 +398,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

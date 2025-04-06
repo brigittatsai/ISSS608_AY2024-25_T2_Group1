@@ -2,17 +2,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.555">
+<meta name="generator" content="quarto-1.5.57">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang">
 
-<<<<<<< Updated upstream
-<title>Singapore Weather Demystified: Visualizing Atmospheric Data - User Guide for EDA &amp; Time Series</title>
-=======
 <title>User Guide for EDA &amp; Time Series – Singapore Weather Demystified: Visualizing Atmospheric Data</title>
->>>>>>> Stashed changes
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -88,26 +84,18 @@ ul.task-list li input[type="checkbox"] {
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
   <span class="navbar-toggler-icon"></span>
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-<<<<<<< Updated upstream
-    <a class="nav-link" href="../../Project/Main/Main_Page.html"> 
-=======
     <a class="nav-link" href="../../Project/Project_Proposal/Project_Proposal.html"> <i class="bi bi-fas fa-home" role="img">
 </i> 
->>>>>>> Stashed changes
 <span class="menu-text">Main Page</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../Project/Project_Proposal/Project_Proposal.html"> 
-<span class="menu-text">Project Proposal</span></a>
-  </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-meeting-minutes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-meeting-minutes" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">Meeting Minutes</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-meeting-minutes">    
@@ -122,12 +110,8 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Meeting Minutes 2</span></a>
   </li>  
         <li>
-<<<<<<< Updated upstream
-    <a class="dropdown-item" href="../../Project/Meeting_Minutes/Meeting_Minutes3.html">
-=======
     <a class="dropdown-item" href="../../Project/Meeting_Minutes/Meeting_Minutes3.html"><i class="bi bi-fas fa-calendar-day" role="img">
 </i> 
->>>>>>> Stashed changes
  <span class="dropdown-text">Meeting Minutes 3</span></a>
   </li>  
     </ul>
@@ -138,7 +122,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Project Code</span></a>
   </li>  
   <li class="nav-item dropdown ">
-    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-user-guide" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-user-guide" role="link" data-bs-toggle="dropdown" aria-expanded="false">
  <span class="menu-text">User Guide</span>
     </a>
     <ul class="dropdown-menu" aria-labelledby="nav-menu-user-guide">    
@@ -173,7 +157,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
-          <div class="quarto-navbar-tools">
+            <div class="quarto-navbar-tools">
 </div>
       </div> <!-- /container-fluid -->
     </nav>
@@ -183,7 +167,20 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#user-guide-rainfall-data-exploration" id="toc-user-guide-rainfall-data-exploration" class="nav-link active" data-scroll-target="#user-guide-rainfall-data-exploration">📈&nbsp;<strong>User Guide: Rainfall Data Exploration</strong></a>
+  <ul class="collapse">
+  <li><a href="#select-the-weather-station" id="toc-select-the-weather-station" class="nav-link" data-scroll-target="#select-the-weather-station">1️⃣&nbsp;<strong>Select the Weather Station</strong></a></li>
+  <li><a href="#choose-the-weather-parameter" id="toc-choose-the-weather-parameter" class="nav-link" data-scroll-target="#choose-the-weather-parameter">2️⃣&nbsp;<strong>Choose the Weather Parameter</strong></a></li>
+  <li><a href="#set-the-date-range" id="toc-set-the-date-range" class="nav-link" data-scroll-target="#set-the-date-range">3️⃣&nbsp;<strong>Set the Date Range</strong></a></li>
+  <li><a href="#generate-the-visualizations" id="toc-generate-the-visualizations" class="nav-link" data-scroll-target="#generate-the-visualizations">4️⃣&nbsp;<strong>Generate the Visualizations</strong></a></li>
+  <li><a href="#view-and-interact-with-the-results" id="toc-view-and-interact-with-the-results" class="nav-link" data-scroll-target="#view-and-interact-with-the-results">5️⃣&nbsp;<strong>View and Interact with the Results</strong></a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -213,8 +210,48 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="user-guide-rainfall-data-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="user-guide-rainfall-data-exploration">📈&nbsp;<strong>User Guide: Rainfall Data Exploration</strong></h2>
+<p>Welcome to the Data Exploration ＆ Time Series section of the app! 🌤️ This feature allows you to interactively view and analyze rainfall and weather data from various stations. Follow these simple steps to get started:</p>
+<section id="select-the-weather-station" class="level3">
+<h3 class="anchored" data-anchor-id="select-the-weather-station">1️⃣&nbsp;<strong>Select the Weather Station</strong></h3>
+<p>🔽 Use the “Station” dropdown to choose the weather station(s) you’re interested in.</p>
+<p><em>You can select one or more stations to compare their data.</em></p>
+</section>
+<section id="choose-the-weather-parameter" class="level3">
+<h3 class="anchored" data-anchor-id="choose-the-weather-parameter">2️⃣&nbsp;<strong>Choose the Weather Parameter</strong></h3>
+<p><br>
+🔽 From the “Variable” dropdown, pick the weather parameter you’d like to analyze, such as:</p>
+<ul>
+<li><p>Daily Rainfall ☔</p></li>
+<li><p>Temperature 🌡️</p></li>
+<li><p>Wind Speed 🌬️</p></li>
+</ul>
+</section>
+<section id="set-the-date-range" class="level3">
+<h3 class="anchored" data-anchor-id="set-the-date-range">3️⃣&nbsp;<strong>Set the Date Range</strong></h3>
+<p><br>
+📅 Use the date range picker to specify the period you want to explore. This helps you focus on the time frame that matters most to you.</p>
+</section>
+<section id="generate-the-visualizations" class="level3">
+<h3 class="anchored" data-anchor-id="generate-the-visualizations">4️⃣&nbsp;<strong>Generate the Visualizations</strong></h3>
+<p><br>
+⚙️ The app automatically updates the charts and map based on your selections. No extra button is needed—simply adjust your inputs to see the results.</p>
+</section>
+<section id="view-and-interact-with-the-results" class="level3">
+<h3 class="anchored" data-anchor-id="view-and-interact-with-the-results">5️⃣&nbsp;<strong>View and Interact with the Results</strong></h3>
+<p><br>
+📊 Explore the following interactive outputs:</p>
+<ul>
+<li><p><strong>Time Series Plot:</strong>&nbsp;A dynamic line chart comparing trends over time.</p></li>
+<li><p><strong>Exploratory Charts:</strong>&nbsp;Histograms, boxplots, violin plots, and trend analysis graphs to help you uncover data insights.</p></li>
+</ul>
+<p>Use these visualizations to gain insights and better understand weather patterns.</p>
+<p>Enjoy exploring the data!</p>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -252,18 +289,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const clipboard = new window.ClipboardJS('.code-copy-button', {
-    text: function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-    }
-  });
-  clipboard.on('success', function(e) {
+  const onCopySuccess = function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -295,7 +321,29 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
   });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -303,7 +351,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {
