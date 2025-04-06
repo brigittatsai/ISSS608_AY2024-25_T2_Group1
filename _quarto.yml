@@ -6,8 +6,12 @@ website:
   navbar:
     left:
     - text: "Main Page"
-      href: "Project/Project_Proposal/Project_Proposal.html"
+      href: "Project/Main/Main_Page.html"
       icon: "fas fa-home"  # Home icon for the main page
+      
+    - text: "Project Proposal"
+      href: "Project/Project_Proposal/Project_Proposal.html"
+      icon: "fas fa-file-alt"
 
     - text: "Meeting Minutes"
       menu:
