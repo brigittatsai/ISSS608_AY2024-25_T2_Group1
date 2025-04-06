@@ -2,3 +2,47 @@
 title: "User Guide for EDA & Time Series"
 author: "Brigitta Karen Tsai, Enrico Limberg, TzuTing Huang"
 ---
+
+## 📈 **User Guide: Rainfall Data Exploration**
+
+Welcome to the Data Exploration ＆ Time Series section of the app! 🌤️ This feature allows you to interactively view and analyze rainfall and weather data from various stations. Follow these simple steps to get started:
+
+### 1️⃣ **Select the Weather Station** 
+
+🔽 Use the "Station" dropdown to choose the weather station(s) you’re interested in.
+
+*You can select one or more stations to compare their data.*
+
+### 2️⃣ **Choose the Weather Parameter**
+
+\
+🔽 From the "Variable" dropdown, pick the weather parameter you’d like to analyze, such as:
+
+-   Daily Rainfall ☔
+
+-   Temperature 🌡️
+
+-   Wind Speed 🌬️
+
+### 3️⃣ **Set the Date Range**
+
+\
+📅 Use the date range picker to specify the period you want to explore. This helps you focus on the time frame that matters most to you.
+
+### 4️⃣ **Generate the Visualizations**
+
+\
+⚙️ The app automatically updates the charts and map based on your selections. No extra button is needed—simply adjust your inputs to see the results.
+
+### 5️⃣ **View and Interact with the Results**
+
+\
+📊 Explore the following interactive outputs:
+
+-   **Time Series Plot:** A dynamic line chart comparing trends over time.
+
+-   **Exploratory Charts:** Histograms, boxplots, violin plots, and trend analysis graphs to help you uncover data insights.
+
+Use these visualizations to gain insights and better understand weather patterns.
+
+Enjoy exploring the data!
