@@ -10,39 +10,51 @@ website:
       
     - text: "Project Proposal"
       href: "Project/Project_Proposal/Project_Proposal.html"
+      icon: "fas fa-home"  # Home icon for the main page
         
     - text: "Meeting Minutes"
       menu:
       - text: "Meeting Minutes 1"
         href: "Project/Meeting_Minutes/Meeting_Minutes1.html"
-        
+        icon: "fas fa-calendar"  # Calendar icon for meeting minutes
       - text: "Meeting Minutes 2"
         href: "Project/Meeting_Minutes/Meeting_Minutes2.html"
-        
+        icon: "fas fa-calendar-check"  # Calendar check icon
       - text: "Meeting Minutes 3"
         href: "Project/Meeting_Minutes/Meeting_Minutes3.html"
+        icon: "fas fa-calendar-day"  # Day calendar icon
       
     - text: "Project Code"
       href: "Project/Project_Code/Project_Code.html"
+      icon: "fas fa-code"  # Code icon for project code
       
     - text: "User Guide"
       menu: 
       - text: "Forecasting User Guide"
         href: "Project/UserGuide/User_Forecasting.html"
+        icon: "fas fa-cloud"  # Cloud icon for forecasting
       - text: "Geospatial User Guide"
         href: "Project/UserGuide/User_Geospatial.html"
+        icon: "fas fa-map-marker-alt"  # Map icon for geospatial
       - text: "Time Series & EDA User Guide"
         href: "Project/UserGuide/User_EDA.html"
+        icon: "fas fa-chart-line"  # Line chart icon for time series & EDA
         
     - text: "Shiny App"
       href: https://brigittatsai.shinyapps.io/ISSS608_Group1/
+      icon: "fas fa-app-store"  # App store icon for shiny app
 
     right: 
       - href: index.qmd
         text: Home
+        icon: "fas fa-home"  # Home icon for the right side home link
+
 format:
   html:
     theme: sandstone
     css: styles.css
     toc: true
-editor: visual
+    includes:
+      in_header: 
+        - "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+
